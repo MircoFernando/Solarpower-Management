@@ -36,6 +36,7 @@ The project is still under active development, so some features may not be fully
 - Logging and visualization of energy production records
 - Role-based access (admin vs. user)
 - Responsive dashboard and data analytics
+- Implement a ML model to predict anomalies
 
 ---
 
