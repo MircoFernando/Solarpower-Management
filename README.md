@@ -56,5 +56,7 @@ The project is still under active development, so some features may not be fully
 1. Clone the repository:
 ```bash
 git clone https://github.com/MircoFernando/Solarpower-Management.git
+npm install 
 cd Solarpower-Management
-run npm install in both main folders
+cd backend_rev
+
