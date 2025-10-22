@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import SolarData from "./SolarEnergyData";
 import Tab from "../../../components/ui/tab";
 import getsolarUnitbyid  from "../../../lib/api/solar-unit.js";
-import { toDate } from "date-fns";
+import { toDate, subDays, format} from "date-fns";
 
 
 import { useSelector } from "react-redux";
@@ -11,25 +11,24 @@ import { getenergyGenerationRecord } from "../../../lib/api/energy-generation-re
 import { useGetenergyGenerationRecordQuery } from "../../../lib/redux/query.js";
 
 const SolarEnergyProduction = () => {
-  const energyProductionData = [
-    { day: "Mon", date: "Aug 18", production: 34.1, hasAnomaly: false },
-    { day: "Tue", date: "Aug 19", production: 3.2, hasAnomaly: false },
-    { day: "Wed", date: "Aug 20", production: 44.7, hasAnomaly: true },
-    { day: "Thu", date: "Aug 21", production: 21.9, hasAnomaly: false },
-    { day: "Fri", date: "Aug 22", production: 41.2, hasAnomaly: false },
-    { day: "Sat", date: "Aug 23", production: 43, hasAnomaly: false },
-    { day: "Sun", date: "Aug 24", production: 26.8, hasAnomaly: false },
-  ];
+  /**
+   * Mock data for solar energy production over the past 7 days
+   */
+  // const energyProductionData = [
+  //   { day: "Mon", date: "Aug 18", production: 34.1, hasAnomaly: false },
+  //   { day: "Tue", date: "Aug 19", production: 3.2, hasAnomaly: false },
+  //   { day: "Wed", date: "Aug 20", production: 44.7, hasAnomaly: true },
+  //   { day: "Thu", date: "Aug 21", production: 21.9, hasAnomaly: false },
+  //   { day: "Fri", date: "Aug 22", production: 41.2, hasAnomaly: false },
+  //   { day: "Sat", date: "Aug 23", production: 43, hasAnomaly: false },
+  //   { day: "Sun", date: "Aug 24", production: 26.8, hasAnomaly: false },
+  // ];
 
   const tabs = [{label: "All", value: "all" },
                  { label: "Anomaly", value: "anomaly" }];
 
   const selectedTab =  useSelector((state) => state.ui.selectedHomeTab);
 
-
-  const filteredEnergyProductionData = selectedTab === "all"
-    ? energyProductionData
-    : energyProductionData.filter((el) => el.hasAnomaly);
 
   // State for API data fetching
   // Example code for fetching data from API inside the component, but i am not using it now, i implemented it using RTK query
@@ -72,9 +71,7 @@ const SolarEnergyProduction = () => {
   // }
 
   //Api data fetching using RTK query 
-  const {data, isLoading, isError, error}= useGetenergyGenerationRecordQuery("68ec8e314c52df21ff6fdab8");
-
-  console.log(data);
+  const {data, isLoading, isError, error}= useGetenergyGenerationRecordQuery({id: "68ec8e314c52df21ff6fdab8", groupBy:"date"});
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -83,14 +80,92 @@ const SolarEnergyProduction = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  const formattedData = data.map((el) => {
-    return {
-      ...el, 
-         timestamp: toDate(el.timestamp),
-        };
-  });
+  console.log(data);
 
-  console.log(formattedData);
+  const newEnergyProductionData =  data.slice(0,7).map((el) => {
+    return{
+      day: format(toDate(el._id.date), "EEE"),
+      date: format(toDate(el._id.date), "MMM d"),
+      production: el.totalEnergy,
+      hasAnomaly: el.hasAnomaly,
+    };
+  });
+  console.log(newEnergyProductionData);
+  
+
+  // const formattedData = data.map((el) => {
+  //   return {
+  //     ...el, 
+  //        timestamp: toDate(el.timestamp),
+  //       };
+  // });
+
+  // console.log(formattedData);
+  /**
+   * Developed an Algorithm to Group Data - week-11*
+   *  
+   */
+//   const latestRecord = formattedData[0];
+//   console.log("Latest Record:", latestRecord);
+//   const sevenDays = subDays(latestRecord.timestamp, 6);
+//   console.log("Seven Days Ago:", sevenDays);
+//   const recordsLast7Days = formattedData.filter((el) => el.timestamp >= sevenDays && el.timestamp <= latestRecord.timestamp);
+//   console.log("Records in Last 7 Days:", recordsLast7Days);
+
+//   const mappedRecords = recordsLast7Days.map((el) => {
+//     return {
+//       ...el,
+//       date: format(el.timestamp, "yyyy-MM-dd"),
+
+//     };
+//   });
+
+//   console.log("Mapped Records:", mappedRecords);
+
+//   const groupedData = {};
+
+//   mappedRecords.forEach((el) => {
+//     if (groupedData[el.date]) {
+//       groupedData[el.date].push(el);
+//     } else {
+//       groupedData[el.date] = [];
+//       groupedData[el.date].push(el);
+//     }
+//   });
+
+//   console.log("Grouped Data:", groupedData);
+  
+//   const GroupedDataArray = Object.entries(groupedData);
+//   console.log("Grouped Data Array:", GroupedDataArray);
+
+//   const totalProduction = (data) => {
+//     let sum = 0;
+//     data.forEach((el) => {
+//       sum += Number(el.energyGenerated) || 0;
+//     });
+//     // remove decimal values, return whole number
+//     return Math.floor(sum);
+//   };
+
+//   const newEnergyProductionData = GroupedDataArray.map(([date, data]) => {
+
+//     console.log("Data for date", date, ":", data);
+
+//     return {
+//       day : format(new Date(date), "EEE"),
+//       date: format(new Date(date), "MMM dd"),
+//       production: totalProduction(data),
+//       hasAnomaly: data.some((record) => record.hasAnomaly),
+//     }
+//   });
+
+//   console.log("New Energy Production Data:", newEnergyProductionData);
+
+ const filteredEnergyProductionData = selectedTab === "all"
+    ? newEnergyProductionData
+    : newEnergyProductionData.filter((el) => el.hasAnomaly);
+
+
 
   return (
     <section className="px-12 font-[Inter] py-6">
@@ -110,7 +185,7 @@ const SolarEnergyProduction = () => {
         
       </div>
       
-        <SolarData energyProductionData={filteredEnergyProductionData} />
+        <SolarData energyProductionData={newEnergyProductionData} />
       
       <div className="mt-4 flex gap-2">
         <Button>Click me</Button>
