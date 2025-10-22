@@ -25,7 +25,7 @@ export const getEnergyRecordsBySolarUnitId = async (req: Request, res: Response,
       return res.status(400).json({ message: "Invalid solar unit ID format" });
     }
 
-    const records = await EnergyGenerationRecord.find({ solarUnit: id });
+    const records = await EnergyGenerationRecord.find({ solarUnit: id }).sort({ timestamp: -1 }); // Sort by timestamp ascending
 
     if (!records || records.length === 0) {
       return res.status(404).json({ message: "No energy generation records found for this solar unit" });

@@ -71,7 +71,9 @@ const SolarEnergyProduction = () => {
   // }
 
   //Api data fetching using RTK query 
-  const {data, isLoading, isError, error}= useGetenergyGenerationRecordQuery("68e35cc7af99833de51091b1");
+  const {data, isLoading, isError, error}= useGetenergyGenerationRecordQuery("68ec8e314c52df21ff6fdab8");
+
+  if 
 
   console.log(data);
 
