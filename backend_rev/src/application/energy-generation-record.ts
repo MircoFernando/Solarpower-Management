@@ -3,6 +3,7 @@ import { NotFoundError, ValidationError } from "../domain/dtos/errors/errors";
 import { Request, Response, NextFunction } from 'express';
 import { idDto } from "../domain/dtos/energy-generation-record";
 import mongoose from "mongoose";
+import { SolarUnit } from "../infastructure/entities/solarUnit";
 
 
 export const validateIdParam = (req: Request, res: Response, next: NextFunction) => {
@@ -17,18 +18,25 @@ export const validateIdParam = (req: Request, res: Response, next: NextFunction)
 };
 
 export const getEnergyRecordsBySolarUnitId = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { solarUnit } = req.params;
-        const record = await EnergyGenerationRecord.find({solarUnit: solarUnit});
-        if (!record) {
+  try {
+    const { id } = req.params; // <-- matches :id in route
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid solar unit ID format" });
+    }
+
+    const records = await EnergyGenerationRecord.find({ solarUnit: id }).sort({ timestamp: -1 }); // Sort by timestamp ascending
+
+    if (!records || records.length === 0) {
       return res.status(404).json({ message: "No energy generation records found for this solar unit" });
-        }
-        res.status(200).json(record);
     }
-    catch (error: any) {
-        next(error); // Pass the error to the global error handler
-    }
+
+    res.status(200).json(records);
+  } catch (error: any) {
+    next(error);
+  }
 };
+
 
 export const getallEnergyRecords = async (req: Request, res: Response, next: NextFunction) => {
     try {
