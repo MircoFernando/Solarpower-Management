@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import SolarData from "./SolarEnergyData";
 import Tab from "../../../components/ui/tab";
 import getsolarUnitbyid  from "../../../lib/api/solar-unit.js";
+import { toDate } from "date-fns";
 
 
 import { useSelector } from "react-redux";
@@ -71,9 +72,25 @@ const SolarEnergyProduction = () => {
   // }
 
   //Api data fetching using RTK query 
-  const {data, isLoading, isError, error}= useGetenergyGenerationRecordQuery("68e35cc7af99833de51091b1");
+  const {data, isLoading, isError, error}= useGetenergyGenerationRecordQuery("68ec8e314c52df21ff6fdab8");
 
   console.log(data);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (!data || isError) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const formattedData = data.map((el) => {
+    return {
+      ...el, 
+         timestamp: toDate(el.timestamp),
+        };
+  });
+
+  console.log(formattedData);
 
   return (
     <section className="px-12 font-[Inter] py-6">
