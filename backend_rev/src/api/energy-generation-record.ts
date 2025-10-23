@@ -4,7 +4,7 @@ import { getEnergyRecordsBySolarUnitId, getallEnergyRecords, validateIdParam} fr
 
 const energyGenerationRecordRouter = express.Router();
 
-energyGenerationRecordRouter.route('/solar-units/:id').get(validateIdParam, getEnergyRecordsBySolarUnitId);
+energyGenerationRecordRouter.route('/solar-units/:id').get(getEnergyRecordsBySolarUnitId);
 energyGenerationRecordRouter.route('/solar-units').get(getallEnergyRecords);
 
 export default energyGenerationRecordRouter;
