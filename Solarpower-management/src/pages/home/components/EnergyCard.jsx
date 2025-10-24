@@ -10,7 +10,7 @@ const EnergyProductionCard = (props) => {
 
   return (
     <button
-      className={`block cursor-pointer ${
+      className={`block cursor-pointer hover:bg-blue-100 sm:flex flex-col ${
         isSelected ? "outline-2 outline-offset-2 outline-blue-600" : ""
       } relative border ${
         props.hasAnomaly ? "border-red-500" : "border-gray-300"
