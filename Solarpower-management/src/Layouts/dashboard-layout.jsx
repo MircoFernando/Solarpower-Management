@@ -17,6 +17,7 @@ export function DashboardLayout() {
          
     <SidebarProvider>
       <AppSidebar variant="inset" />
+      <main className="p-4 w-full bg-slate-200">
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">
@@ -33,6 +34,7 @@ export function DashboardLayout() {
           </div>
         </div>
       </SidebarInset>
+      </main>
     </SidebarProvider>
   )
 };
