@@ -18,6 +18,8 @@ export const api = createApi({
 
 export const { useGetenergyGenerationRecordQuery } = api;
 
+// TODO : Continue the rest of the implementation
+
 // Weather API client
 export const weatherApi = createApi({
   reducerPath: "weatherApi",
