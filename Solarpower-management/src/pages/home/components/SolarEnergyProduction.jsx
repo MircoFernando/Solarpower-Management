@@ -86,7 +86,7 @@ const SolarEnergyProduction = () => {
     return{
       day: format(toDate(el._id.date), "EEE"),
       date: format(toDate(el._id.date), "MMM d"),
-      production: el.totalEnergy,
+      production: Math.floor(el.totalEnergy),
       hasAnomaly: el.hasAnomaly,
     };
   });
@@ -171,8 +171,8 @@ const SolarEnergyProduction = () => {
     <section className="px-12 font-[Inter] py-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2">Solar Energy Production</h2>
-        <p className="text-gray-600">Daily energy output for the past 7 days</p>
-        <div className="mt-4 flex items-center gap-2">
+        <p className="text-gray-600">Daily energy output for the past 6 days</p>
+        <div className="mt-4 flex items-center gap-2" >
           {tabs.map((tab) => {
             return (
             <Tab key={tab.value} tab ={tab}
