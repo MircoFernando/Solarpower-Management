@@ -45,7 +45,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel><span class="font-bold">Aelora</span></SidebarGroupLabel>
+          <SidebarGroupLabel><span className="font-bold">Aelora</span></SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
