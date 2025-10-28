@@ -11,7 +11,9 @@ export const api = createApi({
   endpoints: (builder) => ({
     getenergyGenerationRecord: builder.query({
       query: ({ id, groupBy, range }) =>
-        `energy-generation-records/solar-units/${id}?groupBy=${groupBy}${range ? `&range=${range}` : ""}`,
+        `energy-generation-records/solar-units/${id}?groupBy=${groupBy}${
+          range ? `&range=${range}` : ""
+        }`,
     }),
   }),
 });
