@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import dotenv from "dotenv";
-dotenv.config();
+
 
 const BASE_URL = "http://localhost:3000/api";
-const WEATHER_API = process.env.WEATHER_API; // e.g. "https://api.openweathermap.org/data/2.5"
+const WEATHER_API = import.meta.env.VITE_WEATHER_API; // ✅ Vite uses import.meta.env
+
 
 export const api = createApi({
   reducerPath: "api",
