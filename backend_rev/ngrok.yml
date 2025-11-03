@@ -1,0 +1,8 @@
+version: 3
+agent:
+  authtoken: 34xSB78uQ4yUBgjSgZnNtqQHCMo_7a7uRQgi24FyFNTQNbeJ5
+endpoints:
+  - name: solarpower-management
+    url: unloquaciously-subhedral-velma.ngrok-free.dev
+    upstream:
+      url: http://localhost:3000

@@ -64,3 +64,4 @@ logs/
 *.bak
 *.tmp
 
+.ngrok.yml

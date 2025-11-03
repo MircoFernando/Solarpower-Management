@@ -1,11 +1,18 @@
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 import React from "react";
 import { Link } from "react-router";
+import { Button } from "../button";
 const user = "JD";
 
 const navBar = () => {
   return (
     <nav className={"px-12 py-6 flex justify-between items-center"}>
-      <Link to="/" className={"flex items-center gap-3 hover:cursor-pointer hover:border-b-2 border-lime-500"}>
+      <Link
+        to="/"
+        className={
+          "flex items-center gap-3 hover:cursor-pointer hover:border-b-2 border-lime-500"
+        }
+      >
         <div
           className={
             "w-10 h-10 rounded-full bg-lime-400 flex justify-center items-center mb-2"
@@ -53,20 +60,33 @@ const navBar = () => {
           <span className="font-[Inter] text-sm font-medium">Dashboard</span>
         </Link>
         <div className={"flex items-center gap-2"}>
-          <div
-            className={
-              "w-8 h-8 rounded-full bg-blue-400 flex justify-center items-center"
-            }
-          >
-            <span className="font-[Inter] text-sm font-medium text-white">
-              {user}
-            </span>
-          </div>
-          <span className="font-[Inter] text-sm font-medium">Aelora</span>
+          <SignedOut>
+            <Button variant="outline" size="sm" asChild>
+              <Link
+                to="/sign-in"
+                className={"flex items-center gap-3 px-3 py-2"}
+              >
+                Sign in
+              </Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link
+                to="/sign-up"
+                className={"flex items-center gap-3 px-3 py-2"}
+              >
+                Sign up
+              </Link>
+            </Button>
+          </SignedOut>
+          <SignedIn>
+              <span className="font-[Inter] text-sm font-medium">
+                <UserButton />
+              </span>
+            </SignedIn>
         </div>
       </div>
     </nav>
-  )
+  );
 };
 
 export default navBar;

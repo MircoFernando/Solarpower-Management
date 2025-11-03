@@ -1,7 +1,7 @@
 import { EnergyGenerationRecord } from "../infastructure/entities/EnergyGenerationRecord";
 import { NotFoundError, ValidationError } from "../domain/dtos/errors/errors";
 import { Request, Response, NextFunction } from 'express';
-import { idDto } from "../domain/dtos/energy-generation-record";
+import { idDto, getallEnergyRecordsDto } from "../domain/dtos/energy-generation-record";
 import mongoose from "mongoose";
 import { SolarUnit } from "../infastructure/entities/solarUnit";
 import { timeStamp } from "console";
@@ -24,7 +24,13 @@ export const getEnergyRecordsBySolarUnitId = async (req: Request, res: Response,
 
     
     const { id } = req.params; // <-- matches :id in route
-    const { groupBy } = req.query;
+    const results = getallEnergyRecordsDto.safeParse(req.query);
+    if(!results.success) {
+        throw new ValidationError(results.error.message);
+    }
+
+    const { groupBy, limit } = results.data;
+
 
     if(!groupBy){
         const records = await EnergyGenerationRecord.find({ solarUnit: id }).sort({timestamp: -1 }); // Sort by timestamp ascending
@@ -51,7 +57,11 @@ export const getEnergyRecordsBySolarUnitId = async (req: Request, res: Response,
             $sort: {"_id.date": -1},
         },
         ]);
-        res.status(200).json(records);
+        if(!limit){
+            res.status(200).json(records);
+            return;
+        }
+        res.status(200).json(records.slice(0, parseInt(limit)));
     }
 
 

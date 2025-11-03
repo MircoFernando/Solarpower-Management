@@ -5,10 +5,12 @@ import EnergyRecordRouter from './api/energy-generation-record';
 import { connectDB } from './infastructure/db';  
 import { loggerMiddleware } from './api/middleware/logger-middleware';
 import { globalErrorHandlingMiddleware } from './api/middleware/global-error-handling-middleware';
+import webHooksRouter from './api/web-hooks/webhooks';
 import cors from 'cors';
 
 dotenv.config(); 
 const server = express();
+server.use("/api/webhooks", webHooksRouter);
 
 server.use(express.json()); // Convert incoming JSON requests to JS objects
 server.use(cors({origin: "http://localhost:5173"})); // Enable CORS for all routes
