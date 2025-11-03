@@ -10,9 +10,10 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar"
-
+import { useUser } from "@clerk/clerk-react";
 
 export function DashboardLayout() {
+
     return (
          
     <SidebarProvider>

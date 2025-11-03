@@ -4,6 +4,7 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
+    "dev:ngrok": "ngrok start solarpower-management --config ngrok.yml",
     "seed": "ts-node src/infastructure/seed.ts",
     "build": "npm install && tsc",
     "start": "node ./dist/index.js"
@@ -12,6 +13,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@clerk/backend": "^2.19.1",
+    "@clerk/express": "^1.7.43",
     "cors": "^2.8.5",
     "data-fns": "^1.1.0",
     "dotenv": "^17.2.2",

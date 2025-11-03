@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/toggle-group"
 import { format, toDate } from "date-fns"
 import { useGetenergyGenerationRecordQuery } from "../lib/redux/query.js"
+import { time } from "console"
 export const description = "Interactive area chart using live data"
 
 const chartConfig = {
@@ -41,32 +42,33 @@ const chartConfig = {
 
 export function ChartAreaInteractive() {
   const isMobile = useIsMobile()
-  const [timeRange, setTimeRange] = React.useState("7d")
+  const [timeRange, setTimeRange] = React.useState(7)
 
   // ✅ Refetch when timeRange changes
   const { data, isLoading, isError, error } = useGetenergyGenerationRecordQuery({
     id: "68ec8e314c52df21ff6fdab8",
     groupBy: "date",
-    range: timeRange, // <-- dynamically tied to selector
+    limit: timeRange // <-- dynamically tied to selector
   })
 
   // Responsive default range
   React.useEffect(() => {
-    if (isMobile) setTimeRange("7d")
+    if (isMobile) setTimeRange(7)
   }, [isMobile])
 
   if (isLoading) return <div>Loading...</div>
   if (!data || isError)
     return <div>Error: {error?.message || "Failed to load data"}</div>
 
-  const daysToShow = timeRange === "7d" ? 7 : timeRange === "30d" ? 30 : 90
+  //const daysToShow = timeRange === 30 ? 7 : timeRange === 30 ? 30 : 90
 
 // Find reference end date (latest date from the API)
 const latestDate = new Date(
   Math.max(...data.map((d) => new Date(d._id.date).getTime()))
 )
 const startDate = new Date(latestDate)
-startDate.setDate(startDate.getDate() - daysToShow)
+startDate.setDate(startDate.getDate() - timeRange)
+
 
 // Filter by that range
 const filtered = data.filter((el) => {
@@ -103,9 +105,9 @@ const energyData = filtered.map((el) => ({
             variant="outline"
             className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
           >
-            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
-            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
+            <ToggleGroupItem value= "7">Last 7 days</ToggleGroupItem>
+            <ToggleGroupItem value= "30">Last 30 days</ToggleGroupItem>
+            <ToggleGroupItem value= "90">Last 3 months</ToggleGroupItem>
           </ToggleGroup>
 
           {/* Mobile Dropdown */}
@@ -117,9 +119,9 @@ const energyData = filtered.map((el) => ({
               <SelectValue placeholder="Last 7 days" />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
-              <SelectItem value="7d">Last 7 days</SelectItem>
-              <SelectItem value="30d">Last 30 days</SelectItem>
-              <SelectItem value="90d">Last 3 months</SelectItem>
+              <SelectItem value="7">Last 7 days</SelectItem>
+              <SelectItem value="30">Last 30 days</SelectItem>
+              <SelectItem value="90">Last 3 months</SelectItem>
             </SelectContent>
           </Select>
         </CardAction>
