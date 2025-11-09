@@ -9,6 +9,12 @@ export const globalErrorHandlingMiddleware = (err: Error, req: Request, res: Res
     if (err.name === "ValidationError") {
         return res.status(400).json({ message: err.message });
     }   
+    if (err.name === "BadRequestError") {
+        return res.status(400).json({ message: err.message });
+    }
+    if (err.name === "UnauthorizedError") {
+        return res.status(401).json({ message: err.message });
+    }
    
 
     

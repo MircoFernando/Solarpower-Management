@@ -29,8 +29,9 @@ import {
   ToggleGroupItem,
 } from "@/components/ui/toggle-group"
 import { format, toDate } from "date-fns"
-import { useGetenergyGenerationRecordQuery } from "../lib/redux/query.js"
+import { useGetEnergyGenerationRecordQuery, useGetSolarUnitsByClerkUserIdQuery } from "../lib/redux/query.js"
 import { time } from "console"
+import { useUser } from "@clerk/clerk-react"
 export const description = "Interactive area chart using live data"
 
 const chartConfig = {
@@ -44,12 +45,37 @@ export function ChartAreaInteractive() {
   const isMobile = useIsMobile()
   const [timeRange, setTimeRange] = React.useState(7)
 
-  // ✅ Refetch when timeRange changes
-  const { data, isLoading, isError, error } = useGetenergyGenerationRecordQuery({
-    id: "68ec8e314c52df21ff6fdab8",
-    groupBy: "date",
-    limit: timeRange // <-- dynamically tied to selector
-  })
+  const {user, isLoaded} = useUser();
+  console.log("Clerk User:",user?.id);
+
+  const {
+    data: SolarUnitData,
+    isLoading: solarUnitLoading,
+    isError: solarUnitError,
+    error: solarUnitFetchError,
+  } = useGetSolarUnitsByClerkUserIdQuery({skip: !isLoaded});
+
+  if (solarUnitLoading) console.log("Loading solar units...");
+  if (solarUnitError)
+    console.error("Error fetching solar unit:", solarUnitFetchError);
+
+  console.log(SolarUnitData);
+
+  //Api data fetching using RTK query
+  const { data, isLoading, isError, error } = useGetEnergyGenerationRecordQuery(
+    {
+      id: SolarUnitData?._id,
+      groupBy: "date",
+      limit: timeRange // <-- dynamically tied to selector
+    }
+  );
+
+  // // ✅ Refetch when timeRange changes
+  // const { data, isLoading, isError, error } = useGetEnergyGenerationRecordQuery({
+  //   id: "68ec8e314c52df21ff6fdab8",
+  //   groupBy: "date",
+  //   limit: timeRange // <-- dynamically tied to selector
+  // })
 
   // Responsive default range
   React.useEffect(() => {
@@ -89,9 +115,9 @@ const energyData = filtered.map((el) => ({
       <CardHeader>
         <CardTitle>Energy Production</CardTitle>
         <CardDescription>
-          {timeRange === "7d"
+          {timeRange === "7"
             ? "Last 7 days"
-            : timeRange === "30d"
+            : timeRange === "30"
             ? "Last 30 days"
             : "Last 3 months"}
         </CardDescription>

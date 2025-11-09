@@ -1,24 +1,40 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-
 const BASE_URL = "http://localhost:3000/api";
 const WEATHER_API = import.meta.env.VITE_WEATHER_API; // ✅ Vite uses import.meta.env
 
-
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL, prepareHeaders: async (headers) => {
+    const clerk = window.Clerk;
+    if(clerk && clerk.session && clerk.session.getToken) {
+      const token = await clerk.session.getToken();
+      console.log("Clerk Token:", token);
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+    }
+    return headers;
+  },
+  }),
   endpoints: (builder) => ({
-    getenergyGenerationRecord: builder.query({
+    getEnergyGenerationRecord: builder.query({
       query: ({ id, groupBy, limit }) =>
         `energy-generation-records/solar-units/${id}?groupBy=${groupBy}${
           limit ? `&limit=${limit}` : ""
         }`,
     }),
+    getSolarUnitsByClerkUserId: builder.query({
+      query: () => `solar-units/user`,
+    }),
   }),
 });
 
-export const { useGetenergyGenerationRecordQuery } = api;
+// ✅ Export both hooks
+export const {
+  useGetEnergyGenerationRecordQuery,
+  useGetSolarUnitsByClerkUserIdQuery,
+} = api;
 
 // TODO : Continue the rest of the implementation
 

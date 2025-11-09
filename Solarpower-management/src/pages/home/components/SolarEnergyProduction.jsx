@@ -2,13 +2,12 @@ import EnergyProductionCard from "./EnergyCard";
 import { Button } from "@/components/ui/button";
 import SolarData from "./SolarEnergyData";
 import Tab from "../../../components/ui/tab";
-import getsolarUnitbyid  from "../../../lib/api/solar-unit.js";
-import { toDate, subDays, format} from "date-fns";
-
+import { toDate, subDays, format } from "date-fns";
+import { useUser} from "@clerk/clerk-react";
 
 import { useSelector } from "react-redux";
 import { getenergyGenerationRecord } from "../../../lib/api/energy-generation-record.js";
-import { useGetenergyGenerationRecordQuery } from "../../../lib/redux/query.js";
+import { useGetEnergyGenerationRecordQuery, useGetSolarUnitsByClerkUserIdQuery } from "../../../lib/redux/query.js";
 
 const SolarEnergyProduction = () => {
   /**
@@ -24,11 +23,12 @@ const SolarEnergyProduction = () => {
   //   { day: "Sun", date: "Aug 24", production: 26.8, hasAnomaly: false },
   // ];
 
-  const tabs = [{label: "All", value: "all" },
-                 { label: "Anomaly", value: "anomaly" }];
+  const tabs = [
+    { label: "All", value: "all" },
+    { label: "Anomaly", value: "anomaly" },
+  ];
 
-  const selectedTab =  useSelector((state) => state.ui.selectedHomeTab);
-
+  const selectedTab = useSelector((state) => state.ui.selectedHomeTab);
 
   // State for API data fetching
   // Example code for fetching data from API inside the component, but i am not using it now, i implemented it using RTK query
@@ -36,7 +36,7 @@ const SolarEnergyProduction = () => {
   // const [energyGenerationRecord, setEnergyGenerationRecord] = useState([]);
   // const [error, setError] = useState(null);
   // const [isError, setIsError] = useState(false);
-  
+
   // // Fetch data from API on component mount
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -66,24 +66,43 @@ const SolarEnergyProduction = () => {
   // console.log(energyGenerationRecord);
 
   // if (isLoading) {
-    
+
   //   console.log("Loading...");
   // }
 
-  //Api data fetching using RTK query 
-  const {data, isLoading, isError, error}= useGetenergyGenerationRecordQuery({id: "68ec8e314c52df21ff6fdab8", groupBy:"date"});
+  const {user} = useUser();
+  console.log("Clerk User:",user?.id);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (!data || isError) {
-    return <div>Error: {error.message}</div>;
-  }
+  const {
+    data: SolarUnitData,
+    isLoading: solarUnitLoading,
+    isError: solarUnitError,
+    error: solarUnitFetchError,
+  } = useGetSolarUnitsByClerkUserIdQuery({skip: !user});
 
-  console.log(data);
+  if (solarUnitLoading) console.log("Loading solar units...");
+  if (solarUnitError)
+    console.error("Error fetching solar unit:", solarUnitFetchError);
 
-  const newEnergyProductionData =  data.slice(0,7).map((el) => {
-    return{
+  
+
+  //Api data fetching using RTK query
+  const { data, isLoading, isError, error } = useGetEnergyGenerationRecordQuery(
+    {
+      id: SolarUnitData?._id,
+      groupBy: "date",
+    }
+  );
+
+  if (isLoading) return <p>Loading energy data...</p>;
+  if (isError) return <p>Error fetchin energy record: {error?.message}</p>;
+  if (!data || data.length === 0) return <p>No energy data found.</p>;
+  console.log("Energy Generation Data:", data);
+  console.log("id",SolarUnitData?._id);
+  
+// TODO: Fix the date formatting issue here and use limiter instead of slicing
+  const newEnergyProductionData = (data?.slice(0, 7) || []).map((el) => {
+    return {
       day: format(toDate(el._id.date), "EEE"),
       date: format(toDate(el._id.date), "MMM d"),
       production: Math.floor(el.totalEnergy),
@@ -91,11 +110,10 @@ const SolarEnergyProduction = () => {
     };
   });
   console.log(newEnergyProductionData);
-  
 
   // const formattedData = data.map((el) => {
   //   return {
-  //     ...el, 
+  //     ...el,
   //        timestamp: toDate(el.timestamp),
   //       };
   // });
@@ -103,90 +121,84 @@ const SolarEnergyProduction = () => {
   // console.log(formattedData);
   /**
    * Developed an Algorithm to Group Data - week-11*
-   *  
+   *
    */
-//   const latestRecord = formattedData[0];
-//   console.log("Latest Record:", latestRecord);
-//   const sevenDays = subDays(latestRecord.timestamp, 6);
-//   console.log("Seven Days Ago:", sevenDays);
-//   const recordsLast7Days = formattedData.filter((el) => el.timestamp >= sevenDays && el.timestamp <= latestRecord.timestamp);
-//   console.log("Records in Last 7 Days:", recordsLast7Days);
+  //   const latestRecord = formattedData[0];
+  //   console.log("Latest Record:", latestRecord);
+  //   const sevenDays = subDays(latestRecord.timestamp, 6);
+  //   console.log("Seven Days Ago:", sevenDays);
+  //   const recordsLast7Days = formattedData.filter((el) => el.timestamp >= sevenDays && el.timestamp <= latestRecord.timestamp);
+  //   console.log("Records in Last 7 Days:", recordsLast7Days);
 
-//   const mappedRecords = recordsLast7Days.map((el) => {
-//     return {
-//       ...el,
-//       date: format(el.timestamp, "yyyy-MM-dd"),
+  //   const mappedRecords = recordsLast7Days.map((el) => {
+  //     return {
+  //       ...el,
+  //       date: format(el.timestamp, "yyyy-MM-dd"),
 
-//     };
-//   });
+  //     };
+  //   });
 
-//   console.log("Mapped Records:", mappedRecords);
+  //   console.log("Mapped Records:", mappedRecords);
 
-//   const groupedData = {};
+  //   const groupedData = {};
 
-//   mappedRecords.forEach((el) => {
-//     if (groupedData[el.date]) {
-//       groupedData[el.date].push(el);
-//     } else {
-//       groupedData[el.date] = [];
-//       groupedData[el.date].push(el);
-//     }
-//   });
+  //   mappedRecords.forEach((el) => {
+  //     if (groupedData[el.date]) {
+  //       groupedData[el.date].push(el);
+  //     } else {
+  //       groupedData[el.date] = [];
+  //       groupedData[el.date].push(el);
+  //     }
+  //   });
 
-//   console.log("Grouped Data:", groupedData);
+  //   console.log("Grouped Data:", groupedData);
+
+  //   const GroupedDataArray = Object.entries(groupedData);
+  //   console.log("Grouped Data Array:", GroupedDataArray);
+
+  //   const totalProduction = (data) => {
+  //     let sum = 0;
+  //     data.forEach((el) => {
+  //       sum += Number(el.energyGenerated) || 0;
+  //     });
+  //     // remove decimal values, return whole number
+  //     return Math.floor(sum);
+  //   };
+
+  //   const newEnergyProductionData = GroupedDataArray.map(([date, data]) => {
+
+  //     console.log("Data for date", date, ":", data);
+
+  //     return {
+  //       day : format(new Date(date), "EEE"),
+  //       date: format(new Date(date), "MMM dd"),
+  //       production: totalProduction(data),
+  //       hasAnomaly: data.some((record) => record.hasAnomaly),
+  //     }
+  //   });
+
+  //   console.log("New Energy Production Data:", newEnergyProductionData);
+
+  const filteredEnergyProductionData =
+    selectedTab === "all"
+      ? newEnergyProductionData
+      : newEnergyProductionData.filter((el) => el.hasAnomaly);
+
   
-//   const GroupedDataArray = Object.entries(groupedData);
-//   console.log("Grouped Data Array:", GroupedDataArray);
-
-//   const totalProduction = (data) => {
-//     let sum = 0;
-//     data.forEach((el) => {
-//       sum += Number(el.energyGenerated) || 0;
-//     });
-//     // remove decimal values, return whole number
-//     return Math.floor(sum);
-//   };
-
-//   const newEnergyProductionData = GroupedDataArray.map(([date, data]) => {
-
-//     console.log("Data for date", date, ":", data);
-
-//     return {
-//       day : format(new Date(date), "EEE"),
-//       date: format(new Date(date), "MMM dd"),
-//       production: totalProduction(data),
-//       hasAnomaly: data.some((record) => record.hasAnomaly),
-//     }
-//   });
-
-//   console.log("New Energy Production Data:", newEnergyProductionData);
-
- const filteredEnergyProductionData = selectedTab === "all"
-    ? newEnergyProductionData
-    : newEnergyProductionData.filter((el) => el.hasAnomaly);
-
-
-
   return (
     <section className="px-12 font-[Inter] py-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2">Solar Energy Production</h2>
         <p className="text-gray-600">Daily energy output for the past 6 days</p>
-        <div className="mt-4 flex items-center gap-2" >
+        <div className="mt-4 flex items-center gap-2">
           {tabs.map((tab) => {
-            return (
-            <Tab key={tab.value} tab ={tab}
-                 
-                 />
-          );
+            return <Tab key={tab.value} tab={tab} />;
           })}
-               
         </div>
-        
       </div>
-      
-        <SolarData energyProductionData={newEnergyProductionData} />
-      
+
+      <SolarData energyProductionData={newEnergyProductionData} />
+
       <div className="mt-4 flex gap-2">
         <Button>Click me</Button>
         {/* <Button onClick={handleGetdataSolarUnit}>Get Unit</Button>

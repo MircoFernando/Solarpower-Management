@@ -7,11 +7,12 @@ import { loggerMiddleware } from './api/middleware/logger-middleware';
 import { globalErrorHandlingMiddleware } from './api/middleware/global-error-handling-middleware';
 import webHooksRouter from './api/web-hooks/webhooks';
 import cors from 'cors';
+import { clerkMiddleware } from '@clerk/express';
 
 dotenv.config(); 
 const server = express();
 server.use("/api/webhooks", webHooksRouter);
-
+server.use(clerkMiddleware())
 server.use(express.json()); // Convert incoming JSON requests to JS objects
 server.use(cors({origin: "http://localhost:5173"})); // Enable CORS for all routes
 server.use(loggerMiddleware); // Use the logger middleware
