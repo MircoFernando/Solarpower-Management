@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { getenergyGenerationRecord } from "../../../lib/api/energy-generation-record.js";
 import { useGetEnergyGenerationRecordQuery, useGetSolarUnitsByClerkUserIdQuery } from "../../../lib/redux/query.js";
 
+
 const SolarEnergyProduction = () => {
   /**
    * Mock data for solar energy production over the past 7 days

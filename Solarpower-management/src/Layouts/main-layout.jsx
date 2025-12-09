@@ -1,5 +1,5 @@
 import { Outlet } from "react-router"
-import Navigation  from "../../src/components/ui/Layout/nav"
+import Navigation  from "../pages/home/components/navBar/NavBar"
 
 export function MainLayout() {
     return (

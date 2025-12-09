@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+// import { get } from "http";
 
 const BASE_URL = "http://localhost:3000/api";
 const WEATHER_API = import.meta.env.VITE_WEATHER_API; // ✅ Vite uses import.meta.env
@@ -27,6 +28,12 @@ export const api = createApi({
     getSolarUnitsByClerkUserId: builder.query({
       query: () => `solar-units/user`,
     }),
+    getAllSolarUnits: builder.query({
+      query: () => `solar-units`,
+    }),
+    getAllUsers: builder.query({
+      query: () => `users`,
+    }),
   }),
 });
 
@@ -34,6 +41,8 @@ export const api = createApi({
 export const {
   useGetEnergyGenerationRecordQuery,
   useGetSolarUnitsByClerkUserIdQuery,
+  useGetAllSolarUnitsQuery,
+  useGetAllUsersQuery,
 } = api;
 
 // TODO : Continue the rest of the implementation
