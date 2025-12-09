@@ -1,4 +1,5 @@
 import { Outlet } from "react-router";
+import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
 import { AppSidebar } from "../components/AppSide"
 import { ChartAreaInteractive } from "../components/chart-area-interactive"
 import { DataTable } from "../components/data-table"
@@ -12,12 +13,36 @@ import {
 } from "@/components/ui/sidebar"
 import { useUser } from "@clerk/clerk-react";
 
+const items = [
+  {
+    title: "Home",
+    url: "#",
+    icon: Home,
+  },
+  {
+    title: "Inbox",
+    url: "#",
+    icon: Inbox,
+  },
+  {
+    title: "Search",
+    url: "#",
+    icon: Search,
+  },
+  {
+    title: "Settings",
+    url: "#",
+    icon: Settings,
+  },
+]
+
+
 export function DashboardLayout() {
 
     return (
          
     <SidebarProvider>
-      <AppSidebar variant="inset" />
+      <AppSidebar items={items} variant="inset" />
       <main className="p-4 w-full bg-slate-200">
       <SidebarInset>
         <SiteHeader />

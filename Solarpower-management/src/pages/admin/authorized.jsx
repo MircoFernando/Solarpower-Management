@@ -6,8 +6,7 @@ export default function AuthorizedLayout() {
     const { user } = useUser();
 
     if (!user || user?.publicMetadata?.role !== "admin") {
-        return <div>Access Denied: You do not have permission to view this page.</div>;
-        <Navigate to="/"/>;
+        return <Navigate to="/" replace />;
     }
 
 

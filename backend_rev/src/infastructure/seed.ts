@@ -60,16 +60,16 @@ const seed = async () => {
     await User.deleteMany({});
 
     // Create a new user with the specified fields
-    const user = await User.create({
-        name: "Jane Smith",
-        email: "jane.smith@example.com",
-        phone: "9876543210"
-        // createdAt will be set automatically
-    });
+    // const user = await User.create({
+    //     name: "Jane Smith",
+    //     email: "jane.smith@example.com",
+    //     phone: "9876543210"
+    //     // createdAt will be set automatically
+    // });
 
     // Create a new solar unit linked to the user
     const solarUnit = await SolarUnit.create({
-        userID: user._id,
+        // userID: user._id,
         HouseID: 1,
         capacity: 1200,
         serial_number: "SN20250928",

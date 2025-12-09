@@ -1,9 +1,13 @@
+
+import { get } from "http";
 import { NotFoundError, ValidationError } from "../domain/dtos/errors/errors";
 import { CreateSolarUnitDto, idDto, UpdateSolarUnitDto} from "../domain/dtos/solar-unit";
 // Or, if the file does not exist, create '../domain/dtos/solar-unit.ts' and export CreateSolarUnitDto from it.
 import { SolarUnit } from '../infastructure/entities/solarUnit';
+import { User } from '../infastructure/entities/user';
 import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
+import { getAuth } from "@clerk/express";
 
 export const getAllSolarUnits = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -44,6 +48,33 @@ export const createSolarUnit = async (req: Request, res: Response, next: NextFun
         next(error); // Pass the error to the global error handler
     }
 };
+
+export const getSolarUnitUserByClerkUserId = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        
+        const auth = getAuth(req);
+        console.log("Authentication info:", auth);
+        const clerkUserid = auth.userId;
+        console.log("Clerk UserID:", clerkUserid);
+        const user = await User.findOne({ clerkUserId: clerkUserid });
+        console.log("User:", user?._id);
+        if (!user) {
+            throw new NotFoundError("User not found");
+        }
+        
+        const solarUnit = await SolarUnit.find({ userID: user._id });
+        console.log("Solar Unit:", solarUnit);
+
+        if (!solarUnit) {
+            throw new NotFoundError("Solarunit not found");
+        }
+        res.status(200).json(solarUnit[0]);
+        
+    }
+        catch (error: any) {
+        next(error); // Pass the error to the global error handler
+    }
+}
 
 export const validateIdParam = (req: Request, res: Response, next: NextFunction) => {
   const result = idDto.safeParse(req.params);
