@@ -7,5 +7,4 @@ const userRouter = express.Router();
 
 userRouter.route("/").get(authenticationMiddleware, authorizaztionMiddleware, getAllUsers);
 
-
 export default userRouter;
