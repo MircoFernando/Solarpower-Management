@@ -1,17 +1,23 @@
-import { useUser } from "@clerk/clerk-react"
+import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { Button } from "./../../../../../components/ui/button.jsx";
 import UserRow from "./users-row.jsx";
 import { User } from "lucide-react";
 import { useGetAllUsersQuery } from "./../../../../../lib/redux/query.js";
-
+import { useGetAllNewUsersQuery } from "./../../../../../lib/redux/query.js";
 
 const AdminUsersPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [viewNewUsers, setViewNewUsers] = useState(false);
 
-
-
-  const { data , isLoading, isError, error } = useGetAllUsersQuery();
+  const { data, isLoading, isError, error } = useGetAllUsersQuery();
+  const {
+    data: newUser,
+    isLoading: newUsersloading,
+    isError: isErrorNewUsers,
+    error: ErrorNewUsers,
+  } = useGetAllNewUsersQuery();
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -24,25 +30,50 @@ const AdminUsersPage = () => {
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error fetching solar units: {error.toString()}
+          Error fetching Users: {error.toString()}
         </div>
       </div>
     );
   }
 
-  const userDetails = data?.map((el) => ({
-    id: el._id,
-    name: el.userName,
-    email: el.email,
-    clerkUserId: el.clerkUserId,
+  if (newUsersloading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
-  })) || [];
+  if (isErrorNewUsers) {
+    return (
+      <div className="p-6">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+          Error fetching Users: {error.toString()}
+        </div>
+      </div>
+    );
+  }
 
-  const {user} = useUser();
-  console.log("Clerk User: ",user);
+  const userDetails =
+    data?.map((el) => ({
+      id: el._id,
+      name: el.userName,
+      email: el.email,
+      clerkUserId: el.clerkUserId,
+    })) || [];
+
+  const newUsers =
+    newUser?.map((el) => ({
+      id: el._id,
+      name: el.userName,
+      email: el.email,
+      clerkUserId: el.clerkUserId,
+    })) || [];
+
+  const { user } = useUser();
+  console.log("Clerk User: ", user);
 
   // MOCK DATA - Replace with your actual data fetch
-  
 
   // const filteredUsers = userDetails?.filter(user => {
   //   const matchesSearch = user.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -54,7 +85,9 @@ const AdminUsersPage = () => {
   return (
     <div className="p-6 bg-background min-h-screen">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-primary-dark mb-2">Users Management</h1>
+        <h1 className="text-4xl font-bold text-primary-dark mb-2">
+          Users Management
+        </h1>
         <p className="text-gray-600">Manage all users and their permissions</p>
       </div>
 
@@ -71,8 +104,11 @@ const AdminUsersPage = () => {
                 className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
-            
-          
+
+            <div className="flex gap-5">
+              <Button onClick={() => setViewNewUsers(false)}>View All</Button>
+              <Button onClick={() => setViewNewUsers(true)}>New Users</Button>
+            </div>
           </div>
         </div>
 
@@ -94,27 +130,60 @@ const AdminUsersPage = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {userDetails.length > 0 ? (
-                userDetails.map((user) => (
-                  <UserRow key={user.id} user={user} />
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="px-6 py-12 text-center text-gray-500">
-                    No users found
-                  </td>
-                </tr>
-              )}
-            </tbody>
+            {viewNewUsers ? (
+              <tbody className=" divide-y divide-gray-200 bg-red-200">
+                {newUsers.length > 0 ? (
+                  newUsers.map((user) => <UserRow key={user.id} user={user} />)
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="px-6 py-12 text-center text-gray-500"
+                    >
+                      No new users found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            ) : (
+              <tbody className="bg-white divide-y divide-gray-200">
+                {userDetails.length > 0 ? (
+                  userDetails.map((user) => (
+                    <UserRow key={user.id} user={user} />
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="px-6 py-12 text-center text-gray-500"
+                    >
+                      No users found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            )}
           </table>
         </div>
 
         <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-600">
-              Showing <span className="font-semibold">{userDetails.length}</span> of{" "}
-              <span className="font-semibold">{userDetails.length}</span> users
+              Showing{" "}
+              {viewNewUsers ? (
+                <>
+                  <span className="font-semibold">{newUsers.length}</span> new
+                  users
+                  <br/>
+                  <span className="font-bold text-red-500">Assign Users to Solar Units</span>
+                </>
+              ) : (
+                <>
+                  <span className="font-semibold">{userDetails.length}</span>{" "}
+                  users
+                  
+                </>
+              )}
             </p>
             <div className="flex gap-2">
               <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700">

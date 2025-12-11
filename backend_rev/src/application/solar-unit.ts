@@ -75,6 +75,24 @@ export const getSolarUnitUserByClerkUserId = async (req: Request, res: Response,
         next(error); // Pass the error to the global error handler
     }
 }
+// GET USERS WHO ARE NOT ASSIGNED A SOLAR UNIT
+export const getNewSolarUnitUsers = async (req: Request, res: Response, next: NextFunction) => {
+ try {
+    // 1️⃣ Fetch all assigned user IDs from solar units
+    const solarUnits = await SolarUnit.find({}, "userID"); 
+    const assignedUserIds = solarUnits.map((unit) => unit.userID);
+
+    // 2️⃣ Find all users whose _id is NOT in assignedUserIds
+    const newUsers = await User.find({
+      _id: { $nin: assignedUserIds } // <-- keep ObjectId (no string conversion)
+    });
+
+    return res.status(200).json(newUsers);
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 export const validateIdParam = (req: Request, res: Response, next: NextFunction) => {
   const result = idDto.safeParse(req.params);
