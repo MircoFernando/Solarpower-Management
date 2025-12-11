@@ -34,6 +34,16 @@ export const api = createApi({
     getAllUsers: builder.query({
       query: () => `users`,
     }),
+    getAllNewUsers: builder.query({
+      query: () => `solar-units/newusers`,
+    }),
+    createSolarUnit: builder.mutation({
+      query: (newUnit) => ({
+        url: `solar-units`,
+        method: "POST",
+        body: newUnit,
+      }),
+    }),
   }),
 });
 
@@ -43,6 +53,8 @@ export const {
   useGetSolarUnitsByClerkUserIdQuery,
   useGetAllSolarUnitsQuery,
   useGetAllUsersQuery,
+  useGetAllNewUsersQuery,
+  useCreateSolarUnitMutation,
 } = api;
 
 // TODO : Continue the rest of the implementation

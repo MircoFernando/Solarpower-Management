@@ -1,9 +1,16 @@
 // AdminHomePage.jsx
+import { useState } from "react";
 import { useGetAllSolarUnitsQuery } from "../../../../../lib/redux/query";
 import AllSolarUnits from "./Solarunits";
+import {Button} from "./../../../../../components/ui/button"
+import { AddSolarUnit } from "./Form";
 
 const AdminHomePage = () => {
   const { data, isLoading, isError, error } = useGetAllSolarUnitsQuery();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+ 
+
 
   if (isLoading) {
     return (
@@ -34,8 +41,12 @@ const AdminHomePage = () => {
 
   console.log("Fetched Solar Units:", solarUnits);
 
+  function HandleAddButton() {
+    <AddSolarUnit/>
+  }
+
   return (
-    <div className="p-6 bg-background min-h-screen">
+    <div className="flex flex-col justify-start p-6 bg-background min-h-screen">
       <h1 className="text-3xl font-bold text-primary-dark mb-2">Admin Home</h1>
       <p className="text-gray-600 mb-8">Welcome to the admin dashboard.</p>
       
@@ -45,6 +56,20 @@ const AdminHomePage = () => {
           {solarUnits.length} Units
         </span>
       </div>
+      
+      <div className="flex md:flex-row flex-col gap-3 mb-3">
+      <Button onClick={() => setIsModalOpen(true)}>Add New Solar Unit</Button>
+      
+      </div>
+
+      {/* Form Modal */}
+      {isModalOpen && (
+        <div className="max-w-2xl p-6 bg-white rounded-xl shadow-md border border-gray-200 mb-5">
+          <Button onClick={() => setIsModalOpen(false)}>Close</Button>
+        <AddSolarUnit closeModal={() => setIsModalOpen(false)} />
+          
+        </div>
+      )}
 
       <AllSolarUnits solarUnits={solarUnits} />
     </div>
