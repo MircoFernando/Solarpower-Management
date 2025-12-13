@@ -9,7 +9,7 @@ import RootLayout from "./Layouts/root-layout";
 import { store } from "@/lib/redux/store.js";
 import { Provider } from "react-redux";
 import { MainLayout } from "./Layouts/main-layout";
-import { DashboardLayout } from "./Layouts/dashboard-layout";
+import DashboardLayout from "./Layouts/dashboard-layout";
 import SignInPage from "./pages/auth/sign-in";
 import SignUpPage from "./pages/auth/sign-up";
 import { ProtectedLayout } from "./Layouts/Protectedlayout.jsx";

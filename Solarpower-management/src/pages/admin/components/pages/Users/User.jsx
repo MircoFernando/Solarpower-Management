@@ -6,12 +6,15 @@ import UserRow from "./users-row.jsx";
 import { User } from "lucide-react";
 import { useGetAllUsersQuery } from "./../../../../../lib/redux/query.js";
 import { useGetAllNewUsersQuery } from "./../../../../../lib/redux/query.js";
+import { useGetAllSolarUnitsQuery } from "../../../../../lib/redux/query";
 
 const AdminUsersPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewNewUsers, setViewNewUsers] = useState(false);
 
   const { data, isLoading, isError, error } = useGetAllUsersQuery();
+  const { data: SolarUnits, isLoading: isLoadingSolarUnits , isError: isErrorSolarUnits , error:errorSolarUnits } = useGetAllSolarUnitsQuery();
+
   const {
     data: newUser,
     isLoading: newUsersloading,
@@ -54,13 +57,19 @@ const AdminUsersPage = () => {
     );
   }
 
-  const userDetails =
-    data?.map((el) => ({
-      id: el._id,
-      name: el.userName,
-      email: el.email,
-      clerkUserId: el.clerkUserId,
-    })) || [];
+  const userDetails = data.map((user) => {
+  const matchedUnit = SolarUnits.find(
+    (unit) => unit.userID === user._id
+  );
+
+  return {
+    id: user._id,
+    name: user.userName,
+    email: user.email,
+    serialNumber: matchedUnit ? matchedUnit.serial_number : "Not Assigned",
+  };
+});
+
 
   const newUsers =
     newUser?.map((el) => ({
@@ -124,6 +133,9 @@ const AdminUsersPage = () => {
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Joined Date
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Serial Number
                 </th>
                 <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Actions

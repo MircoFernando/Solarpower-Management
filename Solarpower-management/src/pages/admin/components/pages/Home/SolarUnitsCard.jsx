@@ -60,7 +60,7 @@ const SolarUnitCard = ({ SerialNumber, capacity, InstalledDate, status, UserID }
           onClick={() => setIsModalOpen(false)}
         >
           <div 
-            className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
+            className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full h-auto overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="bg-gradient-primary p-6 text-white relative">
@@ -173,7 +173,7 @@ const SolarUnitCard = ({ SerialNumber, capacity, InstalledDate, status, UserID }
           onClick={() => setIsEditing(false)}
         >
           <div 
-            className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
+            className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full h-auto overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="bg-gradient-primary p-6 text-white relative">
