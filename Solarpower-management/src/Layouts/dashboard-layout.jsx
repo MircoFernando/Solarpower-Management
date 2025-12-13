@@ -8,7 +8,7 @@ import { SectionCards } from "../components/section-cards"
 import { SiteHeader } from "../components/site-header"
 import { BrowserRouter, Routes, Route } from 'react-router'
 import SolarEnergyProduction from "../pages/home/components/SolarEnergyProduction"
-import { useGetAllNewUsersQuery } from "../lib/redux/query";
+
 
 import {
   SidebarInset,

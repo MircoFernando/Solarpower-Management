@@ -17,6 +17,7 @@ import AuthorizedLayout from "./pages/admin/authorized.jsx";
 import AdminPage from "./pages/admin/admin.jsx";
 import AdminHomePage from "./pages/admin/components/pages/Home/Home.jsx";
 import AdminUsersPage from "./pages/admin/components/pages/Users/User.jsx//";
+import { RegistrationPage } from "./pages/auth/registration/registration-page.jsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -33,10 +34,13 @@ createRoot(document.getElementById("root")).render(
             <Route element={<RootLayout />}>
               <Route path="/sign-in" element={<SignInPage />} />
               <Route path="/sign-up" element={<SignUpPage />} />
+              
               <Route element={<MainLayout />}>
+                <Route path="/registration" element={<RegistrationPage />} />
                 <Route path="/" element={<HomePage />} />
               </Route>
               <Route element={<ProtectedLayout />}>
+                
                 <Route element={<DashboardLayout />}>
                   <Route path="/dashboard" element={<DashBoardPage />} />
                 </Route>
