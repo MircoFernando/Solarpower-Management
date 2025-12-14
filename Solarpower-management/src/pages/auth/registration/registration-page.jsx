@@ -1,8 +1,9 @@
-import Video from "./../../../assets/videos/registration-pg.mp4"
+import Video from "./../../../assets/videos/registration-pg.mp4";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import VignettePurchaseFormDemo from "./reg-form";
 
+//TODO : Add the form validation and make a Registered user schema 
 
-//TODO : Add the form and make a new schema and use that schema to store form details from that fix the user section in  admin
 export const RegistrationPage = () => {
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
@@ -14,86 +15,112 @@ export const RegistrationPage = () => {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source
-            src={Video}
-            type="video/mp4"
-          />
+          <source src={Video} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <div className="absolute inset-0 bg-black/50"></div>
+        {/* <div className="absolute inset-0 bg-black/50"></div> */}
       </div>
+    <div className="relative flex flex-col md:flex-row items-center justify-center max-w-8xl">
+      <div className="w-full max-w-screen-xl h-[80vh] flex flex-col justify-center items-center rounded-2xl"
+      style={{
+                background:
+                  'linear-gradient(135deg, rgba(0, 84, 97, 0.75) 0%, rgba(1, 135, 144, 0.75) 50%, rgba(0, 183, 181, 0.75) 100%)'
+              }}>
+  <h1 className="text-3xl font-bold mt-5 text-white text-shadow-2xs">
+    Apply for a Solar Unit
+  </h1>
+  <p className="text-white font-semibold text-center mt-5">Please fill out the following information to request for a Solar Unit<br />We will get back to you shortly after reviewing your request after, installation your dashboard will be ready!</p>
+  <VignettePurchaseFormDemo />
+</div>
 
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-12">
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center">
         {/* Your content */}
- 
-    {/* Contact Consultation Section */}
-        <div className="w-full max-w-5xl">
-          <div 
-            className="rounded-2xl shadow-2xl p-8 md:p-12 border border-white/20"
-            style={{
-              background: 'linear-gradient(135deg, #005461 0%, #018790 50%, #00B7B5 100%)'
-            }}
-          >
-            <div className="text-center mb-10">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-                Need Help? Book a Consultation
-              </h2>
-              <p className="text-white/90 text-lg">
-                Our experts are here to assist you with your solar unit registration
-              </p>
-            </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {/* Phone */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 border border-white/20">
-                <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Phone className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-white font-semibold text-lg mb-2">Phone</h3>
-                <p className="text-white/90 text-sm mb-1">+1 (555) 123-4567</p>
-                <p className="text-white/90 text-sm">+1 (555) 987-6543</p>
+         <div className=" flex items-center justify-center h-screen w-full px-4">
+
+            <div
+              className="w-full max-w-[900px] h-[80vh] rounded-2xl backdrop-blur-md 
+             border border-white/20 shadow-2xl overflow-hidden"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(0, 84, 97, 0.5) 0%, rgba(1, 135, 144, 0.5) 50%, rgba(0, 183, 181, 0.5) 100%)'
+              }}
+            >
+            <div className="flex flex-col h-full p-20">
+              <div className="text-center lg:text-left mb-8">
+                <h2 className="text-2xl lg:text-3xl font-bold text-white mb-3 drop-shadow-lg">
+                  Need Help?
+                </h2>
+                <p className="text-white/95 text-base drop-shadow-md">
+                  Our experts are here to assist you
+                </p>
               </div>
 
-              {/* Email */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 border border-white/20">
-                <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Mail className="w-8 h-8 text-white" />
+              <div className="space-y-4">
+                {/* Phone */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300 border border-white/20">
+                  <div className="flex items-center gap-4">
+                    <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold text-sm mb-1">Phone</h3>
+                      <p className="text-white/90 text-xs">+1 (555) 123-4567</p>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-white font-semibold text-lg mb-2">Email</h3>
-                <p className="text-white/90 text-sm mb-1">support@solar.com</p>
-                <p className="text-white/90 text-sm">info@solar.com</p>
+
+                {/* Email */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300 border border-white/20">
+                  <div className="flex items-center gap-4">
+                    <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Mail className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold text-sm mb-1">Email</h3>
+                      <p className="text-white/90 text-xs">support@solar.com</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Location */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300 border border-white/20">
+                  <div className="flex items-center gap-4">
+                    <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold text-sm mb-1">Location</h3>
+                      <p className="text-white/90 text-xs">123 Solar Street</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Hours */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300 border border-white/20">
+                  <div className="flex items-center gap-4">
+                    <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Clock className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold text-sm mb-1">Hours</h3>
+                      <p className="text-white/90 text-xs">Mon - Fri: 9AM - 6PM</p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Location */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 border border-white/20">
-                <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <MapPin className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-white font-semibold text-lg mb-2">Location</h3>
-                <p className="text-white/90 text-sm mb-1">123 Solar Street</p>
-                <p className="text-white/90 text-sm">Green City, ST 12345</p>
+              {/* CTA Button */}
+              <div className="mt-8">
+                <button className="w-full bg-white/90 hover:bg-white text-primary-dark py-3 rounded-xl font-semibold text-base shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+                  Schedule a Consultation
+                </button>
               </div>
-
-              {/* Hours */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 border border-white/20">
-                <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Clock className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-white font-semibold text-lg mb-2">Hours</h3>
-                <p className="text-white/90 text-sm mb-1">Mon - Fri: 9AM - 6PM</p>
-                <p className="text-white/90 text-sm">Sat: 10AM - 4PM</p>
               </div>
-            </div>
-
-            {/* CTA Button */}
-            <div className="text-center mt-10">
-              <button className="bg-white hover:bg-gray-100 text-primary-dark px-8 py-4 rounded-xl font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105">
-                Schedule a Consultation
-              </button>
-            </div>
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
