@@ -12,6 +12,8 @@ const AdminUsersPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewNewUsers, setViewNewUsers] = useState(false);
 
+ //TODO : Use the registered user query to get the registered users and see new users filter users using status field, and when assigning users use rgusers when assigned change the status to accepted
+
   const { data, isLoading, isError, error } = useGetAllUsersQuery();
   const { data: SolarUnits, isLoading: isLoadingSolarUnits , isError: isErrorSolarUnits , error:errorSolarUnits } = useGetAllSolarUnitsQuery();
 

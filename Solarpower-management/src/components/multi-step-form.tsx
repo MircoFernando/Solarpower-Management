@@ -2,29 +2,47 @@ import * as React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { X } from "lucide-react";
 
-const multiStepFormVariants = cva(
-  "flex flex-col",
-  {
-    variants: {
-      size: {
-        default: "md:w-[700px]",
-        sm: "md:w-[550px]",
-        lg: "md:w-[850px]",
-      },
-    },
-    defaultVariants: {
-      size: "default",
-    },
-  }
-);
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
-interface MultiStepFormProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof multiStepFormVariants> {
+const multiStepFormVariants = cva("flex flex-col", {
+  variants: {
+    size: {
+      default: "md:w-[700px]",
+      sm: "md:w-[550px]",
+      lg: "md:w-[850px]",
+    },
+  },
+  defaultVariants: {
+    size: "default",
+  },
+});
+
+interface MultiStepFormProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof multiStepFormVariants> {
   currentStep: number;
   totalSteps: number;
   title: string;
@@ -38,22 +56,26 @@ interface MultiStepFormProps extends React.HTMLAttributes<HTMLDivElement>, Varia
 }
 
 const MultiStepForm = React.forwardRef<HTMLDivElement, MultiStepFormProps>(
-  ({
-    className,
-    size,
-    currentStep,
-    totalSteps,
-    title,
-    description,
-    onBack,
-    onNext,
-    onClose,
-    backButtonText = "Back",
-    nextButtonText = "Next Step",
-    footerContent,
-    children,
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      size,
+      currentStep,
+      totalSteps,
+      title,
+      description,
+      onBack,
+      onNext,
+      isSubmitted,
+      onClose,
+      backButtonText = "Back",
+      nextButtonText = "Next Step",
+      footerContent,
+      children,
+      ...props
+    },
+    ref
+  ) => {
     const progress = Math.round((currentStep / totalSteps) * 100);
 
     const variants = {
@@ -62,13 +84,26 @@ const MultiStepForm = React.forwardRef<HTMLDivElement, MultiStepFormProps>(
       exit: { opacity: 0, x: -100 },
     };
 
+    if (currentStep == 4) {
+      nextButtonText = "Submit";
+    }
+
     return (
-      <Card ref={ref} className={cn(multiStepFormVariants({ size }), className)} {...props}>
+      <Card
+        ref={ref}
+        className={cn(multiStepFormVariants({ size }), className)}
+        {...props}
+      >
         <CardHeader>
           <div className="flex items-start justify-between">
             <CardTitle>{title}</CardTitle>
             {onClose && (
-              <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onClose}
+                aria-label="Close"
+              >
                 <X className="h-4 w-4" />
               </Button>
             )}
@@ -105,9 +140,26 @@ const MultiStepForm = React.forwardRef<HTMLDivElement, MultiStepFormProps>(
                 {backButtonText}
               </Button>
             )}
-            <Button onClick={onNext}>
-              {nextButtonText}
-            </Button>
+            <Button onClick={onNext}>{nextButtonText}</Button>
+              <AlertDialog open={open} onOpenChange={isSubmitted}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Your request has been submitted successfully!
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      We will get back to you after reviewing your request,
+                      after solar unit installation your dashboard will be
+                      ready. Thank you!
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogAction>
+                      <Link to="/">Go to Home</Link>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
           </div>
         </CardFooter>
       </Card>

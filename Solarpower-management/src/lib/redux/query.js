@@ -6,17 +6,19 @@ const WEATHER_API = import.meta.env.VITE_WEATHER_API; // ✅ Vite uses import.me
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL, prepareHeaders: async (headers) => {
-    const clerk = window.Clerk;
-    if(clerk && clerk.session && clerk.session.getToken) {
-      const token = await clerk.session.getToken();
-      console.log("Clerk Token:", token);
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
+  baseQuery: fetchBaseQuery({
+    baseUrl: BASE_URL,
+    prepareHeaders: async (headers) => {
+      const clerk = window.Clerk;
+      if (clerk && clerk.session && clerk.session.getToken) {
+        const token = await clerk.session.getToken();
+        console.log("Clerk Token:", token);
+        if (token) {
+          headers.set("Authorization", `Bearer ${token}`);
+        }
       }
-    }
-    return headers;
-  },
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     getEnergyGenerationRecord: builder.query({
@@ -37,11 +39,21 @@ export const api = createApi({
     getAllNewUsers: builder.query({
       query: () => `solar-units/newusers`,
     }),
+    getAllRegisteredUsers: builder.query({
+      query: () => `users/registered-users`,
+    }),
     createSolarUnit: builder.mutation({
       query: (newUnit) => ({
         url: `solar-units`,
         method: "POST",
         body: newUnit,
+      }),
+    }),
+    createRegisteredUser: builder.mutation({
+      query: (user) => ({
+        url: `users/registered-users`,
+        method: "POST",
+        body: user,
       }),
     }),
   }),
@@ -55,6 +67,7 @@ export const {
   useGetAllUsersQuery,
   useGetAllNewUsersQuery,
   useCreateSolarUnitMutation,
+  useCreateRegisteredUserMutation,
 } = api;
 
 // TODO : Continue the rest of the implementation

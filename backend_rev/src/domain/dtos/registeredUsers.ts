@@ -1,0 +1,78 @@
+import { z } from "zod";
+
+export const CreateRegisteredUserDto = z.object({
+  userName: z
+    .string()
+    .min(2, "Username must be at least 2 characters")
+    .trim(),
+
+  clerkUserId: z
+    .string()
+    .min(1, "Clerk User ID is required"),
+
+  firstName: z
+    .string()
+    .min(1, "First name is required")
+    .trim(),
+
+  lastName: z
+    .string()
+    .min(1, "Last name is required")
+    .trim(),
+
+  email: z
+    .string()
+    .email("Invalid email address")
+    .toLowerCase()
+    .trim(),
+
+  phoneNumber: z
+    .string()
+    .min(7, "Phone number is required"),
+
+  address: z
+    .string()
+    .min(5, "Address is required"),
+
+  city: z
+    .string()
+    .min(2, "City is required"),
+
+  postalCode: z
+    .string()
+    .optional(),
+
+  propertyType: z.enum(["Residential", "Commercial", "Industrial"] as const, {
+    message: "Property type is required",
+  }),
+
+  roofType: z
+    .enum(["Flat", "Sloped", "Metal", "Tile", "Concrete"])
+    .optional(),
+
+  avgConsumption: z
+    .number()
+    .positive("Average consumption must be positive")
+    .optional(),
+
+  systemType: z
+    .enum(["Grid-tied", "Off-grid", "Hybrid"])
+    .optional(),
+
+  timeline: z
+    .enum(["ASAP", "1-3 months", "3-6 months"])
+    .optional(),
+
+  budget: z
+    .number()
+    .positive("Budget must be a positive number")
+    .optional(),
+
+  financing: z
+    .enum(["Yes", "No"])
+    .optional(),
+
+  status: z
+    .enum(["pending", "approved", "rejected"])
+    .optional(), 
+});

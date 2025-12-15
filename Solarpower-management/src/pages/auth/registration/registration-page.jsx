@@ -2,7 +2,7 @@ import Video from "./../../../assets/videos/registration-pg.mp4";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import VignettePurchaseFormDemo from "./reg-form";
 
-//TODO : Add the form validation and make a Registered user schema 
+//TODO : Add the form validation and make a Registered user schema make the page responsive
 
 export const RegistrationPage = () => {
   return (
@@ -21,15 +21,15 @@ export const RegistrationPage = () => {
         {/* <div className="absolute inset-0 bg-black/50"></div> */}
       </div>
     <div className="relative flex flex-col md:flex-row items-center justify-center max-w-8xl">
-      <div className="w-full max-w-screen-xl h-[80vh] flex flex-col justify-center items-center rounded-2xl"
+      <div className="w-full max-w-screen-xl h-[80vh] flex flex-col justify-center items-center rounded-2xl backdrop-blur-md border-white/20 shadow-2xl overflow-hidden"
       style={{
                 background:
-                  'linear-gradient(135deg, rgba(0, 84, 97, 0.75) 0%, rgba(1, 135, 144, 0.75) 50%, rgba(0, 183, 181, 0.75) 100%)'
+                  'linear-gradient(135deg, rgba(0, 84, 97, 0.5) 0%, rgba(1, 135, 144, 0.5) 50%, rgba(0, 183, 181, 0.5) 100%)'
               }}>
-  <h1 className="text-3xl font-bold mt-5 text-white text-shadow-2xs">
+  <h1 className="text-3xl font-bold mt-10 text-white text-shadow-2xs drop-shadow-lg ">
     Apply for a Solar Unit
   </h1>
-  <p className="text-white font-semibold text-center mt-5">Please fill out the following information to request for a Solar Unit<br />We will get back to you shortly after reviewing your request after, installation your dashboard will be ready!</p>
+  <p className="text-white/95 text-base drop-shadow-md text-center mt-5">Please fill out the following information to request for a Solar Unit<br />We will get back to you shortly after reviewing your request after, installation your dashboard will be ready!</p>
   <VignettePurchaseFormDemo />
 </div>
 
