@@ -56,6 +56,13 @@ export const api = createApi({
         body: user,
       }),
     }),
+    updateRegisteredUser: builder.mutation({
+      query: ({ id, user }) => ({
+        url: `users/registered-users/${id}`,
+        method: "PUT",
+        body: user,
+      }),
+    }),
   }),
 });
 
@@ -66,8 +73,10 @@ export const {
   useGetAllSolarUnitsQuery,
   useGetAllUsersQuery,
   useGetAllNewUsersQuery,
+  useGetAllRegisteredUsersQuery,
   useCreateSolarUnitMutation,
   useCreateRegisteredUserMutation,
+  useUpdateRegisteredUserMutation,
 } = api;
 
 // TODO : Continue the rest of the implementation

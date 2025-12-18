@@ -72,3 +72,41 @@ export const CreateRegisteredUser = async (req: Request, res: Response, next: Ne
     next(error);
   }
 };
+
+export const updateRegisteredUserById = async (req: Request, res: Response, next: NextFunction) => {
+  try{
+    const {id} = req.params;
+    const data: z.infer<typeof CreateRegisteredUserDto> =
+      CreateRegisteredUserDto.parse(req.body);
+    const User = await RegisteredUser.findById(id);
+
+    if(!User) {
+      throw new NotFoundError("User not found");
+    }
+
+    const updatedUser = await RegisteredUser.findByIdAndUpdate(id, {
+      userName: data.userName,
+      clerkUserId: data.clerkUserId,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phoneNumber: data.phoneNumber,
+      address: data.address,
+      city: data.city,
+      postalCode: data.postalCode,
+      propertyType: data.propertyType,
+      roofType: data.roofType,
+      avgConsumption: data.avgConsumption,
+      systemType: data.systemType,
+      timeline: data.timeline,
+      budget: data.budget,
+      financing: data.financing,
+      status: data.status
+    }, {new: true});
+
+    res.status(200).json(updatedUser);
+  }
+  catch(error: any) {
+    next(error);
+  }
+}

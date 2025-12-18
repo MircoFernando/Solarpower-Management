@@ -7,22 +7,23 @@ import { User } from "lucide-react";
 import { useGetAllUsersQuery } from "./../../../../../lib/redux/query.js";
 import { useGetAllNewUsersQuery } from "./../../../../../lib/redux/query.js";
 import { useGetAllSolarUnitsQuery } from "../../../../../lib/redux/query";
-
+import { useGetAllRegisteredUsersQuery } from "./../../../../../lib/redux/query.js";
 const AdminUsersPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewNewUsers, setViewNewUsers] = useState(false);
 
  //TODO : Use the registered user query to get the registered users and see new users filter users using status field, and when assigning users use rgusers when assigned change the status to accepted
 
-  const { data, isLoading, isError, error } = useGetAllUsersQuery();
-  const { data: SolarUnits, isLoading: isLoadingSolarUnits , isError: isErrorSolarUnits , error:errorSolarUnits } = useGetAllSolarUnitsQuery();
+  const { data, isLoading, isError, error } = useGetAllRegisteredUsersQuery();
+  // const { data: SolarUnits, isLoading: isLoadingSolarUnits , isError: isErrorSolarUnits , error:errorSolarUnits } = useGetAllSolarUnitsQuery();
 
-  const {
-    data: newUser,
-    isLoading: newUsersloading,
-    isError: isErrorNewUsers,
-    error: ErrorNewUsers,
-  } = useGetAllNewUsersQuery();
+  // const {
+  //   data: newUser,
+  //   isLoading: newUsersloading,
+  //   isError: isErrorNewUsers,
+  //   error: ErrorNewUsers,
+  // } = useGetAllNewUsersQuery();
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -41,48 +42,68 @@ const AdminUsersPage = () => {
     );
   }
 
-  if (newUsersloading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
+  // if (newUsersloading) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-[400px]">
+  //       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+  //     </div>
+  //   );
+  // }
 
-  if (isErrorNewUsers) {
-    return (
-      <div className="p-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error fetching Users: {error.toString()}
-        </div>
-      </div>
-    );
-  }
+//   if (isErrorNewUsers) {
+//     return (
+//       <div className="p-6">
+//         <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+//           Error fetching Users: {error.toString()}
+//         </div>
+//       </div>
+//     );
+//   }
 
-  const userDetails = data.map((user) => {
-  const matchedUnit = SolarUnits.find(
-    (unit) => unit.userID === user._id
-  );
+//   const userDetails = data.map((user) => {
+//   const matchedUnit = SolarUnits.find(
+//     (unit) => unit.userID === user._id
+//   );
 
-  return {
-    id: user._id,
-    name: user.userName,
-    email: user.email,
-    serialNumber: matchedUnit ? matchedUnit.serial_number : "Not Assigned",
-  };
-});
+//   return {
+//     id: user._id,
+//     name: user.userName,
+//     email: user.email,
+//     serialNumber: matchedUnit ? matchedUnit.serial_number : "Not Assigned",
+//   };
+// });
 
 
-  const newUsers =
-    newUser?.map((el) => ({
+  const Users =
+    data?.map((el) => ({
       id: el._id,
-      name: el.userName,
-      email: el.email,
       clerkUserId: el.clerkUserId,
+      firstName: el.firstName,
+      lastName: el.lastName,
+      email: el.email,
+      phoneNumber: el.phoneNumber,
+      address: el.address,
+      city: el.city,
+      postalCode: el.postalCode,
+      propertyType: el.propertyType,
+      roofType: el.roofType,
+      avgConsumption: el.avgConsumption,
+      systemType: el.systemType,
+      timeline: el.timeline,
+      budget: el.budget,
+      financing: el.financing,
+      status: el.status,
+
     })) || [];
 
-  const { user } = useUser();
-  console.log("Clerk User: ", user);
+  const registeredUsers = (User) => {
+    
+  }
+
+
+
+//   const { user } = useUser();
+//   console.log("Clerk User: ", user);
 
   // MOCK DATA - Replace with your actual data fetch
 
@@ -144,7 +165,7 @@ const AdminUsersPage = () => {
                 </th>
               </tr>
             </thead>
-            {viewNewUsers ? (
+            { ? (
               <tbody className=" divide-y divide-gray-200 bg-red-200">
                 {newUsers.length > 0 ? (
                   newUsers.map((user) => <UserRow key={user.id} user={user} />)
