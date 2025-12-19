@@ -10,7 +10,7 @@ const AdminHomePage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
  
-
+  console.log("loading")
 
   if (isLoading) {
     return (
@@ -19,6 +19,8 @@ const AdminHomePage = () => {
       </div>
     );
   }
+
+  console.log("loading done")
 
   if (isError) {
     return (

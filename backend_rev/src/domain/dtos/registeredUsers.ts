@@ -75,4 +75,7 @@ export const CreateRegisteredUserDto = z.object({
   status: z
     .enum(["pending", "approved", "rejected"])
     .optional(), 
+  solarUnitSerialNo: z
+    .string()
+    .min(2, "Serial number is required"),
 });

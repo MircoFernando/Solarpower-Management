@@ -102,6 +102,10 @@ const RegisteredUserSchema = new mongoose.Schema(
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },
+    solarUnitSerialNo: {
+      type: String,
+      default: "not assigned"
+    }
   },
   {
     timestamps: true, 
