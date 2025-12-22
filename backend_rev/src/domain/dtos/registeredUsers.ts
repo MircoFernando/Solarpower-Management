@@ -38,6 +38,10 @@ export const CreateRegisteredUserDto = z.object({
     .string()
     .min(2, "City is required"),
 
+  country: z
+    .string()
+    .min(2, "Country is required"),
+
   postalCode: z
     .string()
     .optional(),
@@ -77,5 +81,55 @@ export const CreateRegisteredUserDto = z.object({
     .optional(), 
   solarUnitSerialNo: z
     .string()
-    .min(2, "Serial number is required"),
+    .min(2, "Serial number is required")
+    .optional(),
+});
+
+export const UpdateRegisteredUserDto = z.object({
+  userName: z.string().min(3).optional(),
+
+  clerkUserId: z.string().min(3).optional(),
+
+  firstName: z.string().min(2).optional(),
+
+  lastName: z.string().min(2).optional(),
+
+  email: z.string().email().optional(),
+
+  phoneNumber: z.string().min(10).optional(),
+
+  address: z.string().min(5).optional(),
+
+  city: z.string().min(2).optional(),
+
+  postalCode: z.string().optional(),
+
+  propertyType: z.enum(
+    ["Residential", "Commercial", "Industrial"]
+  ).optional(),
+
+  roofType: z.enum(
+    ["Flat", "Sloped", "Metal", "Tile", "Concrete"]
+  ).optional(),
+
+  avgConsumption: z.number().positive().optional(),
+
+  systemType: z.enum(
+    ["Grid-tied", "Off-grid", "Hybrid"]
+  ).optional(),
+
+  timeline: z.enum(
+    ["ASAP", "1-3 months", "3-6 months"]
+  ).optional(),
+
+  budget: z.number().positive().optional(),
+
+  financing: z.enum(["Yes", "No"]).optional(),
+
+  status: z.enum(
+    ["pending", "approved", "rejected"]
+  ).optional(),
+
+  solarUnitSerialNo: z.string().optional(),
+
 });

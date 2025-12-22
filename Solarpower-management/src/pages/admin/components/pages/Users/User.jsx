@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
-import { Search, User, Clock, CheckCircle, Edit, Eye, X, AlertTriangle } from "lucide-react";
+import {
+  Search,
+  User,
+  Clock,
+  CheckCircle,
+  Edit,
+  Eye,
+  X,
+  AlertTriangle,
+} from "lucide-react";
 import { Button } from "./../../../../../components/ui/button.jsx";
 import { useGetAllRegisteredUsersQuery } from "./../../../../../lib/redux/query.js";
 import { useUpdateRegisteredUserMutation } from "./../../../../../lib/redux/query.js";
@@ -40,71 +49,108 @@ const userSchema = z.object({
   systemType: z.string().min(1, "Select a system type"),
   timeline: z.string().min(1, "Select a timeline"),
   budget: z.coerce.number().min(5, "Enter valid budget"),
-  status: z.enum(["pending", "accepted"]), // Admin specific field
+  financing: z.string().optional(),
+  status: z.enum(["pending", "approved"]), 
 });
 
 const AdminUsersPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewSection, setViewSection] = useState("accepted");
+  const [viewSection, setViewSection] = useState("approved");
   const [selectedUser, setSelectedUser] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
   const { data, isLoading, isError, error } = useGetAllRegisteredUsersQuery();
+  const [updateUser, { isLoading: createUpdate }] = useUpdateRegisteredUserMutation();
 
   // --- Form Initialization ---
   const form = useForm({
-    resolver: zodResolver(userSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
-      address: "",
-      city: "",
-      postalCode: "",
-      propertyType: "",
-      roofType: "",
-      avgConsumption: 0,
-      systemType: "",
-      timeline: "",
-      budget: 0,
-      status: "pending",
-    },
-  });
+  resolver: zodResolver(userSchema),
+  defaultValues: {
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    propertyType: "",
+    roofType: "",
+    avgConsumption: 0,
+    systemType: "",
+    timeline: "",
+    budget: 0,
+    financing: "", 
+    status: "pending",
+  },
+});
 
   // --- Populate Form when User Selected ---
   useEffect(() => {
-    if (selectedUser) {
-      form.reset({
-        firstName: selectedUser.firstName || "",
-        lastName: selectedUser.lastName || "",
-        email: selectedUser.email || "",
-        phoneNumber: selectedUser.phoneNumber || "",
-        address: selectedUser.address || "",
-        city: selectedUser.city || "",
-        postalCode: selectedUser.postalCode || "",
-        propertyType: selectedUser.propertyType || "",
-        roofType: selectedUser.roofType || "",
-        avgConsumption: selectedUser.avgConsumption || 0,
-        systemType: selectedUser.systemType || "",
-        timeline: selectedUser.timeline || "",
-        budget: selectedUser.budget || 0,
-        status: selectedUser.status || "pending",
-      });
-    }
-  }, [selectedUser, form]);
+  if (selectedUser) {
+    form.reset({
+      firstName: selectedUser.firstName || "",
+      lastName: selectedUser.lastName || "",
+      email: selectedUser.email || "",
+      phoneNumber: selectedUser.phoneNumber || "",
+      address: selectedUser.address || "",
+      city: selectedUser.city || "",
+      postalCode: selectedUser.postalCode || "",
+      propertyType: selectedUser.propertyType || "",
+      roofType: selectedUser.roofType || "",
+      avgConsumption: selectedUser.avgConsumption || 0,
+      systemType: selectedUser.systemType || "",
+      timeline: selectedUser.timeline || "",
+      budget: selectedUser.budget || 0,
+      financing: selectedUser.financing || "", 
+      status: selectedUser.status || "pending",
+    });
+  }
+}, [selectedUser, form]);
 
   const onSubmit = async (values) => {
     console.log("Updated Values:", values);
     console.log("User ID:", selectedUser._id);
-    
-    // TODO: Call your update mutation here
-    // await updateUser({ id: selectedUser._id, ...values });
-    
-    setIsEditMode(false);
-    
-    
 
+    const payload = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      phoneNumber: values.phoneNumber,
+      address: values.address,
+      city: values.city,
+      postalCode: values.postalCode,
+      propertyType: values.propertyType,
+      roofType: values.roofType,
+      avgConsumption: values.avgConsumption,
+      systemType: values.systemType,
+      timeline: values.timeline,
+      budget: values.budget,
+      financing: values.financing || selectedUser.financing,
+      status: values.status,
+    };
+
+    console.log("Payload to send:", payload);
+
+    try {
+      const user = await updateUser({
+        id: selectedUser._id,
+        body: payload,
+      }).unwrap();
+
+      console.log("Updated user successfully:", user);
+      alert("✅ User updated successfully!");
+
+      // Close modal and refresh
+      setIsEditMode(false);
+      setSelectedUser(null);
+    } catch (err) {
+      console.error("Update user error:", err);
+      alert(
+        `❌ Error: ${
+          err?.data?.message || err.message || "Failed to update user"
+        }`
+      );
+    }
   };
 
   if (isLoading) {
@@ -126,9 +172,11 @@ const AdminUsersPage = () => {
   }
 
   // Filter Logic
-  const acceptedUsers = data?.filter((user) => user.status === "accepted") || [];
+  const acceptedUsers =
+    data?.filter((user) => user.status === "approved") || [];
   const pendingUsers = data?.filter((user) => user.status === "pending") || [];
-  const currentUsers = viewSection === "accepted" ? acceptedUsers : pendingUsers;
+  const currentUsers =
+    viewSection === "approved" ? acceptedUsers : pendingUsers;
 
   const filteredUsers = currentUsers.filter((user) => {
     const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
@@ -217,9 +265,9 @@ const AdminUsersPage = () => {
 
             <div className="flex gap-3">
               <Button
-                onClick={() => setViewSection("accepted")}
+                onClick={() => setViewSection("approved")}
                 className={
-                  viewSection === "accepted"
+                  viewSection === "approved"
                     ? "bg-primary"
                     : "bg-gray-200 text-gray-700"
                 }
@@ -254,6 +302,9 @@ const AdminUsersPage = () => {
                   User
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  User ID
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Email
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -264,6 +315,9 @@ const AdminUsersPage = () => {
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Status
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  SolarUnit SN
                 </th>
                 <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Actions
@@ -310,6 +364,9 @@ const AdminUsersPage = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-700">
+                       {user._id}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-700">
                       {user.email}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-700">
@@ -321,17 +378,28 @@ const AdminUsersPage = () => {
                     <td className="px-6 py-4">
                       <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                          user.status === "accepted"
+                          user.status === "approved"
                             ? "bg-green-100 text-green-700 border border-green-200"
                             : "bg-yellow-100 text-yellow-700 border border-yellow-200"
                         }`}
                       >
-                        {user.status === "accepted" ? (
+                        {user.status === "approved" ? (
                           <CheckCircle className="w-3 h-3 mr-1" />
                         ) : (
                           <Clock className="w-3 h-3 mr-1" />
                         )}
                         {user.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                          user.solarUnitSerialNo === "not assigned"
+                            ? "bg-yellow-100 text-yellow-700 border border-yellow-200"
+                            : "bg-green-100 text-green-700 border border-green-200"
+                        }`}
+                      >
+                        {user.solarUnitSerialNo}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -376,8 +444,9 @@ const AdminUsersPage = () => {
         >
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-600">
-              Showing <span className="font-semibold">{filteredUsers.length}</span>{" "}
-              of <span className="font-semibold">{currentUsers.length}</span>{" "}
+              Showing{" "}
+              <span className="font-semibold">{filteredUsers.length}</span> of{" "}
+              <span className="font-semibold">{currentUsers.length}</span>{" "}
               {viewSection === "pending" ? "pending" : "active"} users
             </p>
             {viewSection === "pending" && (
@@ -562,9 +631,15 @@ const AdminUsersPage = () => {
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="Residential">Residential</SelectItem>
-                                <SelectItem value="Commercial">Commercial</SelectItem>
-                                <SelectItem value="Industrial">Industrial</SelectItem>
+                                <SelectItem value="Residential">
+                                  Residential
+                                </SelectItem>
+                                <SelectItem value="Commercial">
+                                  Commercial
+                                </SelectItem>
+                                <SelectItem value="Industrial">
+                                  Industrial
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -578,7 +653,7 @@ const AdminUsersPage = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Roof Type</FormLabel>
-                             <Select
+                            <Select
                               onValueChange={field.onChange}
                               defaultValue={field.value}
                               disabled={!isEditMode}
@@ -593,7 +668,9 @@ const AdminUsersPage = () => {
                                 <SelectItem value="Sloped">Sloped</SelectItem>
                                 <SelectItem value="Metal">Metal</SelectItem>
                                 <SelectItem value="Tile">Tile</SelectItem>
-                                <SelectItem value="Concrete">Concrete</SelectItem>
+                                <SelectItem value="Concrete">
+                                  Concrete
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -607,7 +684,11 @@ const AdminUsersPage = () => {
                           <FormItem>
                             <FormLabel>Avg Consumption (kWh)</FormLabel>
                             <FormControl>
-                              <Input type="number" disabled={!isEditMode} {...field} />
+                              <Input
+                                type="number"
+                                disabled={!isEditMode}
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -630,8 +711,12 @@ const AdminUsersPage = () => {
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="Grid-tied">Grid-tied</SelectItem>
-                                <SelectItem value="Off-grid">Off-grid</SelectItem>
+                                <SelectItem value="Grid-tied">
+                                  Grid-tied
+                                </SelectItem>
+                                <SelectItem value="Off-grid">
+                                  Off-grid
+                                </SelectItem>
                                 <SelectItem value="Hybrid">Hybrid</SelectItem>
                               </SelectContent>
                             </Select>
@@ -657,8 +742,12 @@ const AdminUsersPage = () => {
                               </FormControl>
                               <SelectContent>
                                 <SelectItem value="ASAP">ASAP</SelectItem>
-                                <SelectItem value="1-3 months">1-3 months</SelectItem>
-                                <SelectItem value="3-6 months">3-6 months</SelectItem>
+                                <SelectItem value="1-3 months">
+                                  1-3 months
+                                </SelectItem>
+                                <SelectItem value="3-6 months">
+                                  3-6 months
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -672,7 +761,11 @@ const AdminUsersPage = () => {
                           <FormItem>
                             <FormLabel>Budget</FormLabel>
                             <FormControl>
-                              <Input type="number" disabled={!isEditMode} {...field} />
+                              <Input
+                                type="number"
+                                disabled={!isEditMode}
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -707,7 +800,32 @@ const AdminUsersPage = () => {
                             </FormControl>
                             <SelectContent>
                               <SelectItem value="pending">Pending</SelectItem>
-                              <SelectItem value="accepted">Accepted</SelectItem>
+                              <SelectItem value="approved">Accepted</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="financing"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Financing Option</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            disabled={!isEditMode}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select financing" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Yes">Yes</SelectItem>
+                              <SelectItem value="No">No</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -734,7 +852,9 @@ const AdminUsersPage = () => {
                   {isEditMode ? (
                     <button
                       type="submit"
-                      disabled={!form.formState.isValid || form.formState.isSubmitting}
+                      disabled={
+                        !form.formState.isValid || form.formState.isSubmitting
+                      }
                       className="px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors disabled:opacity-50"
                     >
                       Save Changes

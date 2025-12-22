@@ -35,7 +35,7 @@ export const ProtectedLayout = () => {
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error fetching solar units: {error.toString()}
+          Error fetching solar unitss: {error.toString()}
         </div>
       </div>
     );
@@ -53,6 +53,9 @@ export const ProtectedLayout = () => {
   if (!isSignedIn || !isAuthorized) {
     return <Navigate to="/sign-in" replace />;
   }
+  if (user?.publicMetadata?.role == "admin") {
+        return <Navigate to="/admin/dashboard" replace />;
+    }
 
   if (!solarUnits || solarUnits.length === 0) {
     return <Navigate to="/registration" replace />;

@@ -20,6 +20,7 @@ export const api = createApi({
       return headers;
     },
   }),
+  tagTypes: ["SolarUnit", "RegisteredUser", "User"], // for automatically refetching
   endpoints: (builder) => ({
     getEnergyGenerationRecord: builder.query({
       query: ({ id, groupBy, limit }) =>
@@ -29,18 +30,27 @@ export const api = createApi({
     }),
     getSolarUnitsByClerkUserId: builder.query({
       query: () => `solar-units/user`,
+      providesTags: ["SolarUnit"],
     }),
     getAllSolarUnits: builder.query({
       query: () => `solar-units`,
+      providesTags: ["SolarUnit"],
     }),
     getAllUsers: builder.query({
       query: () => `users`,
+      providesTags: ["User"],
     }),
     getAllNewUsers: builder.query({
       query: () => `solar-units/newusers`,
+      providesTags: ["User"],
     }),
     getAllRegisteredUsers: builder.query({
       query: () => `users/registered-users`,
+      providesTags: ["RegisteredUser"],
+    }),
+    getAllRegisteredUsersByClerkUserId: builder.query({
+      query: (id) => `users/registered-users/${id}`,
+      providesTags: ["RegisteredUser"],
     }),
     createSolarUnit: builder.mutation({
       query: (newUnit) => ({
@@ -48,6 +58,14 @@ export const api = createApi({
         method: "POST",
         body: newUnit,
       }),
+      invalidatesTags: ["SolarUnit", "RegisteredUser", "User"],
+    }),
+    deleteSolarUnit: builder.mutation({
+      query: (id) => ({
+        url: `solar-units/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["SolarUnit"], 
     }),
     createRegisteredUser: builder.mutation({
       query: (user) => ({
@@ -55,13 +73,15 @@ export const api = createApi({
         method: "POST",
         body: user,
       }),
+      invalidatesTags: ["SolarUnit", "RegisteredUser", "User"],
     }),
     updateRegisteredUser: builder.mutation({
-      query: ({ id, user }) => ({
+      query: ({ id, body }) => ({
         url: `users/registered-users/${id}`,
         method: "PUT",
-        body: user,
+        body,
       }),
+      invalidatesTags: ["RegisteredUser", "User"],
     }),
   }),
 });
@@ -75,8 +95,10 @@ export const {
   useGetAllNewUsersQuery,
   useGetAllRegisteredUsersQuery,
   useCreateSolarUnitMutation,
+  useGetAllRegisteredUsersByClerkUserIdQuery,
   useCreateRegisteredUserMutation,
   useUpdateRegisteredUserMutation,
+  useDeleteSolarUnitMutation,
 } = api;
 
 // TODO : Continue the rest of the implementation

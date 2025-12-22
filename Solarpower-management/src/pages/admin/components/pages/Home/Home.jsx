@@ -26,7 +26,7 @@ const AdminHomePage = () => {
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error fetching solar units: {error.toString()}
+          Error fetching solar unitsss: {error.toString()}
         </div>
       </div>
     );

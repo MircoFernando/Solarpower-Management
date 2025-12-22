@@ -49,6 +49,7 @@ interface MultiStepFormProps
   description: string;
   onBack: () => void;
   onNext: () => void;
+  isSubmitted: boolean;
   onClose?: () => void;
   backButtonText?: string;
   nextButtonText?: string;
@@ -141,7 +142,7 @@ const MultiStepForm = React.forwardRef<HTMLDivElement, MultiStepFormProps>(
               </Button>
             )}
             <Button onClick={onNext}>{nextButtonText}</Button>
-              <AlertDialog open={open} onOpenChange={isSubmitted}>
+              <AlertDialog  open={isSubmitted} onOpenChange={isSubmitted}>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>

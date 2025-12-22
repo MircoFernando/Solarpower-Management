@@ -32,7 +32,7 @@ export function AddSolarUnit() {
   })
 
   const [createSolarUnit, { isLoading: createLoading }] = useCreateSolarUnitMutation();
-  
+  const [updateUser, {isLoading: createUpdate }] = useUpdateRegisteredUserMutation();
   // Fetch new users
   const { data, isLoading, isError, error } = useGetAllRegisteredUsersQuery();
 
@@ -75,20 +75,32 @@ export function AddSolarUnit() {
       userId: values.userId,
     }
 
+    const id = payload.userId;
+
     const status = {
       status: "approved",
       solarUnitSerialNo: payload.serial_number
     }
 
     console.log("Backend Payload:", payload)
-    useUpdateRegisteredUserMutation({skip: !payload.userId, status})
+    
 
     try {
-      const response = await createSolarUnit(payload).unwrap()
-      console.log("Created new Solar Unit:", response)
+      const solarunit = await createSolarUnit(payload).unwrap()
+      console.log("Created new Solar Unit:", solarunit)
+
+      
     } catch (err) {
       console.error("Create solar unit error:", err)
     }
+
+    try{
+        const user = await updateUser({id, body: status}).unwrap()
+      console.log("Update user:", user)
+    } catch (err) {
+      console.error("Updated user:", err)
+    }
+
   }
 
   return (
@@ -178,7 +190,7 @@ export function AddSolarUnit() {
                     {pendingUsers.length > 0 ? (
                       pendingUsers.map((user) => (
                         <SelectItem key={user._id} value={user._id}>
-                          {user.name} ({user.email})
+                          {user.userName} ({user.email})
                         </SelectItem>
                       ))
                     ) : (

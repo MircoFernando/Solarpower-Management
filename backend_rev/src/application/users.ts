@@ -2,8 +2,9 @@ import {get} from 'http';
 import { NotFoundError, ValidationError } from "../domain/dtos/errors/errors";
 import { User } from '../infastructure/entities/user';
 import { RegisteredUser } from '../infastructure/entities/registeredUsers';
-import { CreateRegisteredUserDto } from '../domain/dtos/registeredUsers';
+import { CreateRegisteredUserDto, UpdateRegisteredUserDto } from '../domain/dtos/registeredUsers';
 import { Request, Response, NextFunction } from 'express';
+import { getAuth } from "@clerk/express";
 import {z} from 'zod';
 
 
@@ -33,6 +34,28 @@ export const CreateRegisteredUserValidator = (req: Request, res: Response, next:
     }
     next();
 };
+export const getAllRegisteredUsersByClerkUserId = async (req: Request, res: Response, next: NextFunction) => {
+  try{
+     const auth = getAuth(req);
+      console.log("Authentication info:", auth);
+      const clerkUserid = auth.userId;
+      console.log("Clerk UserID:", clerkUserid);
+      const user = await RegisteredUser.findOne({ clerkUserId: clerkUserid });
+      console.log("User:", user?._id);
+
+      if (!user) {
+                  throw new NotFoundError("User not found");
+              }
+      res.status(200).json(user);
+        
+    }
+        catch (error: any) {
+        next(error); // Pass the error to the global error handler
+    }
+  }
+
+
+
 
 export const CreateRegisteredUser = async (req: Request, res: Response, next: NextFunction) => {
     
@@ -50,6 +73,7 @@ export const CreateRegisteredUser = async (req: Request, res: Response, next: Ne
       email: data.email,
       phoneNumber: data.phoneNumber,
       address: data.address,
+      country: data.country,
       city: data.city,
       postalCode: data.postalCode,
       propertyType: data.propertyType,
@@ -73,36 +97,18 @@ export const CreateRegisteredUser = async (req: Request, res: Response, next: Ne
   }
 };
 
-export const updateRegisteredUserById = async (req: Request, res: Response, next: NextFunction) => {
+export const updateRegisteredUserByUserId = async (req: Request, res: Response, next: NextFunction) => {
   try{
     const {id} = req.params;
-    const data: z.infer<typeof CreateRegisteredUserDto> =
-      CreateRegisteredUserDto.parse(req.body);
+    const data: z.infer<typeof UpdateRegisteredUserDto> =
+      UpdateRegisteredUserDto.parse(req.body);
     const User = await RegisteredUser.findById(id);
 
     if(!User) {
       throw new NotFoundError("User not found");
     }
 
-    const updatedUser = await RegisteredUser.findByIdAndUpdate(id, {
-      userName: data.userName,
-      clerkUserId: data.clerkUserId,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phoneNumber: data.phoneNumber,
-      address: data.address,
-      city: data.city,
-      postalCode: data.postalCode,
-      propertyType: data.propertyType,
-      roofType: data.roofType,
-      avgConsumption: data.avgConsumption,
-      systemType: data.systemType,
-      timeline: data.timeline,
-      budget: data.budget,
-      financing: data.financing,
-      status: data.status
-    }, {new: true});
+    const updatedUser = await RegisteredUser.findByIdAndUpdate(id, data, {new: true});
 
     res.status(200).json(updatedUser);
   }

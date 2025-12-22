@@ -44,6 +44,7 @@ createRoot(document.getElementById("root")).render(
                 <Route element={<DashboardLayout />}>
                   <Route path="/dashboard" element={<DashBoardPage />} />
                 </Route>
+              </Route>
                 <Route element={<AuthorizedLayout />}>
                   {/* Admin with nested routes */}
                   <Route path="/admin/dashboard" element={<AdminPage />}>
@@ -51,7 +52,6 @@ createRoot(document.getElementById("root")).render(
                     <Route path="users" element={<AdminUsersPage />} />
                   </Route>
                 </Route>
-              </Route>
             </Route>
           </Routes>
         </ClerkProvider>

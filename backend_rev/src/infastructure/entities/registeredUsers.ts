@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { required } from "zod/v4/core/util.cjs";
 
 const RegisteredUserSchema = new mongoose.Schema(
   {
@@ -104,7 +105,7 @@ const RegisteredUserSchema = new mongoose.Schema(
     },
     solarUnitSerialNo: {
       type: String,
-      default: "not assigned"
+      default: "not assigned",
     }
   },
   {

@@ -1,14 +1,19 @@
-import { Outlet } from "react-router";
+import { Outlet, Navigate } from "react-router";
 import { useUser } from "@clerk/clerk-react";
-import { Navigate } from "react-router";
 
 export default function AuthorizedLayout() {
-    const { user } = useUser();
-
-    if (!user || user?.publicMetadata?.role !== "admin") {
-        return <Navigate to="/" replace />;
-    }
+  const { user, isLoaded } = useUser();
 
 
-    return <Outlet />;
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+  if (user?.publicMetadata?.role !== "admin") {
+    return <Navigate to="/" replace />;
+  }
+  return <Outlet />;
 }

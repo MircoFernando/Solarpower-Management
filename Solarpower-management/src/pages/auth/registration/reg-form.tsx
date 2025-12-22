@@ -43,6 +43,7 @@ import {
 
 
 import { useCreateRegisteredUserMutation } from "./../../../lib/redux/query.js";
+import {useGetAllRegisteredUsersQuery } from "./../../../lib/redux/query.js";
 import { useUser } from "@clerk/clerk-react";
 
 
