@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 const solarUnitSchema = new mongoose.Schema({
 
-    userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    userID: { type: mongoose.Schema.Types.ObjectId, ref: 'RegisteredUser'},
     serial_number: { type: String, required: true, unique: true },
     capacity: { type: Number, required: true },
     houseID: { type: mongoose.Schema.Types.ObjectId, ref: 'House', unique: true, sparse:true}, //null allowed

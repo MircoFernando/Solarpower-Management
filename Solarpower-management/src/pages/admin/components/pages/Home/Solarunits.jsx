@@ -15,6 +15,7 @@ const AllSolarUnits = ({ solarUnits = [] }) => {
       {solarUnits.map((unit) => (
         <SolarUnitCard
           key={unit.id}
+          id={unit.id}
           SerialNumber={unit.serialNumber}
           capacity={unit.capacity}
           InstalledDate={unit.installedAt}

@@ -8,7 +8,8 @@ import { Button } from "../../../../../components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../../../../components/ui/form"
 import { Input } from "../../../../../components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../../../components/ui/select"
-
+import { useGetAllRegisteredUsersQuery } from "./../../../../../lib/redux/query.js";
+import { useUpdateRegisteredUserMutation } from "./../../../../../lib/redux/query.js";
 const formSchema = z.object({
   serialNumber: z.string().min(2),
   capacity: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0),
@@ -31,9 +32,9 @@ export function AddSolarUnit() {
   })
 
   const [createSolarUnit, { isLoading: createLoading }] = useCreateSolarUnitMutation();
-  
+  const [updateUser, {isLoading: createUpdate }] = useUpdateRegisteredUserMutation();
   // Fetch new users
-  const { data, isLoading, isError, error } = useGetAllNewUsersQuery();
+  const { data, isLoading, isError, error } = useGetAllRegisteredUsersQuery();
 
   const userDetails = data?.map((el) => ({
     id: el._id,
@@ -41,6 +42,8 @@ export function AddSolarUnit() {
     email: el.email,
     clerkUserId: el.clerkUserId,
   })) || []
+
+  const pendingUsers = data?.filter((user) => user.status === "pending") || [];
 
   if (isLoading) {
     return (
@@ -72,14 +75,32 @@ export function AddSolarUnit() {
       userId: values.userId,
     }
 
+    const id = payload.userId;
+
+    const status = {
+      status: "approved",
+      solarUnitSerialNo: payload.serial_number
+    }
+
     console.log("Backend Payload:", payload)
+    
 
     try {
-      const response = await createSolarUnit(payload).unwrap()
-      console.log("Created new Solar Unit:", response)
+      const solarunit = await createSolarUnit(payload).unwrap()
+      console.log("Created new Solar Unit:", solarunit)
+
+      
     } catch (err) {
       console.error("Create solar unit error:", err)
     }
+
+    try{
+        const user = await updateUser({id, body: status}).unwrap()
+      console.log("Update user:", user)
+    } catch (err) {
+      console.error("Updated user:", err)
+    }
+
   }
 
   return (
@@ -166,10 +187,10 @@ export function AddSolarUnit() {
                     <SelectValue placeholder="Choose a user" />
                   </SelectTrigger>
                   <SelectContent>
-                    {userDetails.length > 0 ? (
-                      userDetails.map((user) => (
-                        <SelectItem key={user.id} value={user.id}>
-                          {user.name} ({user.email})
+                    {pendingUsers.length > 0 ? (
+                      pendingUsers.map((user) => (
+                        <SelectItem key={user._id} value={user._id}>
+                          {user.userName} ({user.email})
                         </SelectItem>
                       ))
                     ) : (

@@ -4,7 +4,7 @@ import { authenticationMiddleware } from './middleware/authentication-middleware
 import { authorizaztionMiddleware } from './middleware/authorization-middleware';
 const solarUnitRouter = express.Router();
 
-solarUnitRouter.route("/").get(authorizaztionMiddleware, getAllSolarUnits).post(authenticationMiddleware, createSolarUnitValidator, createSolarUnit);
+solarUnitRouter.route("/").get(getAllSolarUnits).post(authenticationMiddleware, createSolarUnitValidator, createSolarUnit);
 solarUnitRouter.route("/user").get(authenticationMiddleware, getSolarUnitUserByClerkUserId);
 solarUnitRouter.route("/newusers").get(getNewSolarUnitUsers);
 solarUnitRouter.route("/:id").get(authenticationMiddleware, validateIdParam, getSolarUnitById);

@@ -1,5 +1,15 @@
 import { useState } from "react";
-import { User, Mail, Shield, Calendar, MoreVertical, Edit, Trash2, Eye, Search } from "lucide-react";
+import {
+  User,
+  Mail,
+  Shield,
+  Calendar,
+  MoreVertical,
+  Edit,
+  Trash2,
+  Eye,
+  Search,
+} from "lucide-react";
 
 const UserRow = ({ user }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,21 +40,28 @@ const UserRow = ({ user }) => {
           </div>
         </div>
       </td>
-      
+
       <td className="px-6 py-4">
         <div className="flex items-center gap-2 text-gray-700">
           <Mail className="w-4 h-4 text-gray-400" />
           <span className="text-sm">{user.email}</span>
         </div>
       </td>
-      
+
       <td className="px-6 py-4">
         <div className="flex items-center gap-2 text-gray-600 text-sm">
           <Calendar className="w-4 h-4 text-gray-400" />
           {user.createdAt}
         </div>
       </td>
-      
+
+      <td className="px-6 py-4">
+        <div className="flex items-center gap-2 text-gray-600 text-sm">
+          <Calendar className="w-4 h-4 text-gray-400" />
+          {user.serialNumber}
+        </div>
+      </td>
+
       <td className="px-6 py-4 text-right relative">
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -52,11 +69,11 @@ const UserRow = ({ user }) => {
         >
           <MoreVertical className="w-5 h-5 text-gray-600" />
         </button>
-        
+
         {isMenuOpen && (
           <>
-            <div 
-              className="fixed inset-0 z-10" 
+            <div
+              className="fixed inset-0 z-10"
               onClick={() => setIsMenuOpen(false)}
             />
             <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-48 z-20">

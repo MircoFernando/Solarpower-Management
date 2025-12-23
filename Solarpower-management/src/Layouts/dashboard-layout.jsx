@@ -1,4 +1,5 @@
 import { Outlet } from "react-router";
+import { useState } from "react";
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
 import { AppSidebar } from "../components/AppSide"
 import { ChartAreaInteractive } from "../components/chart-area-interactive"
@@ -7,11 +8,15 @@ import { SectionCards } from "../components/section-cards"
 import { SiteHeader } from "../components/site-header"
 import { BrowserRouter, Routes, Route } from 'react-router'
 import SolarEnergyProduction from "../pages/home/components/SolarEnergyProduction"
+
+
 import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar"
 import { useUser } from "@clerk/clerk-react";
+
+// TODO : check if signed in user has a solar unit assign useUser === newUser redirect them to apply to a solarunit
 
 const items = [
   {
@@ -37,7 +42,11 @@ const items = [
 ]
 
 
-export function DashboardLayout() {
+const DashboardLayout = () => {
+
+
+
+
 
     return (
          
@@ -52,7 +61,7 @@ export function DashboardLayout() {
               <SectionCards />
               <div className="flex m-3 p-2">
                 <SolarEnergyProduction />
-              </div>
+              </div> 
               <div className="px-4 lg:px-6">
                 <ChartAreaInteractive />
               </div>
