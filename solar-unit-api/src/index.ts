@@ -3,7 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { globalErrorHandler } from "./api/middleware/global-error-handling-middleware"
 import { loggerMiddleware } from "./api/middleware/logger-middleware"
-import { connectDB } from "./infastructure/db"
+import { connectDB } from "./infastructure/db";
+import energyGenerationRecordRouter from "./api/energy-generation-records"
+import { initializeEnergyCron } from "./infastructure/energy-generation-cron";
 
 
 dotenv.config();
@@ -14,12 +16,12 @@ server.use(loggerMiddleware);
 
 server.use(express.json());
 
-// server.use("/api/energy-generation-records", energyGenerationRecordRouter);
+server.use("/api/energy-generation-records", energyGenerationRecordRouter);
 
 server.use(globalErrorHandler);
 
 connectDB();
-// initializeEnergyCron();
+initializeEnergyCron();
 
 const PORT = process.env.PORT || 800;
 server.listen(PORT, () => {

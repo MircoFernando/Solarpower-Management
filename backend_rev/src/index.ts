@@ -5,6 +5,7 @@ import EnergyRecordRouter from './api/energy-generation-record';
 import userRouter from './api/users';
 import { connectDB } from './infastructure/db';  
 import { loggerMiddleware } from './api/middleware/logger-middleware';
+import { initializeScheduler } from "./infastructure/scheduler";
 import { globalErrorHandlingMiddleware } from './api/middleware/global-error-handling-middleware';
 import webHooksRouter from './api/web-hooks/webhooks';
 import cors from 'cors';
@@ -23,6 +24,7 @@ server.use("/api/users", userRouter);
 server.use(globalErrorHandlingMiddleware); // (err, res, req, next) are global error handlers, Use the global error handling middleware
 
 connectDB(); // Connect to the database
+initializeScheduler();
 
 const Port = process.env.PORT || 3000;
 server.listen(Port, () => {

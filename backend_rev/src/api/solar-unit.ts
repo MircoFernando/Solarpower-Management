@@ -2,7 +2,7 @@ import express from 'express';
 import { getAllSolarUnits, createSolarUnit, getSolarUnitById, updateSolarUnitById, deleteSolarUnitById, createSolarUnitValidator, validateIdParam, getSolarUnitUserByClerkUserId, getNewSolarUnitUsers} from '../application/solar-unit';
 import { authenticationMiddleware } from './middleware/authentication-middleware';
 import { authorizaztionMiddleware } from './middleware/authorization-middleware';
-import syncMiddleware from './middleware/sync/sync-middleware';
+import { syncMiddleware } from './middleware/sync/sync-middleware';
 const solarUnitRouter = express.Router();
 
 solarUnitRouter.route("/").get(getAllSolarUnits).post(authenticationMiddleware, createSolarUnitValidator, createSolarUnit);

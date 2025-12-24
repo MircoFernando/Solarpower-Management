@@ -8,6 +8,7 @@ import { User } from '../infastructure/entities/user';
 import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { getAuth } from "@clerk/express";
+import { RegisteredUser } from "../infastructure/entities/registeredUsers";
 
 export const getAllSolarUnits = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -56,7 +57,7 @@ export const getSolarUnitUserByClerkUserId = async (req: Request, res: Response,
         console.log("Authentication info:", auth);
         const clerkUserid = auth.userId;
         console.log("Clerk UserID:", clerkUserid);
-        const user = await User.findOne({ clerkUserId: clerkUserid });
+        const user = await RegisteredUser.findOne({ clerkUserId: clerkUserid });
         console.log("User:", user?._id);
         if (!user) {
             throw new NotFoundError("User not found");

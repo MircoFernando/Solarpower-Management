@@ -44,9 +44,11 @@ export const getAllRegisteredUsersByClerkUserId = async (req: Request, res: Resp
       console.log("User:", user?._id);
 
       if (!user) {
-                  throw new NotFoundError("User not found");
+        console.log("User has not registered");
+                  return res.status(200).json({message: "User has not applied"});
+                  
               }
-      res.status(200).json(user);
+      return res.status(200).json(user);
         
     }
         catch (error: any) {

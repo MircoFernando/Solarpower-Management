@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { EnergyGenerationRecord } from "../infrastructure/entities/EnergyGenerationRecord";
+import { EnergyGenerationRecord } from "./../infastructure/entities/EnergyGenerationRecord";
 
 export const getAllEnergyGenerationRecordsBySerialNumber = async (
   req: Request,

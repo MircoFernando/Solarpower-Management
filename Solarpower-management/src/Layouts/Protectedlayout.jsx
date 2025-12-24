@@ -60,6 +60,9 @@ export const ProtectedLayout = () => {
   if (!solarUnits || solarUnits.length === 0) {
     return <Navigate to="/registration" replace />;
   }
+  if (solarUnits.length > 0){
+    return <Navigate to="/dashboard" replace />;
+  }
   
   return <Outlet />;
 };
