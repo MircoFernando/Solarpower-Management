@@ -1,10 +1,12 @@
 import cron from "node-cron";
 import { EnergyGenerationRecord } from "./entities/EnergyGenerationRecord";
-
+import { SolarUnit } from "./entities/solarUnits";
 /**
  * Calculate realistic energy generation based on timestamp
  * Uses seasonal variations and time-of-day multipliers
  */
+
+
 function calculateEnergyGeneration(timestamp: Date): number {
   const hour = timestamp.getUTCHours();
   const month = timestamp.getUTCMonth(); // 0-11
@@ -49,24 +51,39 @@ function calculateEnergyGeneration(timestamp: Date): number {
 /**
  * Generate a new energy generation record for the current time
  */
-async function generateNewRecord() {
+export async function generateNewRecord(serial_number:string){
   try {
     const timestamp = new Date();
-    const serialNumber = process.env.SOLAR_UNIT_SERIAL || "SU-0001";
 
-    const energyGenerated = calculateEnergyGeneration(timestamp);
+  // Get schedule from env or default to every 2 hours
+  const schedule = process.env.ENERGY_CRON_SCHEDULE || '0 */2 * * *';
 
-    const record = {
-      serialNumber,
+  // Create cron job for this specific solar unit
+  const job = cron.schedule(schedule, async () => {
+    console.log(`[${new Date().toISOString()}] Generating energy for ${serial_number}`);
+    try {
+      const energyGenerated = calculateEnergyGeneration(timestamp);
+
+      //Store Generated Energy record
+      const record = {
+      serial_number: serial_number,
       timestamp,
       energyGenerated,
       intervalHours: 2,
     };
 
     await EnergyGenerationRecord.create(record);
-    console.log(
-      `[${timestamp.toISOString()}] Generated energy record: ${energyGenerated}Wh for ${serialNumber}`
-    );
+
+    } catch (error) {
+      console.error(`Error generating energy for ${serial_number}:`, error);
+    }
+  });
+  // Start the job
+  job.start();
+  // Store the job
+  
+  console.log(`✅ Cron job started for ${serial_number} (Schedule: ${schedule})`);
+
   } catch (error) {
     console.error(
       `[${new Date().toISOString()}] Failed to generate energy record:`,
@@ -75,6 +92,8 @@ async function generateNewRecord() {
   }
 }
 
+
+
 /**
  * Initialize the cron scheduler to generate energy records every 2 hours
  */
@@ -82,8 +101,23 @@ export const initializeEnergyCron = () => {
   // Run every 2 hours on the hour (0 */2 * * *)
   const schedule = process.env.ENERGY_CRON_SCHEDULE || "0 */2 * * *";
 
-  cron.schedule(schedule, async () => {
-    await generateNewRecord();
+  console.log(
+    `[Energy Cron] Scheduler initializing.............`
+  );
+
+   cron.schedule(schedule, async () => {
+    try {
+      const units = await SolarUnit.find({ status: "active" });
+
+      for (const unit of units) {
+        await generateNewRecord(unit.serialNumber);
+         console.log(
+          `[Energy Cron] Scheduler initialized - ${unit.serialNumber}`
+        );
+      }
+    } catch (err) {
+      console.error("[Energy Cron] Failed:", err);
+    }
   });
 
   console.log(

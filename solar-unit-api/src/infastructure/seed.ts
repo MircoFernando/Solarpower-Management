@@ -7,7 +7,7 @@ dotenv.config();
 
 async function seed() {
 
-  const serialNumber = "SU-0001";
+  const serialNumber = "SU-0002";
 
   try {
     // Connect to DB

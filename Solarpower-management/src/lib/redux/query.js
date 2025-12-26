@@ -83,6 +83,13 @@ export const api = createApi({
       }),
       invalidatesTags: ["RegisteredUser", "User"],
     }),
+     getCapacityFactor: builder.query({
+      query: (days = 30) => `/metrics/capacity-factor?days=${days}`,
+    }),
+    
+    getPeakOffPeakDistribution: builder.query({
+      query: (days = 30) => `/metrics/peak-offpeak?days=${days}`,
+    }),
   }),
 });
 
@@ -99,6 +106,8 @@ export const {
   useCreateRegisteredUserMutation,
   useUpdateRegisteredUserMutation,
   useDeleteSolarUnitMutation,
+  useGetCapacityFactorQuery,
+  useGetPeakOffPeakDistributionQuery
 } = api;
 
 // TODO : Continue the rest of the implementation
