@@ -145,7 +145,7 @@ export const getPeakOffPeakDistribution = async (
     let offPeakEnergy = 0; // All other times
 
     records.forEach((record) => {
-      const hour = record.timestamp.getHours();
+      const hour = record.timestamp.getUTCHours();
       if (hour >= 10 && hour <= 14) {
         peakEnergy += record.energyGenerated;
       } else {

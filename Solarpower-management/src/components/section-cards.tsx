@@ -56,8 +56,8 @@ export function SectionCards({ days = 90}) {
 
   const performance = getPerformanceRating(data.capacityFactor);
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-      <Card className="@container/card bg-cover bg-center text-white border border-white/20 backdrop-blur-md"
+    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-10 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
+      <Card className="@container/card bg-cover bg-center h-[80vh] text-white border border-white/20 backdrop-blur-md"
           style={{
             backgroundImage: `url(${SolarImage})`,
           }}
@@ -125,7 +125,7 @@ export function SectionCards({ days = 90}) {
           </div>
           <div className="text-muted-foreground">Engagement exceed targets</div>
         </CardFooter> */}
-         <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+      <div className="bg-white max-w-2xl h-[80vh] rounded-xl shadow-md border border-gray-200 p-6">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
@@ -213,18 +213,11 @@ export function SectionCards({ days = 90}) {
       </div>
 
       {/* Info Box */}
-      <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="font-semibold text-blue-900 mb-2">What is Capacity Factor?</h3>
-        <p className="text-sm text-blue-800">
-          Capacity Factor measures actual energy generation against theoretical maximum. 
-          A higher percentage indicates better performance. Factors affecting this include 
-          weather conditions, panel orientation, shading, and equipment efficiency.
-        </p>
-      </div>
+      
     </div>
       </Card>
       <Card className="@container/card">
-        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+        <div className="bg-white rounded-xl h-[80vh] shadow-md border border-gray-200 p-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Peak vs Off-Peak Generation</h2>
       <p className="text-gray-600 text-sm mb-6">
         Distribution of energy generation during peak sun hours vs off-peak periods
