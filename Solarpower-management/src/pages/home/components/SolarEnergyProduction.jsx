@@ -187,7 +187,7 @@ const SolarEnergyProduction = () => {
 
   
   return (
-    <section className="px-12 font-[Inter] py-6">
+    <section className="px-8 font-[Inter] py-6 max-w-max">
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2">Solar Energy Production</h2>
         <p className="text-gray-600">Daily energy output for the past 6 days</p>

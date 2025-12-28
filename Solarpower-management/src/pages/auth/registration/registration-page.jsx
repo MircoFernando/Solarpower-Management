@@ -16,10 +16,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+
 //TODO : Add the form validation and make a Registered user schema make the page responsive
 
 export const RegistrationPage = () => {
-  const [isSubmitted, SetisSubmitted] = useState(false);
+  const [isSubmitted, SetisSubmitted] = useState(null);
 
   const { user } = useUser();
   console.log("Clerk User:", user?.id);
@@ -28,7 +29,16 @@ export const RegistrationPage = () => {
     useGetAllRegisteredUsersByClerkUserIdQuery(undefined, { skip: !user });
 
   useEffect(() => {
-  if (data?.clerkUserId === user?.id) {
+  if (!data || !user) return;
+
+  // Case 1: backend explicitly says no application
+  if (data === "User has not applied") {
+    SetisSubmitted(false);
+    return;
+  }
+
+  // Case 2: user already applied
+  if (data?.clerkUserId === user.id) {
     SetisSubmitted(true);
   }
 }, [data, user]);
@@ -194,7 +204,7 @@ export const RegistrationPage = () => {
           </div>
         </div>
         {isSubmitted && (
-            <AlertDialog open={isSubmitted} onOpenChange={isSubmitted}>
+            <AlertDialog open={isSubmitted} onOpenChange={SetisSubmitted}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>

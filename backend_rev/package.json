@@ -15,12 +15,14 @@
   "dependencies": {
     "@clerk/backend": "^2.19.1",
     "@clerk/express": "^1.7.46",
+    "axios": "^1.13.2",
     "cors": "^2.8.5",
     "data-fns": "^1.1.0",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "mongodb": "^6.20.0",
     "mongoose": "^8.19.1",
+    "node-cron": "^4.2.1",
     "uuid": "^13.0.0",
     "zod": "^4.1.11"
   },

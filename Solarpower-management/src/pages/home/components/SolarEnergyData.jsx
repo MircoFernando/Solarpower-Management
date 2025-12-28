@@ -10,7 +10,7 @@ const filteredEnergyProductionData = ({ energyProductionData = [] }) => {
   }
 
   return (
-    <div className=" flex items-center flex-col gap-4 sm:flex-row">
+    <div className=" flex items-center flex-col gap-10 sm:flex-row">
       {energyProductionData.map((el) => (
         <EnergyProductionCard
           key={el.date}

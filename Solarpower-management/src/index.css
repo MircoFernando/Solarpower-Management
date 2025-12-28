@@ -62,7 +62,7 @@
   --font-family-sans: 'Ubuntu', system-ui, sans-serif;
   --font-family-ubuntu: 'Ubuntu', sans-serif;
 }
-
+  
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
