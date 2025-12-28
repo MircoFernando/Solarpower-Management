@@ -48,8 +48,8 @@ export function SectionCards({ days = 90}) {
   };
 
   const chartData = [
-    { name: 'Peak Hours (10 AM - 2 PM)', value: dataPeak.peak.energy, percentage: dataPeak.peak.percentage },
-    { name: 'Off-Peak Hours', value: dataPeak.offPeak.energy, percentage: dataPeak.offPeak.percentage },
+    { name: 'Peak Hours (10 AM - 2 PM)', value: dataPeak?.peak.energy, percentage: dataPeak?.peak.percentage },
+    { name: 'Off-Peak Hours', value: dataPeak?.offPeak.energy, percentage: dataPeak?.offPeak.percentage },
   ];
 
   const COLORS = ['#018790', '#00B7B5'];
@@ -254,8 +254,8 @@ export function SectionCards({ days = 90}) {
               <Sun className="w-6 h-6 text-primary" />
               <span className="font-semibold text-gray-700">Peak Hours</span>
             </div>
-            <p className="text-2xl font-bold text-primary-dark">{dataPeak.peak.energy} kWh</p>
-            <p className="text-sm text-gray-600">{dataPeak.peak.percentage}% of total</p>
+            <p className="text-2xl font-bold text-primary-dark">{dataPeak?.peak.energy} kWh</p>
+            <p className="text-sm text-gray-600">{dataPeak?.peak.percentage}% of total</p>
           </div>
 
           <div className="bg-gray-100 rounded-lg p-4 border border-gray-300">
@@ -263,8 +263,8 @@ export function SectionCards({ days = 90}) {
               <Moon className="w-6 h-6 text-gray-600" />
               <span className="font-semibold text-gray-700">Off-Peak Hours</span>
             </div>
-            <p className="text-2xl font-bold text-gray-700">{dataPeak.offPeak.energy} kWh</p>
-            <p className="text-sm text-gray-600">{dataPeak.offPeak.percentage}% of total</p>
+            <p className="text-2xl font-bold text-gray-700">{dataPeak?.offPeak.energy} kWh</p>
+            <p className="text-sm text-gray-600">{dataPeak?.offPeak.percentage}% of total</p>
           </div>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
