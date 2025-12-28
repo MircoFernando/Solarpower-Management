@@ -135,3 +135,4 @@ export const syncEnergyGenerationRecordsForUser = async ( req: Request,
         console.error("Sync Job error:", error);
     }
 };
+

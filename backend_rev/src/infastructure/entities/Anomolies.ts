@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const AnomalyRecordSchema = new mongoose.Schema(
   {
-    solarUnit: {
-      type: mongoose.Schema.Types.ObjectId,
+    solarUnit_SN: {
+      type: String,
       ref: 'SolarUnit',
       required: true,
     },
