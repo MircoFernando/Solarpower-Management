@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import "./index.css";
 import HomePage from "./pages/home/home-page";
 import DashBoardPage from "./pages/dashboard/dashboard-page";
+import HomeDashboard from "./pages/UserDashboard/dashboard-home.jsx";
 import RootLayout from "./Layouts/root-layout";
 import { store } from "@/lib/redux/store.js";
 import { Provider } from "react-redux";
@@ -17,7 +18,9 @@ import AuthorizedLayout from "./pages/admin/authorized.jsx";
 import AdminPage from "./pages/admin/admin.jsx";
 import AdminHomePage from "./pages/admin/components/pages/Home/Home.jsx";
 import AdminUsersPage from "./pages/admin/components/pages/Users/User.jsx//";
+import AdminAnomaliesPage from "./pages/admin/components/pages/Anomalies/Anomalies.jsx";
 import { RegistrationPage } from "./pages/auth/registration/registration-page.jsx";
+import AnomalyDashboard from "./pages/UserDashboard/dashboard-anomaly.jsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -34,24 +37,24 @@ createRoot(document.getElementById("root")).render(
             <Route element={<RootLayout />}>
               <Route path="/sign-in" element={<SignInPage />} />
               <Route path="/sign-up" element={<SignUpPage />} />
-              
               <Route element={<MainLayout />}>
                 <Route path="/registration" element={<RegistrationPage />} />
                 <Route path="/" element={<HomePage />} />
               </Route>
               <Route element={<ProtectedLayout />}>
-                
-                <Route element={<DashboardLayout />}>
-                  <Route path="/dashboard" element={<DashBoardPage />} />
+                  <Route path="/dashboard" element={<DashboardLayout />} >
+                  <Route index element={<HomeDashboard />} />
+                  <Route path="anomalies" element={<AnomalyDashboard />} />
                 </Route>
               </Route>
-                <Route element={<AuthorizedLayout />}>
-                  {/* Admin with nested routes */}
-                  <Route path="/admin/dashboard" element={<AdminPage />}>
-                    <Route index element={<AdminHomePage />} />
-                    <Route path="users" element={<AdminUsersPage />} />
-                  </Route>
+              <Route element={<AuthorizedLayout />}>
+                {/* Admin with nested routes */}
+                <Route path="/admin/dashboard" element={<AdminPage />}>
+                  <Route index element={<AdminHomePage />} />
+                  <Route path="users" element={<AdminUsersPage />} />
+                  <Route path="anomaly" element={<AdminAnomaliesPage />} />
                 </Route>
+              </Route>
             </Route>
           </Routes>
         </ClerkProvider>

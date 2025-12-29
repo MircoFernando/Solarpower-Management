@@ -26,3 +26,5 @@ export const initializeScheduler = () => {
 
   console.log(`[Scheduler] Energy generation records sync and Anomaly Detection scheduled for: ${schedule}`);
 };
+
+//TODO: Start Implementing the UI for Anomalies

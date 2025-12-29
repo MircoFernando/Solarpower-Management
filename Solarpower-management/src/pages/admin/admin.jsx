@@ -35,11 +35,11 @@ const items = [
     url: "/admin/dashboard/users",
     icon: Inbox,
   },
-  // {
-  //   title: "Calendar",
-  //   url: "#",
-  //   icon: Calendar,
-  // },
+  {
+    title: "Anomalies",
+    url: "/admin/dashboard/anomaly",
+    icon: Calendar,
+  },
   // {
   //   title: "Search",
   //   url: "#",

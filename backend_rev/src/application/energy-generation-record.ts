@@ -61,7 +61,7 @@ export const getEnergyRecordsBySolarUnitId = async (
             solarUnit: new mongoose.Types.ObjectId(id),
           },
         },
-        {
+         {
           $group: {
             _id: {
               date: {
