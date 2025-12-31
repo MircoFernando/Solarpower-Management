@@ -6,6 +6,14 @@ import { EnergyGenerationRecord } from "../../../infastructure/entities/EnergyGe
 
 import { z } from "zod";
 import { RegisteredUser } from "../../../infastructure/entities/registeredUsers";
+import mongoose from "mongoose";
+import {
+  ABNORMAL_PEAK,
+  GENERATION_DROP,
+  NIGHT_GENERATION,
+  ZERO_GENERATION,
+} from "../../../application/backgroundJob/anomaly/anomoly-detection";
+import { log } from "console";
 
 export const DataAPIEnergyGenerationRecordDto = z.object({
   _id: z.string(),
@@ -16,10 +24,38 @@ export const DataAPIEnergyGenerationRecordDto = z.object({
   __v: z.number(),
 });
 
+export interface RecordDto {
+  solarUnit: mongoose.Types.ObjectId;
+  energyGenerated: Number;
+  timestamp: Date;
+  intervalHours: Number;
+}
+
+export interface SolarUnitDto {
+  _id: string;
+  userID: mongoose.Types.ObjectId;
+  capacity: Number;
+  installation_date: Date;
+  status: String;
+}
+
 /**
  * Synchronizes energy generation records from the data API
  * Fetches latest records and merges new data with existing records
  */
+
+async function syncGenerationRecords(payload: RecordDto[]) {
+  // Get latest synced timestamp to only fetch new data
+
+  try {
+    await EnergyGenerationRecord.insertMany(payload);
+    console.log(`Synced ${payload.length} new energy generation records`);
+  } catch (error) {
+    console.error("Sync Generation records error:", error);
+  }
+}
+
+// Sync Middleware for Syncing both Generation Records and Anomalies
 export const syncMiddleware = async (
   req: Request,
   res: Response,
@@ -32,7 +68,6 @@ export const syncMiddleware = async (
       throw new NotFoundError("User not found");
     }
     console.log("User ", user);
-    
 
     const solarUnit = await SolarUnit.findOne({ userID: user._id });
     if (!solarUnit) {
@@ -51,18 +86,18 @@ export const syncMiddleware = async (
       );
     }
 
+    //Create Generation Records Sync and Anomaly Sync
+
     const latestEnergyGenerationRecords =
       DataAPIEnergyGenerationRecordDto.array().parse(
         await dataAPIResponse.json()
       );
 
-    // Get latest synced timestamp to only fetch new data
     const lastSyncedRecord = await EnergyGenerationRecord.findOne({
       solarUnit: solarUnit._id,
     }).sort({ timestamp: -1 });
 
-    console.log("Last data: ",lastSyncedRecord);
-    
+    console.log("Last data: ", lastSyncedRecord);
 
     // Filter records that are new (not yet in database)
     const newRecords = latestEnergyGenerationRecords.filter((apiRecord) => {
@@ -74,18 +109,37 @@ export const syncMiddleware = async (
       // Transform API records to match schema
       const recordsToInsert = newRecords.map((record) => ({
         solarUnit: solarUnit._id,
+        serialNumber: solarUnit.serial_number,
         energyGenerated: record.energyGenerated,
         timestamp: new Date(record.timestamp),
         intervalHours: record.intervalHours,
+        processedForAnomaly: false,
       }));
 
-      await EnergyGenerationRecord.insertMany(recordsToInsert);
-      console.log(
-        `Synced ${recordsToInsert.length} new energy generation records`
-      );
-    } else {
-      console.log("No new records to sync");
-    }
+      await syncGenerationRecords(recordsToInsert);
+
+    //   console.log("Processing for Anomaly Detection");
+      
+
+    //   const insertedRecords = await EnergyGenerationRecord.find({
+    //     solarUnit: solarUnit._id,
+    //   processedForAnomaly: false,
+    //     });
+
+    //   console.log("New Inserted: ", insertedRecords);
+      
+    // for (const record of insertedRecords) {
+    //   console.log("Processing for Anomaly Detection", solarUnit._id);
+    //   await ZERO_GENERATION(record);
+    //   await GENERATION_DROP(record, solarUnit._id);
+    //   await ABNORMAL_PEAK(record, solarUnit.capacity);
+    //   await NIGHT_GENERATION(record);
+    // }
+  }
+  else{
+    console.log("No new generation Records to Sync and Detect Anomalies");
+    
+  }
 
     next();
   } catch (error) {
@@ -93,7 +147,4 @@ export const syncMiddleware = async (
     next(error);
   }
 };
-
 export default syncMiddleware;
-
- 

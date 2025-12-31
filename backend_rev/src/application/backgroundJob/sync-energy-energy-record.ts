@@ -8,7 +8,7 @@ import { NotFoundError, ValidationError } from "./../../domain/dtos/errors/error
 
 export const DataAPIEnergyGenerationRecordDto = z.object({
     _id: z.string(),
-    serial_number: z.string(),
+    serialNumber: z.string(),
     energyGenerated: z.number(),
     timestamp: z.string(),
     intervalHours: z.number(),
@@ -49,13 +49,15 @@ export const syncEnergyGenerationRecords = async () => {
                 .array()
                 .parse(await dataAPIResponse.json());
 
-            if (newRecords.length > 0) {
+            if (newRecords?.length > 0) {
                 // Transform API records to match schema
                 const recordsToInsert = newRecords.map(record => ({
                     solarUnit: solarUnit._id,
+                    serialNumber: solarUnit.serial_number,
                     energyGenerated: record.energyGenerated,
                     timestamp: new Date(record.timestamp),
                     intervalHours: record.intervalHours,
+                    processedForAnomaly: false,
                 }));
 
                 await EnergyGenerationRecord.insertMany(recordsToInsert);
@@ -122,6 +124,7 @@ export const syncEnergyGenerationRecordsForUser = async ( req: Request,
                     energyGenerated: record.energyGenerated,
                     timestamp: new Date(record.timestamp),
                     intervalHours: record.intervalHours,
+                    processedForAnomaly: false,
                 }));
                 
                 await EnergyGenerationRecord.insertMany(recordsToInsert);

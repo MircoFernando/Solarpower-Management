@@ -1,29 +1,40 @@
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
-import WeatherData from "../pages/dashboard/weather/WeatherApi"
-import { Badge } from "@/components/ui/badge"
-import SolarImage from "../assets/solar.jpg"
+import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import WeatherData from "../pages/dashboard/weather/WeatherApi";
+import { Badge } from "@/components/ui/badge";
+import SolarImage from "../assets/solar.jpg";
 import {
   Card,
-  CardAction,
+  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { useGetCapacityFactorQuery } from '@/lib/redux/query';
-import { Activity, TrendingUp, Zap } from 'lucide-react';
-import { PieChart, Pie, Cell } from 'recharts';
-import { useGetPeakOffPeakDistributionQuery } from '@/lib/redux/query';
-import { Sun, Moon } from 'lucide-react';
+} from "@/components/ui/card";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import { useGetCapacityFactorQuery } from "@/lib/redux/query";
+import { Activity, TrendingUp, Zap, Sun, Moon } from "lucide-react";
+import { useGetPeakOffPeakDistributionQuery } from "@/lib/redux/query";
 
-
-export function SectionCards({ days = 90}) {
-
+export function SectionCards({ days = 90 }) {
   const { data, isLoading, isError } = useGetCapacityFactorQuery(days);
-  const { data:dataPeak , isLoading:LoadingPeak, isError:Peak } = useGetPeakOffPeakDistributionQuery(days);
+  const {
+    data: dataPeak,
+    isLoading: LoadingPeak,
+    isError: Peak,
+  } = useGetPeakOffPeakDistributionQuery(days);
 
-  if (isLoading) {
+  if (isLoading || LoadingPeak) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -31,251 +42,226 @@ export function SectionCards({ days = 90}) {
     );
   }
 
-  if (isError || !data) {
+  if (isError || !data || Peak || !dataPeak) {
     return (
       <div className="text-center text-red-600 p-4">
-        Error loading capacity factor data
+        Error loading dashboard data
       </div>
     );
   }
 
   // Get performance rating
   const getPerformanceRating = (cf) => {
-    if (cf >= 80) return { label: 'Excellent', color: 'text-green-600', bg: 'bg-green-100' };
-    if (cf >= 60) return { label: 'Good', color: 'text-blue-600', bg: 'bg-blue-100' };
-    if (cf >= 40) return { label: 'Fair', color: 'text-yellow-600', bg: 'bg-yellow-100' };
-    return { label: 'Poor', color: 'text-red-600', bg: 'bg-red-100' };
+    if (cf >= 80)
+      return { label: "Excellent", color: "text-green-600", bg: "bg-green-100" };
+    if (cf >= 60)
+      return { label: "Good", color: "text-blue-600", bg: "bg-blue-100" };
+    if (cf >= 40)
+      return { label: "Fair", color: "text-yellow-600", bg: "bg-yellow-100" };
+    return { label: "Poor", color: "text-red-600", bg: "bg-red-100" };
   };
 
   const chartData = [
-    { name: 'Peak Hours (10 AM - 2 PM)', value: dataPeak.peak.energy, percentage: dataPeak.peak.percentage },
-    { name: 'Off-Peak Hours', value: dataPeak.offPeak.energy, percentage: dataPeak.offPeak.percentage },
+    {
+      name: "Peak Hours",
+      value: dataPeak?.peak.energy,
+      percentage: dataPeak?.peak.percentage,
+    },
+    {
+      name: "Off-Peak",
+      value: dataPeak?.offPeak.energy,
+      percentage: dataPeak?.offPeak.percentage,
+    },
   ];
 
-  const COLORS = ['#018790', '#00B7B5'];
-
+  const COLORS = ["#018790", "#00B7B5"];
   const performance = getPerformanceRating(data.capacityFactor);
+
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-10 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
-      <Card className="@container/card bg-cover bg-center h-[80vh] text-white border border-white/20 backdrop-blur-md"
-          style={{
-            backgroundImage: `url(${SolarImage})`,
-          }}
-        >
-        {/* <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 lg:p-6 w-full items-stretch">
+      {/* ---------------- CARD 1: WEATHER ---------------- */}
+      <Card
+        className="relative overflow-hidden border-0 shadow-lg text-white flex flex-col h-full min-h-[500px]"
+        style={{
+          backgroundImage: `url(${SolarImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {/* Dark Gradient Overlay for Readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/30 z-0" />
+
+        <CardHeader className="relative z-10 pb-0">
+          <CardTitle className="text-2xl font-bold text-white">
+            Site Conditions
           </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
-            </Badge>
-          </CardAction>
-        </CardHeader> */}
-        <WeatherData />
-        {/* <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Visitors for the last 6 months
-          </div>
-        </CardFooter> */}
-      </Card>
-      <Card className="@container/card">
-        {/* <CardHeader>
-          <CardDescription>New Customers</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingDown />
-              -20%
-            </Badge>
-          </CardAction>
+          <CardDescription className="text-gray-200">
+            Real-time weather & environment
+          </CardDescription>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <IconTrendingDown className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
-          </div>
-        </CardFooter>
+
+        <CardContent className="relative z-10 flex-1 flex flex-col justify-center p-6">
+          <WeatherData />
+        </CardContent>
       </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
-            </Badge>
-          </CardAction>
+
+      {/* ---------------- CARD 2: CAPACITY FACTOR ---------------- */}
+      <Card className="flex flex-col h-full shadow-lg border-gray-200">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-xl font-bold text-gray-800">
+                Capacity Factor
+              </CardTitle>
+              <CardDescription>Efficiency vs Rated Capacity</CardDescription>
+            </div>
+            <div className={`px-3 py-1 rounded-full ${performance.bg}`}>
+              <span className={`text-xs font-bold ${performance.color}`}>
+                {performance.label}
+              </span>
+            </div>
+          </div>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
-        </CardFooter> */}
-      <div className="bg-white max-w-2xl h-[80vh] rounded-xl shadow-md border border-gray-200 p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-gray-800">Capacity Factor</h2>
-          <div className={`px-4 py-2 rounded-lg ${performance.bg}`}>
-            <span className={`font-semibold ${performance.color}`}>
-              {performance.label}
-            </span>
-          </div>
-        </div>
-        <p className="text-gray-600 text-sm">
-          Measures how efficiently your solar unit performs compared to its rated capacity
-        </p>
-      </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        {/* Overall Capacity Factor */}
-        <div className="bg-primary/5 rounded-lg p-4 border border-primary/20">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="bg-primary/20 p-2 rounded-lg">
-              <TrendingUp className="w-5 h-5 text-primary" />
+        <CardContent className="flex-1 flex flex-col gap-6">
+          {/* Stats Row */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-primary/5 rounded-lg p-3 text-center border border-primary/10">
+              <TrendingUp className="w-4 h-4 text-primary mx-auto mb-1" />
+              <p className="text-lg font-bold text-primary-dark">
+                {data.capacityFactor}%
+              </p>
+              <p className="text-[10px] text-gray-500">Factor</p>
             </div>
-            <span className="text-sm font-medium text-gray-600">Capacity Factor</span>
-          </div>
-          <p className="text-3xl font-bold text-primary-dark">
-            {data.capacityFactor}%
-          </p>
-        </div>
-
-        {/* Actual Energy */}
-        <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="bg-green-200 p-2 rounded-lg">
-              <Zap className="w-5 h-5 text-green-700" />
+            <div className="bg-green-50 rounded-lg p-3 text-center border border-green-100">
+              <Zap className="w-4 h-4 text-green-600 mx-auto mb-1" />
+              <p className="text-lg font-bold text-green-700">
+                {data.actualEnergy}
+              </p>
+              <p className="text-[10px] text-gray-500">Actual kWh</p>
             </div>
-            <span className="text-sm font-medium text-gray-600">Actual Generated</span>
-          </div>
-          <p className="text-3xl font-bold text-green-700">
-            {data.actualEnergy} kWh
-          </p>
-        </div>
-
-        {/* Theoretical Max */}
-        <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="bg-blue-200 p-2 rounded-lg">
-              <Activity className="w-5 h-5 text-blue-700" />
+            <div className="bg-blue-50 rounded-lg p-3 text-center border border-blue-100">
+              <Activity className="w-4 h-4 text-blue-600 mx-auto mb-1" />
+              <p className="text-lg font-bold text-blue-700">
+                {data.theoreticalMax}
+              </p>
+              <p className="text-[10px] text-gray-500">Max kWh</p>
             </div>
-            <span className="text-sm font-medium text-gray-600">Theoretical Max</span>
           </div>
-          <p className="text-3xl font-bold text-blue-700">
-            {data.theoreticalMax} kWh
-          </p>
-        </div>
-      </div>
 
-      {/* Bar Chart */}
-      <div className="h-80">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data.dailyData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis 
-              dataKey="date" 
-              tick={{ fontSize: 12 }}
-              tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-            />
-            <YAxis 
-              label={{ value: 'Capacity Factor (%)', angle: -90, position: 'insideLeft' }}
-              tick={{ fontSize: 12 }}
-            />
-            <Tooltip 
-              formatter={(value) => [`${value}%`, 'Capacity Factor']}
-              labelFormatter={(label) => new Date(label).toLocaleDateString()}
-            />
-            <Legend />
-            <Bar 
-              dataKey="capacityFactor" 
-              fill="#018790" 
-              name="Capacity Factor (%)"
-              radius={[8, 8, 0, 0]}
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Info Box */}
-      
-    </div>
+          {/* Chart */}
+          <div className="flex-1 min-h-[200px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data.dailyData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis
+                  dataKey="date"
+                  tick={{ fontSize: 10 }}
+                  tickFormatter={(value) =>
+                    new Date(value).toLocaleDateString("en-US", {
+                      day: "numeric",
+                    })
+                  }
+                />
+                <YAxis hide />
+                <Tooltip
+                  cursor={{ fill: "#f4f4f5" }}
+                  contentStyle={{
+                    borderRadius: "8px",
+                    border: "none",
+                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                  }}
+                />
+                <Bar
+                  dataKey="capacityFactor"
+                  fill="#018790"
+                  radius={[4, 4, 0, 0]}
+                  barSize={20}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
       </Card>
-      <Card className="@container/card">
-        <div className="bg-white rounded-xl h-[80vh] shadow-md border border-gray-200 p-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">Peak vs Off-Peak Generation</h2>
-      <p className="text-gray-600 text-sm mb-6">
-        Distribution of energy generation during peak sun hours vs off-peak periods
-      </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Pie Chart */}
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={chartData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ percentage }) => `${percentage}%`}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {chartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip formatter={(value) => `${value.toFixed(2)} kWh`} />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+      {/* ---------------- CARD 3: PEAK vs OFF-PEAK ---------------- */}
+      <Card className="flex flex-col h-full shadow-lg border-gray-200">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-xl font-bold text-gray-800">
+            Generation Split
+          </CardTitle>
+          <CardDescription>Peak (10 AM - 2 PM) vs Off-Peak</CardDescription>
+        </CardHeader>
 
-        {/* Stats */}
-        <div className="space-y-4">
-          <div className="bg-primary/5 rounded-lg p-4 border border-primary/20">
-            <div className="flex items-center gap-3 mb-2">
-              <Sun className="w-6 h-6 text-primary" />
-              <span className="font-semibold text-gray-700">Peak Hours</span>
+        <CardContent className="flex-1 flex flex-col gap-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-3 justify-center">
+              <div className="bg-primary/5 rounded-lg p-3 border border-primary/10">
+                <div className="flex items-center gap-2 mb-1">
+                  <Sun className="w-4 h-4 text-primary" />
+                  <span className="text-xs font-semibold text-gray-600">
+                    Peak
+                  </span>
+                </div>
+                <p className="text-lg font-bold text-primary-dark">
+                  {dataPeak?.peak.energy} <span className="text-xs">kWh</span>
+                </p>
+              </div>
+
+              <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                <div className="flex items-center gap-2 mb-1">
+                  <Moon className="w-4 h-4 text-gray-500" />
+                  <span className="text-xs font-semibold text-gray-600">
+                    Off-Peak
+                  </span>
+                </div>
+                <p className="text-lg font-bold text-gray-700">
+                  {dataPeak?.offPeak.energy}{" "}
+                  <span className="text-xs">kWh</span>
+                </p>
+              </div>
             </div>
-            <p className="text-2xl font-bold text-primary-dark">{dataPeak.peak.energy} kWh</p>
-            <p className="text-sm text-gray-600">{dataPeak.peak.percentage}% of total</p>
+
+            {/* Pie Chart */}
+            <div className="h-[180px] w-full relative">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={chartData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={40}
+                    outerRadius={60}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {chartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+              {/* Center Text Overlay */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="text-center">
+                  <span className="text-xs font-bold text-gray-400">Total</span>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-gray-100 rounded-lg p-4 border border-gray-300">
-            <div className="flex items-center gap-3 mb-2">
-              <Moon className="w-6 h-6 text-gray-600" />
-              <span className="font-semibold text-gray-700">Off-Peak Hours</span>
-            </div>
-            <p className="text-2xl font-bold text-gray-700">{dataPeak.offPeak.energy} kWh</p>
-            <p className="text-sm text-gray-600">{dataPeak.offPeak.percentage}% of total</p>
-          </div>
-
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-            <p className="text-sm text-blue-800">
-              <strong>Peak hours (10 AM - 2 PM)</strong> typically generate 40-50% of daily energy due to optimal sun angle and intensity.
+          <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 mt-auto">
+            <p className="text-xs text-blue-800 leading-relaxed">
+              <span className="font-semibold">Insight:</span> Peak hours contribute{" "}
+              {dataPeak?.peak.percentage}% of total energy. Optimization suggested if below 40%.
             </p>
           </div>
-        </div>
-      </div>
-    </div>
+        </CardContent>
       </Card>
     </div>
-  )
+  );
 }

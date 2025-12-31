@@ -11,6 +11,7 @@ import webHooksRouter from './api/web-hooks/webhooks';
 import cors from 'cors';
 import { clerkMiddleware } from '@clerk/express';
 import Metricsrouter from './api/metrics';
+import AnomalyRecordsRouter from './api/anomaly';
 
 dotenv.config(); 
 const server = express();
@@ -21,6 +22,7 @@ server.use(cors({origin: "http://localhost:5173"})); // Enable CORS for all rout
 server.use(loggerMiddleware); // Use the logger middleware
 server.use("/api/solar-units", solarUnitRouter);
 server.use("/api/energy-generation-records", EnergyRecordRouter);
+server.use("/api/anomaly-records", AnomalyRecordsRouter);
 server.use("/api/users", userRouter);
 server.use("/api/metrics", Metricsrouter);
 server.use(globalErrorHandlingMiddleware); // (err, res, req, next) are global error handlers, Use the global error handling middleware
