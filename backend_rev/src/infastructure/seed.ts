@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { SolarUnit } from "./entities/SolarUnit";
+import { SolarUnit } from "./entities/solarUnit";
 import dotenv from "dotenv";
 import { connectDB } from "./db";
 
