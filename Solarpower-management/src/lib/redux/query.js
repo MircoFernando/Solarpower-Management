@@ -90,6 +90,12 @@ export const api = createApi({
     getPeakOffPeakDistribution: builder.query({
       query: (days = 30) => `/metrics/peak-offpeak?days=${days}`,
     }),
+    getUserAnomalies: builder.query({
+      query: (groupBy = "date") => `/anomaly-records/solar-unit/user?groupBy=${groupBy}`
+    }),
+    getAllAnomalies: builder.query({
+      query: (groupBy = "date") => `/anomaly-records/solar-unit?groupBy=${groupBy}`
+    })
   }),
 });
 
@@ -107,7 +113,9 @@ export const {
   useUpdateRegisteredUserMutation,
   useDeleteSolarUnitMutation,
   useGetCapacityFactorQuery,
-  useGetPeakOffPeakDistributionQuery
+  useGetPeakOffPeakDistributionQuery,
+  useGetUserAnomaliesQuery,
+  useGetAllAnomaliesQuery
 } = api;
 
 // TODO : Continue the rest of the implementation
