@@ -78,7 +78,7 @@ export const syncMiddleware = async (
 
     // Fetch latest records from data API
     const dataAPIResponse = await fetch(
-      `http://localhost:8000/api/energy-generation-records/solar-unit/${solarUnit.serial_number}`
+      `https://solarpower-management-solarunit-api.onrender.com/api/energy-generation-records/solar-unit/${solarUnit.serial_number}`
     );
     if (!dataAPIResponse.ok) {
       throw new Error(

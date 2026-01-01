@@ -32,7 +32,7 @@ export const syncEnergyGenerationRecords = async () => {
                 .sort({ timestamp: -1 });
 
             // Build URL with sinceTimestamp query parameter
-            const baseUrl = `http://localhost:8000/api/energy-generation-records/solar-unit/${solarUnit.serial_number}`;
+            const baseUrl = `https://solarpower-management-solarunit-api.onrender.com/api/energy-generation-records/solar-unit/${solarUnit.serial_number}`;
             const url = new URL(baseUrl);
 
             if (lastSyncedRecord?.timestamp) {
