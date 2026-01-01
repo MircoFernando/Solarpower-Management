@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // import { get } from "http";
 
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = "https://solarpower-management.onrender.com/api";
 const WEATHER_API = import.meta.env.VITE_WEATHER_API; // ✅ Vite uses import.meta.env
 
 export const api = createApi({
