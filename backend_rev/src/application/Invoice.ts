@@ -44,3 +44,20 @@ export const getAllInVoices = async (
         next(error);
     }
 }
+
+export const getInvoiceById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+    try {
+        const { id } = req.params;
+        const invoice = await Invoice.findById(id);
+        if (!invoice) {
+            throw new NotFoundError("Invoice not found");
+        }
+        res.status(200).json(invoice);
+    } catch (error: any) {
+    next(error); // Pass the error to the global error handler
+  }
+};
