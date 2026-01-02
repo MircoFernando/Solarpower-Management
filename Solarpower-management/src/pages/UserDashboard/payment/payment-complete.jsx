@@ -1,4 +1,4 @@
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link } from "react-router";
 import { useGetSessionStatusQuery } from "../../../lib/redux/query";
 
 export default function PaymentCompletePage() {
