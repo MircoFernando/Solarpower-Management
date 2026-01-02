@@ -24,37 +24,37 @@ export const api = createApi({
   endpoints: (builder) => ({
     getEnergyGenerationRecord: builder.query({
       query: ({ id, groupBy, limit }) =>
-        `energy-generation-records/solar-units/${id}?groupBy=${groupBy}${
+        `/energy-generation-records/solar-units/${id}?groupBy=${groupBy}${
           limit ? `&limit=${limit}` : ""
         }`,
     }),
     getSolarUnitsByClerkUserId: builder.query({
-      query: () => `solar-units/user`,
+      query: () => `/solar-units/user`,
       providesTags: ["SolarUnit"],
     }),
     getAllSolarUnits: builder.query({
-      query: () => `solar-units`,
+      query: () => `/solar-units`,
       providesTags: ["SolarUnit"],
     }),
     getAllUsers: builder.query({
-      query: () => `users`,
+      query: () => `/users`,
       providesTags: ["User"],
     }),
     getAllNewUsers: builder.query({
-      query: () => `solar-units/newusers`,
+      query: () => `/solar-units/newusers`,
       providesTags: ["User"],
     }),
     getAllRegisteredUsers: builder.query({
-      query: () => `users/registered-users`,
+      query: () => `/users/registered-users`,
       providesTags: ["RegisteredUser"],
     }),
     getAllRegisteredUsersByClerkUserId: builder.query({
-      query: (id) => `users/registered-users/${id}`,
+      query: (id) => `/users/registered-users/${id}`,
       providesTags: ["RegisteredUser"],
     }),
     createSolarUnit: builder.mutation({
       query: (newUnit) => ({
-        url: `solar-units`,
+        url: `/solar-units`,
         method: "POST",
         body: newUnit,
       }),
@@ -62,14 +62,14 @@ export const api = createApi({
     }),
     deleteSolarUnit: builder.mutation({
       query: (id) => ({
-        url: `solar-units/${id}`,
+        url: `/solar-units/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["SolarUnit"], 
     }),
     createRegisteredUser: builder.mutation({
       query: (user) => ({
-        url: `users/registered-users`,
+        url: `/users/registered-users`,
         method: "POST",
         body: user,
       }),
@@ -77,7 +77,7 @@ export const api = createApi({
     }),
     updateRegisteredUser: builder.mutation({
       query: ({ id, body }) => ({
-        url: `users/registered-users/${id}`,
+        url: `/users/registered-users/${id}`,
         method: "PUT",
         body,
       }),
@@ -95,6 +95,18 @@ export const api = createApi({
     }),
     getAllAnomalies: builder.query({
       query: (groupBy = "date") => `/anomaly-records/solar-unit?groupBy=${groupBy}`
+    }),
+    getInvoicesForUser: builder.query({
+      query: () => `/payments/user`,
+      providesTags: ["Invoice"],
+    }),
+    getAllInvoices: builder.query({
+      query: () => `/payments`,
+      providesTags: ["Invoice"],
+    }),
+    getSessionStatus: builder.query({
+      query: (session_id) => `/payments/session-status?session_id=${session_id}`,
+      providesTags: ["Invoice"],
     })
   }),
 });
@@ -115,7 +127,10 @@ export const {
   useGetCapacityFactorQuery,
   useGetPeakOffPeakDistributionQuery,
   useGetUserAnomaliesQuery,
-  useGetAllAnomaliesQuery
+  useGetAllAnomaliesQuery,
+  useGetAllInvoicesQuery,
+  useGetInvoicesForUserQuery,
+  useGetSessionStatusQuery
 } = api;
 
 // TODO : Continue the rest of the implementation
