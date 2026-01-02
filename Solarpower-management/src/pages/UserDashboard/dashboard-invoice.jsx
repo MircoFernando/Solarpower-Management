@@ -29,9 +29,9 @@ const UserInvoicesPage = () => {
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-LK', { // Sri Lanka format based on context
+    return new Intl.NumberFormat('en-US', { // Sri Lanka format based on context
       style: 'currency',
-      currency: 'LKR',
+      currency: 'USD',
       minimumFractionDigits: 2
     }).format(amount);
   };
