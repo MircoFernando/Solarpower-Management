@@ -97,6 +97,6 @@ export const generateInvoice = async () => {
         }
 
     } catch (error) {
-        console.error("Critical Error in Invoice Generation Job:", error);
+        console.error("Error in Invoice Generation Job:", error);
     }
 }
