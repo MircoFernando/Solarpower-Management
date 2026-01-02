@@ -21,6 +21,7 @@ import AdminUsersPage from "./pages/admin/components/pages/Users/User.jsx//";
 import AdminAnomaliesPage from "./pages/admin/components/pages/Anomalies/Anomalies.jsx";
 import { RegistrationPage } from "./pages/auth/registration/registration-page.jsx";
 import AnomalyDashboard from "./pages/UserDashboard/dashboard-anomaly.jsx";
+import InvoiceDashboard from "./pages/UserDashboard/dashboard-invoice.jsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -45,6 +46,7 @@ createRoot(document.getElementById("root")).render(
                   <Route path="/dashboard" element={<DashboardLayout />} >
                   <Route index element={<HomeDashboard />} />
                   <Route path="anomalies" element={<AnomalyDashboard />} />
+                  <Route path="invoices" element={<InvoiceDashboard />} />
                 </Route>
               </Route>
               <Route element={<AuthorizedLayout />}>

@@ -12,6 +12,8 @@ import cors from 'cors';
 import { clerkMiddleware } from '@clerk/express';
 import Metricsrouter from './api/metrics';
 import AnomalyRecordsRouter from './api/anomaly';
+import InvoiceRouter from './api/invoice';
+import PaymentRouter from './api/payments';
 
 dotenv.config(); 
 const server = express();
@@ -25,6 +27,8 @@ server.use("/api/energy-generation-records", EnergyRecordRouter);
 server.use("/api/anomaly-records", AnomalyRecordsRouter);
 server.use("/api/users", userRouter);
 server.use("/api/metrics", Metricsrouter);
+server.use("/api/invoices", InvoiceRouter);
+server.use("/api/payments", PaymentRouter);
 server.use(globalErrorHandlingMiddleware); // (err, res, req, next) are global error handlers, Use the global error handling middleware
 
 connectDB(); // Connect to the database
