@@ -44,6 +44,10 @@ export const generateInvoice = async () => {
                     .findOne({ solarUnit: unit._id })
                     .sort({ timestamp: -1 })
                     .select('timestamp'); // Only need the timestamp
+                
+                if(!latestRecord){
+                    console.log("No records found the SolarUnit");
+                }
 
                 // If we have no records at all, or the latest record is OLDER than our target billing date,
                 if (!latestRecord || new Date(latestRecord.timestamp) < targetEndDate) {
