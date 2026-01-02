@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSearchParams, Link, useNavigate } from "react-router-dom"; // <--- FIXED IMPORT
 import { useGetSessionStatusQuery } from "../../../lib/redux/query";
-import { CheckCircle, XCircle, ArrowRight, Loader2 } from "lucide-react";
+import { CheckCircle, XCircle, ArrowLeft, Loader2 } from "lucide-react";
 
 export default function PaymentCompletePage() {
   const [searchParams] = useSearchParams();
