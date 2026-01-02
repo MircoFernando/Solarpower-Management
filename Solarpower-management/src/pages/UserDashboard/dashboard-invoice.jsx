@@ -11,7 +11,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useGetInvoicesForUserQuery } from '@/lib/redux/query';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router'; 
 
 const UserInvoicesPage = () => {
   const [statusFilter, setStatusFilter] = useState('all'); // 'all' | 'PENDING' | 'PAID'
