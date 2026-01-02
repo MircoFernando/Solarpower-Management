@@ -97,11 +97,11 @@ export const api = createApi({
       query: (groupBy = "date") => `/anomaly-records/solar-unit?groupBy=${groupBy}`
     }),
     getInvoicesForUser: builder.query({
-      query: () => `/payments/user`,
+      query: () => `/invoices/user`,
       providesTags: ["Invoice"],
     }),
     getAllInvoices: builder.query({
-      query: () => `/payments`,
+      query: () => `/invoices`,
       providesTags: ["Invoice"],
     }),
     getSessionStatus: builder.query({
