@@ -1,8 +1,9 @@
 import express from "express";
 import { verifyWebhook } from "@clerk/express/webhooks";
 import { User } from "../../infastructure/entities/user";
-
+import { handleStripeWebhook } from "../../application/payment";
 const webhooksRouter = express.Router();
+
 
 webhooksRouter.post(
   "/clerk",
@@ -52,5 +53,12 @@ webhooksRouter.post(
     }
   }
 );
+
+webhooksRouter.post(
+  "/api/stripe/webhook",
+  express.raw({ type: "application/json" }),
+  handleStripeWebhook
+);
+
 
 export default webhooksRouter;

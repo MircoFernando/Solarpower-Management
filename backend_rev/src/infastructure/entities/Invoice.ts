@@ -11,7 +11,11 @@ const InvoiceSchema = new mongoose.Schema(
     clerkUserId: {
       type: String,
       required: true,
-      unique: true,
+    },
+
+    userName: {
+      type: String,
+      required: true,
     },
 
     billingPeriodStart: {
@@ -32,9 +36,9 @@ const InvoiceSchema = new mongoose.Schema(
     paymentStatus: {
       type: String,
       enum: ["PENDING", "PAID", "FAILED"],
+      default: "PENDING",
       required: true,
     },
-
     paidAt: {
         type: Date
     }
@@ -45,5 +49,3 @@ const InvoiceSchema = new mongoose.Schema(
 );
 
 export const Invoice = mongoose.model('Invoice', InvoiceSchema);
-
-//TODO : Start doing from the 5th step
