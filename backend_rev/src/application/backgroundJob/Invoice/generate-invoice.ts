@@ -43,8 +43,7 @@ export const generateInvoice = async () => {
                 const latestRecord = await EnergyGenerationRecord
                     .findOne({ solarUnit: unit._id })
                     .sort({ timestamp: -1 })
-                    .select('timestamp'); // Only need the timestamp
-                
+
                 if(!latestRecord){
                     console.log("No records found the SolarUnit");
                 }
