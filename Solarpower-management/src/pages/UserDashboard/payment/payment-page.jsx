@@ -7,10 +7,8 @@ import {
   ShieldCheck, 
   AlertCircle 
 } from 'lucide-react';
-import { useGetInvoiceByIdQuery } from '@/lib/redux/query'; 
+import { useGetInvoiceByIdQuery } from '../../../lib/redux/query';
 import { CheckoutForm } from './../../../components/checkoutForm';
-// Initialize Stripe (Move this to a config file in production)
-
 
 const PaymentPage = () => {
   const { id } = useParams();

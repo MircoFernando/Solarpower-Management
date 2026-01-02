@@ -11,7 +11,6 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useGetInvoicesForUserQuery } from '@/lib/redux/query';
-import PaymentPage from './payment/payment-page';
 import { Link } from 'react-router'; 
 
 const UserInvoicesPage = () => {

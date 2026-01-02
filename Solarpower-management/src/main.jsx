@@ -52,7 +52,7 @@ createRoot(document.getElementById("root")).render(
                 </Route>
                 {/* Payment Page (Protected, but standalone layout) */}
                   <Route path="/invoices/:id" element={<PaymentPage />} />
-                  <Route path="/invoices/complete" element={<PaymentPage />} />
+                  <Route path="/invoices/complete" element={<PaymentCompletePage />} />
               </Route>
               <Route element={<AuthorizedLayout />}>
                 {/* Admin with nested routes */}
