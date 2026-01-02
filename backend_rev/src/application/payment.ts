@@ -4,7 +4,7 @@ import { NotFoundError, ValidationError } from "../domain/dtos/errors/errors";
 import { Invoice } from "../infastructure/entities/Invoice";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-
+   
 export const createCheckoutSession = async (req: Request, res: Response) => {
   // 1. Get invoice (use your existing auth + query patterns)
   const invoice = await Invoice.findById(req.body.invoiceId);

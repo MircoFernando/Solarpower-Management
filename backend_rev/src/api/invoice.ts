@@ -7,4 +7,4 @@ const InvoiceRouter = express.Router();
 InvoiceRouter.route("/").get(getAllInVoices);
 InvoiceRouter.route("/user").get(getInvoiceForUser);
 
-export default InvoiceRouter;
+export default InvoiceRouter; 
