@@ -20,7 +20,7 @@ const server = express();
 server.use("/api/webhooks", webHooksRouter);
 server.use(clerkMiddleware())
 server.use(express.json()); // Convert incoming JSON requests to JS objects
-// server.use(cors({origin: process.env.FRONTEND_URL})); // Enable CORS for all routes
+server.use(cors({origin: process.env.FRONTEND_URL})); // Enable CORS for all routes
 server.use(loggerMiddleware); // Use the logger middleware
 server.use("/api/solar-units", solarUnitRouter);
 server.use("/api/energy-generation-records", EnergyRecordRouter);
