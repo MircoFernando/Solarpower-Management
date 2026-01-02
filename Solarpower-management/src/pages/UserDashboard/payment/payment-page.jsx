@@ -8,7 +8,7 @@ import {
   AlertCircle 
 } from 'lucide-react';
 import { useGetInvoiceByIdQuery } from '../../../lib/redux/query';
-import { CheckoutForm } from './../../../components/checkoutForm';
+import CheckoutForm from '../../../components/checkoutForm';
 
 const PaymentPage = () => {
   const { id } = useParams();
@@ -147,7 +147,7 @@ const PaymentPage = () => {
         </div>
 
         {/* Right Column: Payment Form */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 lg:p-8">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 lg:p-8 min-h-[600px]">
            <h2 className="text-xl font-bold text-gray-900 mb-6">Payment Details</h2>
            
            <CheckoutForm invoiceId ={id} />
