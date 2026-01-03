@@ -253,7 +253,7 @@ const CardNav = ({
             </div>
             <UserButton />
             <div className="logo-container">
-              <img src={logo} alt={logoAlt} className="logo" />
+              <img src={Logo} alt={logoAlt} className="logo" />
             </div>
           </div>
 

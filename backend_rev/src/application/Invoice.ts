@@ -28,7 +28,7 @@ export const getInvoiceForUser = async (
         if(!invoice){
             throw new NotFoundError("Invoice not Found");
         }
-        res.status(200).json(invoice[0]);
+        res.status(200).json(invoice);
     } catch (error: any){
         next(error);
     }
