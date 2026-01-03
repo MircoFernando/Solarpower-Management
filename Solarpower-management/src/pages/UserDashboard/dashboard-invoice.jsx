@@ -29,9 +29,9 @@ const UserInvoicesPage = () => {
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-LK', { // Sri Lanka format based on context
+    return new Intl.NumberFormat('en-US', { // Sri Lanka format based on context
       style: 'currency',
-      currency: 'LKR',
+      currency: 'USD',
       minimumFractionDigits: 2
     }).format(amount);
   };
@@ -232,7 +232,7 @@ const UserInvoicesPage = () => {
                     <td className="px-6 py-4 text-right">
                       {invoice.paymentStatus === 'PENDING' ? (
                         <Link 
-                          to={`/payment/${invoice._id}`} 
+                          to={`/invoices/${invoice._id}`} 
                           className="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
                         >
                           Pay Now

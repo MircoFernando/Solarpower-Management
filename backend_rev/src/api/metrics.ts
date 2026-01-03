@@ -3,7 +3,7 @@ import { getCapacityFactor, getPeakOffPeakDistribution } from './../application/
 
 const Metricsrouter = express.Router();
 
-Metricsrouter.get('/capacity-factor', getCapacityFactor);
-Metricsrouter.get('/peak-offpeak', getPeakOffPeakDistribution);
+Metricsrouter.route('/capacity-factor').get(getCapacityFactor);
+Metricsrouter.route('/peak-offpeak').get(getPeakOffPeakDistribution);
 
 export default Metricsrouter;
