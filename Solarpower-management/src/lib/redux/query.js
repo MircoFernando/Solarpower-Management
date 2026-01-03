@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // import { get } from "http";
 
-const BASE_URL = "https://solarpower-management.onrender.com/api";
+// const BASE_URL = "https://solarpower-management.onrender.com/api";
+const BASE_URL = "http://localhost:3000/api";
 const WEATHER_API = import.meta.env.VITE_WEATHER_API; // ✅ Vite uses import.meta.env
 
 export const api = createApi({
@@ -97,17 +98,25 @@ export const api = createApi({
       query: (groupBy = "date") => `/anomaly-records/solar-unit?groupBy=${groupBy}`
     }),
     getInvoicesForUser: builder.query({
-      query: () => `/payments/user`,
+      query: () => `/invoices/user`,
       providesTags: ["Invoice"],
     }),
     getAllInvoices: builder.query({
-      query: () => `/payments`,
+      query: () => `/invoices`,
       providesTags: ["Invoice"],
     }),
     getSessionStatus: builder.query({
       query: (session_id) => `/payments/session-status?session_id=${session_id}`,
       providesTags: ["Invoice"],
-    })
+    }),
+    updateInvoiceStatus: builder.mutation({
+      query: ({ id, body }) => ({
+        url: `/invoices/user/${id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Invoice"],
+    }),
   }),
 });
 
@@ -130,7 +139,8 @@ export const {
   useGetAllAnomaliesQuery,
   useGetAllInvoicesQuery,
   useGetInvoicesForUserQuery,
-  useGetSessionStatusQuery
+  useGetSessionStatusQuery,
+  useUpdateInvoiceStatusMutation
 } = api;
 
 // TODO : Continue the rest of the implementation
