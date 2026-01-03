@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // import { get } from "http";
 
-const BASE_URL = "https://solarpower-management.onrender.com/api";
+// const BASE_URL = "https://solarpower-management.onrender.com/api";
+const BASE_URL = "http://localhost:3000/api";
 const WEATHER_API = import.meta.env.VITE_WEATHER_API; // ✅ Vite uses import.meta.env
 
 export const api = createApi({
@@ -104,14 +105,18 @@ export const api = createApi({
       query: () => `/invoices`,
       providesTags: ["Invoice"],
     }),
-    getInvoiceById: builder.query({
-      query: (id) => `/invoices/user/${id}`,
-      providesTags: ["Invoice"],
-    }),
     getSessionStatus: builder.query({
       query: (session_id) => `/payments/session-status?session_id=${session_id}`,
       providesTags: ["Invoice"],
-    })
+    }),
+    updateInvoiceStatus: builder.mutation({
+      query: ({ id, body }) => ({
+        url: `/invoices/user/${id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Invoice"],
+    }),
   }),
 });
 
@@ -135,7 +140,7 @@ export const {
   useGetAllInvoicesQuery,
   useGetInvoicesForUserQuery,
   useGetSessionStatusQuery,
-  useGetInvoiceByIdQuery
+  useUpdateInvoiceStatusMutation
 } = api;
 
 // TODO : Continue the rest of the implementation

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSearchParams, Link, useNavigate } from "react-router-dom"; // <--- FIXED IMPORT
 import { useGetSessionStatusQuery } from "../../../lib/redux/query";
 import { CheckCircle, XCircle, ArrowLeft, Loader2 } from "lucide-react";
+import { useUpdateInvoiceStatusMutation } from "../../../lib/redux/query";
 
 export default function PaymentCompletePage() {
   const [searchParams] = useSearchParams();
@@ -18,6 +19,8 @@ export default function PaymentCompletePage() {
   const { data, isLoading, isError } = useGetSessionStatusQuery(sessionId, {
     skip: !sessionId,
   });
+
+  const [updateInvoiceStatus] = useUpdateInvoiceStatusMutation();
 
   // 2. Loading State (Centered & Styled)
   if (isLoading) {
@@ -56,6 +59,18 @@ export default function PaymentCompletePage() {
   // 4. Success / Failure Logic based on Stripe status
   // Stripe usually returns status='complete' or payment_status='paid'
   const isSuccess = data?.status === 'complete' || data?.payment_status === 'paid';
+
+  // Update Invoice Status in backend
+  useEffect(() => {
+    if (isSuccess && data?.invoice_id) {
+      updateInvoiceStatus({
+        id: data.invoice_id,
+        body: { paymentStatus: "paid",
+          paidAt: new Date().toISOString()
+         }
+      });
+    }
+  }, [isSuccess, data, updateInvoiceStatus]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
