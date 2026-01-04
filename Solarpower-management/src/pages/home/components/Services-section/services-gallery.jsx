@@ -1,48 +1,53 @@
-import { Gallery6 } from "../../../../components/gallery6"
+import { Gallery6 } from "../../../../components/gallery6";
 
 const ServiceGallery = {
-  heading: "Services That We Offer",
-  demoUrl: "https://www.shadcnblocks.com",
+  heading: "Solar Solutions for Every Scale",
+  demoUrl: "#",
   items: [
     {
       id: "item-1",
-      title: "Build Modern UIs",
+      title: "Residential Power Systems",
       summary:
-        "Create stunning user interfaces with our comprehensive design system.",
+        "Turn your roof into a personal power plant. We design bespoke solar arrays that integrate seamlessly with your home's architecture while maximizing energy offset.",
       url: "#",
-      image: "https://www.shadcnblocks.com/images/block/placeholder-dark-1.svg",
+      // Image: Clear shot of a modern house with solar panels
+      image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2069&auto=format&fit=crop",
     },
     {
       id: "item-2",
-      title: "Design System Components",
+      title: "Commercial Infrastructure",
       summary:
-        "Explore our library of customizable components built with shadcn/ui and Tailwind CSS.",
+        "Scalable energy solutions that slash operational overhead. Empower your business with reliable, commercial-grade renewable energy that drives long-term ROI.",
       url: "#",
-      image: "https://www.shadcnblocks.com/images/block/placeholder-dark-1.svg",
+      // Image: Large scale commercial solar array
+      image: "https://images.unsplash.com/photo-1566093097221-ac2335b09e70?q=80&w=2069&auto=format&fit=crop",
     },
     {
       id: "item-3",
-      title: "Responsive Layouts",
+      title: "Next-Gen Battery Storage",
       summary:
-        "Build websites that look great on any device with our responsive design patterns.",
+        "Achieve true energy independence. Our advanced battery backup systems protect you from grid outages and optimize usage during peak-rate hours.",
       url: "#",
-      image: "https://www.shadcnblocks.com/images/block/placeholder-dark-1.svg",
+      // Image: Modern battery/server rack technology
+      image: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=2070&auto=format&fit=crop",
     },
     {
       id: "item-4",
-      title: "Developer Experience",
+      title: "Intelligent Monitoring",
       summary:
-        "Streamline your workflow with our developer-friendly tools and documentation.",
+        "Visibility is power. Track production, consumption, and savings in real-time through our proprietary dashboard, ensuring your system operates at peak efficiency.",
       url: "#",
-      image: "https://www.shadcnblocks.com/images/block/placeholder-dark-1.svg",
+      // Image: Data visualization dashboard
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
     },
     {
       id: "item-5",
-      title: "Performance First",
+      title: "Proactive Maintenance",
       summary:
-        "Create fast, optimized websites using our performance-focused components.",
+        "Protect your investment with our comprehensive care packages. From automated diagnostics to rapid field repair, we ensure your panels perform for decades.",
       url: "#",
-      image: "https://www.shadcnblocks.com/images/block/placeholder-dark-1.svg",
+      // Image: Technician working on panels
+      image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=2069&auto=format&fit=crop",
     },
   ],
 };
@@ -51,4 +56,4 @@ function Gallery() {
   return <Gallery6 {...ServiceGallery} />;
 }
 
-export { Gallery };
+export default Gallery;

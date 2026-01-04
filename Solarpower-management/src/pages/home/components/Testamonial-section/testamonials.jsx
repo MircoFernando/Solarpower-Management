@@ -1,101 +1,98 @@
 import { TestimonialsColumn } from "./../../../../components/testimonials-columns-1";
-import { motion } from "motion/react";
+import { motion } from "framer-motion"; // Ensure you use the same package as your other components
 
 const testimonials = [
   {
-    text: "This ERP revolutionized our operations, streamlining finance and inventory. The cloud-based platform keeps us productive, even remotely.",
+    text: "Switching to solar was the best investment we made. Our energy bills dropped by 80% in the first month alone.",
     image: "https://randomuser.me/api/portraits/women/1.jpg",
     name: "Briana Patton",
-    role: "Operations Manager",
+    role: "Homeowner",
   },
   {
-    text: "Implementing this ERP was smooth and quick. The customizable, user-friendly interface made team training effortless.",
+    text: "The installation crew was professional and fast. The entire system was up and running in just two days.",
     image: "https://randomuser.me/api/portraits/men/2.jpg",
     name: "Bilal Ahmed",
-    role: "IT Manager",
+    role: "Small Business Owner",
   },
   {
-    text: "The support team is exceptional, guiding us through setup and providing ongoing assistance, ensuring our satisfaction.",
+    text: "I love the monitoring app. Seeing my production in real-time gives me complete peace of mind.",
     image: "https://randomuser.me/api/portraits/women/3.jpg",
     name: "Saman Malik",
-    role: "Customer Support Lead",
+    role: "Eco-Conscious User",
   },
   {
-    text: "This ERP's seamless integration enhanced our business operations and efficiency. Highly recommend for its intuitive interface.",
+    text: "Enovex handled all the permits and paperwork. It was a completely hands-off experience for me.",
     image: "https://randomuser.me/api/portraits/men/4.jpg",
     name: "Omar Raza",
-    role: "CEO",
+    role: "Property Manager",
   },
   {
-    text: "Its robust features and quick support have transformed our workflow, making us significantly more efficient.",
+    text: "The commercial PPA model allowed our factory to go green with zero upfront capital. Incredible ROI.",
     image: "https://randomuser.me/api/portraits/women/5.jpg",
     name: "Zainab Hussain",
-    role: "Project Manager",
+    role: "Operations Director",
   },
   {
-    text: "The smooth implementation exceeded expectations. It streamlined processes, improving overall business performance.",
+    text: "Their support team actually picks up the phone. Had a small inverter issue and they fixed it remotely in minutes.",
     image: "https://randomuser.me/api/portraits/women/6.jpg",
     name: "Aliza Khan",
-    role: "Business Analyst",
+    role: "Facility Manager",
   },
   {
-    text: "Our business functions improved with a user-friendly design and positive customer feedback.",
+    text: "The battery backup saved us during the last storm. While the neighborhood went dark, we had power.",
     image: "https://randomuser.me/api/portraits/men/7.jpg",
     name: "Farhan Siddiqui",
-    role: "Marketing Director",
+    role: "Residential Client",
   },
   {
-    text: "They delivered a solution that exceeded expectations, understanding our needs and enhancing our operations.",
+    text: "Transparent pricing and no hidden fees. The savings projection they gave was 100% accurate.",
     image: "https://randomuser.me/api/portraits/women/8.jpg",
     name: "Sana Sheikh",
-    role: "Sales Manager",
+    role: "Architect",
   },
   {
-    text: "Using this ERP, our online presence and conversions significantly improved, boosting business performance.",
+    text: "Highly recommend for anyone looking to reduce their carbon footprint without sacrificing reliability.",
     image: "https://randomuser.me/api/portraits/men/9.jpg",
     name: "Hassan Ali",
-    role: "E-commerce Manager",
+    role: "Sustainability Lead",
   },
 ];
-
 
 const firstColumn = testimonials.slice(0, 3);
 const secondColumn = testimonials.slice(3, 6);
 const thirdColumn = testimonials.slice(6, 9);
 
-
 const Testimonials = () => {
   return (
-    <section className="bg-background my-20 relative">
-
+    <div className="relative w-full bg-white h-[]70rem]"> 
       <div className="container z-10 mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="flex flex-col items-center justify-center max-w-[540px] mx-auto"
+          className="flex flex-col items-center justify-center max-w-[640px] mx-auto text-center"
         >
-          <div className="flex justify-center">
-            <div className="border py-1 px-4 rounded-lg">Testimonials</div>
-          </div>
+           <span className="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 text-xs font-bold tracking-widest mb-4 uppercase">
+              Customer Stories
+           </span>
 
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tighter mt-5">
-            What our users say
+          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-4">
+            Powered by <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Trust</span>
           </h2>
-          <p className="text-center mt-5 opacity-75">
-            See what our customers have to say about us.
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Join thousands of homeowners and businesses who have taken control of their energy future.
           </p>
         </motion.div>
 
-        <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+        <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)] max-h-[740px] overflow-hidden">
           <TestimonialsColumn testimonials={firstColumn} duration={15} />
           <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
           <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
-export default Testimonials ;
+export default Testimonials;

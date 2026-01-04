@@ -53,8 +53,6 @@ export const SolarUnitRegistry = async  (req: Request,
 
     console.log(`Solar unit ${serialNumber} registered in database`);
 
-
-
     res.status(200).json({
       message: 'Solar unit registered successfully',
       solarUnit: newSolarUnit,

@@ -10,7 +10,7 @@ export const generateInvoice = async () => {
         console.log("Starting Invoice Generation Job...");
         
         // 1. Fetch all solar units (optionally filter by status if you have an 'isActive' flag)
-        const solarUnits = await SolarUnit.find();
+        const solarUnits = await SolarUnit.find({status: 'active'});
 
         const RATE_PER_KWH = 0.5;
         

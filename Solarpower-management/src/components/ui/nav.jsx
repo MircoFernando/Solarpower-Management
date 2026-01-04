@@ -16,8 +16,6 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 
-
-
 const NavBarDesk = ({scrolled}) =>{
   return (
     <NavigationMenu>
@@ -35,23 +33,11 @@ const NavBarDesk = ({scrolled}) =>{
                     href="/"
                   >
                     <div className="mb-2 text-lg font-medium sm:mt-4">
-                      shadcn/ui
+                      Home
                     </div>
-                    <p className="text-muted-foreground text-sm leading-tight">
-                      Beautifully designed components built with Tailwind CSS.
-                    </p>
                   </a>
                 </NavigationMenuLink>
               </li>
-              <a href="/docs" title="Introduction">
-                Re-usable components built using Radix UI and Tailwind CSS.
-              </a>
-              <a href="/docs/installation" title="Installation">
-                How to install dependencies and structure your app.
-              </a>
-              <a href="/docs/primitives/typography" title="Typography">
-                Styles for headings, paragraphs, lists...etc
-              </a>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -65,26 +51,14 @@ const NavBarDesk = ({scrolled}) =>{
                 <NavigationMenuLink asChild>
                   <a
                     className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-4 no-underline outline-hidden transition-all duration-200 select-none focus:shadow-md md:p-6"
-                    href="/"
+                    href="/services"
                   >
                     <div className="mb-2 text-lg font-medium sm:mt-4">
-                      shadcn/ui
+                      Services
                     </div>
-                    <p className="text-muted-foreground text-sm leading-tight">
-                      Beautifully designed components built with Tailwind CSS.
-                    </p>
                   </a>
                 </NavigationMenuLink>
               </li>
-              <a href="/docs" title="Introduction">
-                Re-usable components built using Radix UI and Tailwind CSS.
-              </a>
-              <a href="/docs/installation" title="Installation">
-                How to install dependencies and structure your app.
-              </a>
-              <a href="/docs/primitives/typography" title="Typography">
-                Styles for headings, paragraphs, lists...etc
-              </a>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -101,23 +75,12 @@ const NavBarDesk = ({scrolled}) =>{
                     href="/"
                   >
                     <div className="mb-2 text-lg font-medium sm:mt-4">
-                      shadcn/ui
+                      Products
                     </div>
-                    <p className="text-muted-foreground text-sm leading-tight">
-                      Beautifully designed components built with Tailwind CSS.
-                    </p>
+                    
                   </a>
                 </NavigationMenuLink>
               </li>
-              <a href="/docs" title="Introduction">
-                Re-usable components built using Radix UI and Tailwind CSS.
-              </a>
-              <a href="/docs/installation" title="Installation">
-                How to install dependencies and structure your app.
-              </a>
-              <a href="/docs/primitives/typography" title="Typography">
-                Styles for headings, paragraphs, lists...etc
-              </a>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -134,23 +97,11 @@ const NavBarDesk = ({scrolled}) =>{
                     href="/"
                   >
                     <div className="mb-2 text-lg font-medium sm:mt-4">
-                      shadcn/ui
+                      About
                     </div>
-                    <p className="text-muted-foreground text-sm leading-tight">
-                      Beautifully designed components built with Tailwind CSS.
-                    </p>
                   </a>
                 </NavigationMenuLink>
               </li>
-              <a href="/docs" title="Introduction">
-                Re-usable components built using Radix UI and Tailwind CSS.
-              </a>
-              <a href="/docs/installation" title="Installation">
-                How to install dependencies and structure your app.
-              </a>
-              <a href="/docs/primitives/typography" title="Typography">
-                Styles for headings, paragraphs, lists...etc
-              </a>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>

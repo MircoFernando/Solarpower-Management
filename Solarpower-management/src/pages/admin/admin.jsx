@@ -1,4 +1,14 @@
-import { 
+import React from "react";
+import { Outlet, useLocation } from "react-router";
+import {
+  Calendar,
+  Home,
+  Inbox,
+  ChevronsUpDown,
+  TriangleAlert,
+  User
+} from "lucide-react";
+import {
   Sidebar,
   SidebarProvider,
   SidebarContent,
@@ -10,96 +20,165 @@ import {
   SidebarMenuButton,
   SidebarFooter,
   SidebarTrigger,
-} from "./../../components/ui/sidebar"
-import { Outlet } from "react-router";
+  SidebarHeader,
+} from "@/components/ui/sidebar";
+import { UserButton, useUser } from "@clerk/clerk-react";
+import Logo from "@/assets/enovex-logo.png";
 
-import { 
-  User,
-  ChevronsUpDown,
-  Calendar,
-  Home,
-  Inbox,
-  Search,
-  Settings 
-} from "lucide-react"
-
-// Menu items
+// Admin Menu Items
 const items = [
   {
-    title: "Home",
+    title: "Overview",
     url: "/admin/dashboard",
     icon: Home,
   },
   {
-    title: "Users",
+    title: "User Management",
     url: "/admin/dashboard/users",
     icon: Inbox,
   },
   {
     title: "Anomalies",
     url: "/admin/dashboard/anomaly",
+    icon: TriangleAlert,
+  },
+  {
+    title: "Invoices",
+    url: "/admin/dashboard/invoices",
     icon: Calendar,
   },
-  // {
-  //   title: "Search",
-  //   url: "#",
-  //   icon: Search,
-  // },
-  // {
-  //   title: "Settings",
-  //   url: "#",
-  //   icon: Settings,
-  // },
-]
+  {
+    title: "Profile",
+    url: "/admin/dashboard/user",
+    icon: User,
+  },
+];
 
-export const AdminPage = () => {
-     return (
+const AdminPage = () => {
+  const { user } = useUser();
+  const location = useLocation();
+
+  return (
     <SidebarProvider>
-      <Sidebar>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Application</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild tooltip={item.title}>
-                      <a href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-
-        <SidebarFooter>
-          <SidebarGroup>
-            <SidebarMenuButton className="w-full justify-between gap-3 h-12">
-              <div className="flex items-center gap-2">
-                <User className="h-5 w-5 rounded-md" />
-                <div className="flex flex-col items-start">
-                  <span className="text-sm font-medium">John Doe</span>
-                  <span className="text-xs text-muted-foreground">john@example.com</span>
+      <div className="flex min-h-screen w-full bg-gray-50/50">
+        
+        {/* --- ADMIN SIDEBAR --- */}
+        <Sidebar className="border-r-0 bg-primary text-white">
+          
+          {/* Header */}
+          <SidebarHeader className="h-16 flex items-center px-6 border-b border-white/10">
+             <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-2">
+                    <img src={Logo} alt="Enovex Logo" className="h-8 w-auto" /> 
                 </div>
-              </div>
-              <ChevronsUpDown className="h-5 w-5 rounded-md" />
-            </SidebarMenuButton>
-          </SidebarGroup>
-        </SidebarFooter>
-      </Sidebar>
+                
+                <span className="px-2 py-0.5 bg-white/20 text-white text-[10px] font-bold uppercase rounded-md tracking-wider backdrop-blur-md">
+                    Admin
+                </span>
+             </div>
+          </SidebarHeader>
 
-       <main className="flex-1 min-w-0">
-        <div className="px-4 py-2">
-          <SidebarTrigger className="h-4 w-4 mt-2" />
-        </div>
-        {/* Child routes render here */}
-        <Outlet />
-      </main>
+          <SidebarContent className="px-3 py-4">
+            
+            <SidebarGroup>
+              <SidebarGroupLabel className="px-4 text-xs font-semibold text-white/50 uppercase tracking-wider mb-2">
+                Administration
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {items.map((item) => {
+                    const isActive = location.pathname === item.url;
+                    
+                    return (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton 
+                          asChild 
+                          tooltip={item.title}
+                          isActive={isActive}
+                          className={`
+                            h-10 px-4 rounded-xl transition-all duration-200
+                            ${isActive 
+                               ? "bg-white text-primary font-bold shadow-md" 
+                               : "text-white/70 hover:bg-white/10 hover:text-white"
+                            }
+                          `}
+                        >
+                          <a href={item.url} className="flex justify-between items-center w-full">
+                            <div className="flex items-center gap-3">
+                              <item.icon className={`h-4 w-4 ${isActive ? "text-primary" : "text-white/70"}`} />
+                              <span>{item.title}</span>
+                            </div>
+                          </a>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+
+          {/* Footer */}
+          <SidebarFooter className="p-4 border-t border-white/10">
+            <SidebarMenuButton className="h-auto w-full p-2 hover:bg-white/10 transition-all rounded-xl border border-transparent">
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-3">
+                  {/* Avatar Wrapper */}
+                  <div className="rounded-full border border-white/20 p-0.5 bg-white/10">
+                      <UserButton 
+                        appearance={{
+                          elements: {
+                            userButtonAvatarBox: "w-8 h-8",
+                          }
+                        }} 
+                      />
+                  </div>
+                  <div className="flex flex-col items-start text-left">
+                    <span className="text-sm font-semibold text-white truncate w-24">
+                        {user?.firstName || "Admin"}
+                    </span>
+                    <span className="text-[10px] text-white/60 truncate w-24">
+                        {user?.primaryEmailAddress?.emailAddress}
+                    </span>
+                  </div>
+                </div>
+                <ChevronsUpDown className="h-4 w-4 text-white/50" />
+              </div>
+            </SidebarMenuButton>
+          </SidebarFooter>
+        </Sidebar>
+
+        {/* --- MAIN CONTENT AREA --- */}
+        <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-gray-50/50">
+          
+          {/* Top Navbar */}
+          <header className="h-16 flex items-center justify-between px-6 bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-20">
+             <div className="flex items-center gap-4">
+                <SidebarTrigger className="h-9 w-9 border border-gray-200 rounded-lg hover:bg-gray-100 text-gray-500" />
+                <h2 className="font-semibold text-gray-700 hidden md:block">Admin Console</h2>
+             </div>
+             
+             {/* Status Indicator */}
+             <div className="flex items-center gap-3 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm">
+                <div className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </div>
+                <span className="text-xs font-medium text-gray-600">System Healthy</span>
+             </div>
+          </header>
+
+          {/* Page Content */}
+          <div className="flex-1 overflow-auto p-4 md:p-8">
+            <div className="max-w-7xl mx-auto">
+               <Outlet />
+            </div>
+          </div>
+        </main>
+
+      </div>
     </SidebarProvider>
-  )
-}
+  );
+};
+
 export default AdminPage;

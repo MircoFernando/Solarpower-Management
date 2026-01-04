@@ -29,7 +29,7 @@ const UserInvoicesPage = () => {
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', { // Sri Lanka format based on context
+    return new Intl.NumberFormat('en-US', { 
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 2

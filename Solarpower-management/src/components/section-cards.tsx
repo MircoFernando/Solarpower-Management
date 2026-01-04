@@ -78,7 +78,7 @@ export function SectionCards({ days = 90 }) {
   const performance = getPerformanceRating(data.capacityFactor);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 lg:p-6 w-full items-stretch">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 lg:p-6 w-full">
       {/* ---------------- CARD 1: WEATHER ---------------- */}
       <Card
         className="relative overflow-hidden border-0 shadow-lg text-white flex flex-col h-full min-h-[500px]"
@@ -193,47 +193,20 @@ export function SectionCards({ days = 90 }) {
           <CardDescription>Peak (10 AM - 2 PM) vs Off-Peak</CardDescription>
         </CardHeader>
 
-        <CardContent className="flex-1 flex flex-col gap-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-3 justify-center">
-              <div className="bg-primary/5 rounded-lg p-3 border border-primary/10">
-                <div className="flex items-center gap-2 mb-1">
-                  <Sun className="w-4 h-4 text-primary" />
-                  <span className="text-xs font-semibold text-gray-600">
-                    Peak
-                  </span>
-                </div>
-                <p className="text-lg font-bold text-primary-dark">
-                  {dataPeak?.peak.energy} <span className="text-xs">kWh</span>
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                <div className="flex items-center gap-2 mb-1">
-                  <Moon className="w-4 h-4 text-gray-500" />
-                  <span className="text-xs font-semibold text-gray-600">
-                    Off-Peak
-                  </span>
-                </div>
-                <p className="text-lg font-bold text-gray-700">
-                  {dataPeak?.offPeak.energy}{" "}
-                  <span className="text-xs">kWh</span>
-                </p>
-              </div>
-            </div>
-
-            {/* Pie Chart */}
-            <div className="h-[180px] w-full relative">
-              <ResponsiveContainer width="100%" height="100%">
+        <CardContent className="flex-1 flex flex-col gap-4">
+          
+          <div className="h-[220px] w-full relative shrink-0">
+             <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={chartData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={40}
-                    outerRadius={60}
+                    innerRadius={60} // Increased from 40
+                    outerRadius={85} // Increased from 60
                     paddingAngle={5}
                     dataKey="value"
+                    stroke="none"
                   >
                     {chartData.map((entry, index) => (
                       <Cell
@@ -242,24 +215,56 @@ export function SectionCards({ days = 90 }) {
                       />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
-              {/* Center Text Overlay */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="text-center">
-                  <span className="text-xs font-bold text-gray-400">Total</span>
-                </div>
+              
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span className="text-sm font-bold text-gray-400">Total</span>
+                <span className="text-lg font-extrabold text-gray-700">
+                   {(dataPeak?.peak.energy + dataPeak?.offPeak.energy).toFixed(0)}
+                </span>
+                <span className="text-[10px] text-gray-400">kWh</span>
               </div>
-            </div>
           </div>
 
+
+          <div className="grid grid-cols-2 gap-4">
+              <div className="bg-primary/5 rounded-lg p-3 border border-primary/10 flex flex-col items-center text-center">
+                <div className="flex items-center gap-2 mb-1">
+                  <Sun className="w-4 h-4 text-primary" />
+                  <span className="text-xs font-semibold text-gray-600">
+                    Peak
+                  </span>
+                </div>
+                <p className="text-lg font-bold text-primary-dark">
+                  {dataPeak?.peak.energy} <span className="text-xs font-normal text-gray-500">kWh</span>
+                </p>
+              </div>
+
+              <div className="bg-gray-50 rounded-lg p-3 border border-gray-200 flex flex-col items-center text-center">
+                <div className="flex items-center gap-2 mb-1">
+                  <Moon className="w-4 h-4 text-gray-500" />
+                  <span className="text-xs font-semibold text-gray-600">
+                    Off-Peak
+                  </span>
+                </div>
+                <p className="text-lg font-bold text-gray-700">
+                  {dataPeak?.offPeak.energy} <span className="text-xs font-normal text-gray-500">kWh</span>
+                </p>
+              </div>
+          </div>
+
+          {/* 3. Insight Box at Bottom */}
           <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 mt-auto">
             <p className="text-xs text-blue-800 leading-relaxed">
               <span className="font-semibold">Insight:</span> Peak hours contribute{" "}
               {dataPeak?.peak.percentage}% of total energy. Optimization suggested if below 40%.
             </p>
           </div>
+
         </CardContent>
       </Card>
     </div>
