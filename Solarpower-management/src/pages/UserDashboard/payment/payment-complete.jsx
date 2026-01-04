@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSearchParams, Link, useNavigate } from "react-router-dom"; // <--- FIXED IMPORT
+import { useSearchParams, Link, useNavigate } from "react-router"; // <--- FIXED IMPORT
 import { useGetSessionStatusQuery } from "../../../lib/redux/query";
 import { CheckCircle, XCircle, ArrowLeft, Loader2 } from "lucide-react";
 import { useUpdateInvoiceStatusMutation } from "../../../lib/redux/query";
