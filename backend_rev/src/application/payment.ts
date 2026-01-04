@@ -27,7 +27,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       },
     ],
     mode: "payment",
-    return_url: `${process.env.FRONTEND_URL}/dashboard/invoices/complete?session_id={CHECKOUT_SESSION_ID}`,
+    return_url: `${process.env.FRONTEND_URL}/dashboard/payment/complete?session_id={CHECKOUT_SESSION_ID}`,
     metadata: {
       invoiceId: invoice._id.toString(),  // Critical: links session to your invoice
     },

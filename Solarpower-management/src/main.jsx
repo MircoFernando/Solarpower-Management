@@ -26,6 +26,8 @@ import AnomalyDashboard from "./pages/UserDashboard/dashboard-anomaly.jsx";
 import InvoiceDashboard from "./pages/UserDashboard/dashboard-invoice.jsx";
 import UserProfile from "./pages/UserDashboard/dashboard-user.jsx";
 import ServicesPage from "./pages/home/services-page.jsx";
+import PaymentPage from "./pages/UserDashboard/payment/payment-page.jsx";
+import PaymentCompletePage from "./pages/UserDashboard/payment/payment-complete.jsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -54,6 +56,9 @@ createRoot(document.getElementById("root")).render(
                   <Route path="invoices" element={<InvoiceDashboard />} />
                   <Route path="user" element={<UserProfile />} />
                 </Route>
+                <Route path="/payment/:id" element={<PaymentPage />} />
+                <Route path="/payment/complete" element={<PaymentCompletePage />} />
+
               </Route>
               <Route element={<AuthorizedLayout />}>
                 {/* Admin with nested routes */}
