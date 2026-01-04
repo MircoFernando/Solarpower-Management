@@ -12,7 +12,7 @@ import {
 import { Button } from "./../../../../../components/ui/button.jsx";
 import { useGetAllRegisteredUsersQuery } from "./../../../../../lib/redux/query.js";
 import { useUpdateRegisteredUserMutation } from "./../../../../../lib/redux/query.js";
-
+import emailjs from "@emailjs/browser";
 // --- Form Imports ---
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -58,6 +58,7 @@ const AdminUsersPage = () => {
   const [viewSection, setViewSection] = useState("approved");
   const [selectedUser, setSelectedUser] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isApproved, setIsApproved] = useState(false);
 
   const { data, isLoading, isError, error } = useGetAllRegisteredUsersQuery();
   const [updateUser, { isLoading: createUpdate }] = useUpdateRegisteredUserMutation();
@@ -137,6 +138,31 @@ const AdminUsersPage = () => {
         body: payload,
       }).unwrap();
 
+      //If status changed to APPROVED, initialize emailJS
+      if (isApproved && selectedUser.status !== "approved") {
+
+        const templateParams = {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email, // This allows EmailJS to send the Auto-Reply to the user
+          phoneNumber: values.phoneNumber,
+          description: values.description,
+          country: values.country,
+          // You can add other fields here if you want them in the admin email
+        };
+
+        
+
+        await emailjs.send(
+          import.meta.env.VITE_EMAILJS_SERVICE_ID,
+          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          templateParams,
+          import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+        );
+
+        console.log("Email sent successfully");
+      }
+
       console.log("Updated user successfully:", user);
       alert("✅ User updated successfully!");
 
@@ -145,13 +171,20 @@ const AdminUsersPage = () => {
       setSelectedUser(null);
     } catch (err) {
       console.error("Update user error:", err);
+
+      if (err.text) { 
+         // This is usually an EmailJS error object
+         console.error("EmailJS Error:", err.text);
+         alert("User Updated, but confirmation email failed to send.");
+
       alert(
         `❌ Error: ${
           err?.data?.message || err.message || "Failed to update user"
         }`
       );
     }
-  };
+  }
+};
 
   if (isLoading) {
     return (
@@ -199,6 +232,10 @@ const AdminUsersPage = () => {
     setSelectedUser(null);
     setIsEditMode(false);
     form.reset(); // Clear form
+  };
+
+  const handleStatusChange = (value) => {
+    setIsApproved(value === "approved");
   };
 
   return (
@@ -790,6 +827,7 @@ const AdminUsersPage = () => {
                           <FormLabel>Status</FormLabel>
                           <Select
                             onValueChange={field.onChange}
+                            handleStatusChange={handleStatusChange(field.value)}
                             defaultValue={field.value}
                             disabled={!isEditMode}
                           >

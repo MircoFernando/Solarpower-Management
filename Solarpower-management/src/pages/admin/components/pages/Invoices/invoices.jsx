@@ -23,6 +23,24 @@ const AdminInvoicesPage = () => {
   // Handle data structure (Array vs Object wrapper)
   const invoices = Array.isArray(data) ? data : (data?.data || []);
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[500px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+          Error loading invoices. Please check your admin permissions.
+        </div>
+      </div>
+    );
+  }
+
   // --- Helpers ---
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
@@ -41,49 +59,34 @@ const AdminInvoicesPage = () => {
   };
 
   // --- Filtering Logic ---
-  const filteredInvoices = invoices.filter(invoice => {
-    // 1. Status Filter
+  const filteredInvoices = invoices?.filter(invoice => {
+
     if (statusFilter !== 'all' && invoice.paymentStatus !== statusFilter) return false;
-    
-    // 2. Search Filter (Invoice ID, Username, or Amount)
+
     const query = searchQuery.toLowerCase();
-    const invoiceId = invoice._id.toLowerCase();
-    const userName = (invoice.userName || '').toLowerCase();
-    const amountStr = invoice.amount.toString();
+
+    const invoiceId = (invoice?._id || '').toString().toLowerCase();
+    const userName  = (invoice?.userName || '').toString().toLowerCase();
+    
+    const amountStr = invoice?.amount != null ? String(invoice.amount) : ''; 
     
     return invoiceId.includes(query) || userName.includes(query) || amountStr.includes(query);
   });
 
   // --- Admin Stats ---
   const totalRevenue = invoices
-    .filter(inv => inv.paymentStatus === 'PAID')
+    ?.filter(inv => inv.paymentStatus === 'PAID')
     .reduce((sum, inv) => sum + inv.amount, 0);
 
   const pendingAmount = invoices
-    .filter(inv => inv.paymentStatus === 'PENDING')
+    ?.filter(inv => inv.paymentStatus === 'PENDING')
     .reduce((sum, inv) => sum + inv.amount, 0);
 
   const overdueCount = invoices
-    .filter(inv => inv.paymentStatus === 'PENDING' && new Date(inv.dueDate) < new Date())
+    ?.filter(inv => inv.paymentStatus === 'PENDING' && new Date(inv.dueDate) < new Date())
     .length;
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[500px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="p-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error loading invoices. Please check your admin permissions.
-        </div>
-      </div>
-    );
-  }
+  
 
   return (
     <div className="p-6 bg-background min-h-screen space-y-8">

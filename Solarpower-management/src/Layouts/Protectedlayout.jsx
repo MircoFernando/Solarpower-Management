@@ -26,7 +26,7 @@ export const ProtectedLayout = () => {
   if (user?.publicMetadata?.role == "admin") {
         return <Navigate to="/admin/dashboard" replace />;
     }
-
+  
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -52,14 +52,15 @@ export const ProtectedLayout = () => {
       </div>
     );
   }
+  
   if (!isSignedIn || !isAuthorized) {
     return <Navigate to="/sign-in" replace />;
   }
-  if (!solarUnits || solarUnits.length === 0) {
-    return <Navigate to="/registration" replace />;
-  }
   if (solarUnits.length > 0){
     return <Navigate to="/dashboard" replace />;
+  }
+  if (!solarUnits || solarUnits.length === 0) {
+    return <Navigate to="/registration" replace />;
   }
   
   return <Outlet />;

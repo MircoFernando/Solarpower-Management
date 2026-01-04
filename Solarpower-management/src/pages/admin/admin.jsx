@@ -5,8 +5,6 @@ import {
   Home,
   Inbox,
   ChevronsUpDown,
-  Sun,
-  ShieldCheck, // Icon for Admin badge
   TriangleAlert,
   User
 } from "lucide-react";
@@ -65,13 +63,16 @@ const AdminPage = () => {
       <div className="flex min-h-screen w-full bg-gray-50/50">
         
         {/* --- ADMIN SIDEBAR --- */}
-        <Sidebar className="border-r border-gray-200 bg-white/50 backdrop-blur-xl">
+        <Sidebar className="border-r-0 bg-primary text-white">
           
-   
-          <SidebarHeader className="h-16 flex items-center px-6 border-b border-gray-100">
+          {/* Header */}
+          <SidebarHeader className="h-16 flex items-center px-6 border-b border-white/10">
              <div className="flex items-center justify-between w-full">
-                <img src={Logo} alt="Enovex Logo"/>
-                <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold uppercase rounded-md tracking-wider">
+                <div className="flex items-center gap-2">
+                    <img src={Logo} alt="Enovex Logo" className="h-8 w-auto" /> 
+                </div>
+                
+                <span className="px-2 py-0.5 bg-white/20 text-white text-[10px] font-bold uppercase rounded-md tracking-wider backdrop-blur-md">
                     Admin
                 </span>
              </div>
@@ -79,15 +80,13 @@ const AdminPage = () => {
 
           <SidebarContent className="px-3 py-4">
             
-    
             <SidebarGroup>
-              <SidebarGroupLabel className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+              <SidebarGroupLabel className="px-4 text-xs font-semibold text-white/50 uppercase tracking-wider mb-2">
                 Administration
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {items.map((item) => {
-                    // Check active state
                     const isActive = location.pathname === item.url;
                     
                     return (
@@ -99,14 +98,14 @@ const AdminPage = () => {
                           className={`
                             h-10 px-4 rounded-xl transition-all duration-200
                             ${isActive 
-                               ? "bg-blue-50 text-blue-700 font-medium shadow-sm" 
-                               : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                               ? "bg-white text-primary font-bold shadow-md" 
+                               : "text-white/70 hover:bg-white/10 hover:text-white"
                             }
                           `}
                         >
                           <a href={item.url} className="flex justify-between items-center w-full">
                             <div className="flex items-center gap-3">
-                              <item.icon className={`h-4 w-4 ${isActive ? "text-blue-600" : "text-gray-500"}`} />
+                              <item.icon className={`h-4 w-4 ${isActive ? "text-primary" : "text-white/70"}`} />
                               <span>{item.title}</span>
                             </div>
                           </a>
@@ -119,12 +118,13 @@ const AdminPage = () => {
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="p-4 border-t border-gray-100 bg-gray-50/50">
-            <SidebarMenuButton className="h-auto w-full p-2 hover:bg-white hover:shadow-md transition-all rounded-xl border border-transparent hover:border-gray-100">
+          {/* Footer */}
+          <SidebarFooter className="p-4 border-t border-white/10">
+            <SidebarMenuButton className="h-auto w-full p-2 hover:bg-white/10 transition-all rounded-xl border border-transparent">
               <div className="flex items-center justify-between w-full">
                 <div className="flex items-center gap-3">
-                  {/* Custom Clerk Button Wrapper */}
-                  <div className="rounded-full border border-gray-200 p-0.5 bg-white">
+                  {/* Avatar Wrapper */}
+                  <div className="rounded-full border border-white/20 p-0.5 bg-white/10">
                       <UserButton 
                         appearance={{
                           elements: {
@@ -134,20 +134,21 @@ const AdminPage = () => {
                       />
                   </div>
                   <div className="flex flex-col items-start text-left">
-                    <span className="text-sm font-semibold text-gray-900 truncate w-24">
+                    <span className="text-sm font-semibold text-white truncate w-24">
                         {user?.firstName || "Admin"}
                     </span>
-                    <span className="text-[10px] text-gray-500 truncate w-24">
+                    <span className="text-[10px] text-white/60 truncate w-24">
                         {user?.primaryEmailAddress?.emailAddress}
                     </span>
                   </div>
                 </div>
-                <ChevronsUpDown className="h-4 w-4 text-gray-400" />
+                <ChevronsUpDown className="h-4 w-4 text-white/50" />
               </div>
             </SidebarMenuButton>
           </SidebarFooter>
         </Sidebar>
 
+        {/* --- MAIN CONTENT AREA --- */}
         <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-gray-50/50">
           
           {/* Top Navbar */}

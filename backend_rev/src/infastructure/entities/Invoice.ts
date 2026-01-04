@@ -39,6 +39,9 @@ const InvoiceSchema = new mongoose.Schema(
       default: "PENDING",
       required: true,
     },
+    amount: {
+        type: Number,
+    },
     paidAt: {
         type: Date
     }

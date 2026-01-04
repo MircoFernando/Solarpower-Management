@@ -250,15 +250,14 @@ const VignettePurchaseFormDemo = () => {
       console.log("Created Registered User:", response);
       SetisSubmitted(true);
      // 3. Send Email via EmailJS
-      // Ensure these match your EmailJS Template Variables exactly: {{firstName}}, {{email}}, etc.
       const templateParams = {
         firstName: values.firstName,
         lastName: values.lastName,
-        email: values.email, // This allows EmailJS to send the Auto-Reply to the user
+        email: values.email, 
         phoneNumber: values.phoneNumber,
         description: values.description,
         country: values.country,
-        // You can add other fields here if you want them in the admin email
+        
       };
 
       await emailjs.send(
