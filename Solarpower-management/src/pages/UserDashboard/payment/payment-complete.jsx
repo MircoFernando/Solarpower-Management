@@ -22,6 +22,18 @@ export default function PaymentCompletePage() {
 
   const [updateInvoiceStatus] = useUpdateInvoiceStatusMutation();
 
+  // Update Invoice Status in backend
+  useEffect(() => {
+    if (isSuccess && data?.invoice_id) {
+      updateInvoiceStatus({
+        id: data.invoice_id,
+        body: { paymentStatus: "paid",
+          paidAt: new Date().toISOString()
+         }
+      });
+    }
+  }, [isSuccess, data, updateInvoiceStatus]);
+
   // 2. Loading State (Centered & Styled)
   if (isLoading) {
     return (
@@ -60,17 +72,7 @@ export default function PaymentCompletePage() {
   // Stripe usually returns status='complete' or payment_status='paid'
   const isSuccess = data?.status === 'complete' || data?.payment_status === 'paid';
 
-  // Update Invoice Status in backend
-  useEffect(() => {
-    if (isSuccess && data?.invoice_id) {
-      updateInvoiceStatus({
-        id: data.invoice_id,
-        body: { paymentStatus: "paid",
-          paidAt: new Date().toISOString()
-         }
-      });
-    }
-  }, [isSuccess, data, updateInvoiceStatus]);
+  
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
