@@ -57,13 +57,18 @@ export const createSolarUnit = async (
 
      if (newSolarUnit.status === 'active') {
       try {
-        const dataServiceUrl = 'http://localhost:8000';
+        const dataServiceUrl = 'https://solarpower-management-solarunit-api.onrender.com';
         
         await axios.post(
           `${dataServiceUrl}/api/energy-generation-records/solar-unit/new-unit`,
           {
             serialNumber: newSolarUnit.serial_number,
             status: newSolarUnit.status,
+          },
+          {
+            headers: {
+              'x-service-secret': process.env.INTERNAL_API_KEY
+            }
           }
         );
 

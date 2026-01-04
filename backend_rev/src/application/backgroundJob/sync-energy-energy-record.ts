@@ -38,9 +38,21 @@ export const syncEnergyGenerationRecords = async () => {
             if (lastSyncedRecord?.timestamp) {
                 url.searchParams.append('sinceTimestamp', lastSyncedRecord.timestamp.toISOString());
             }
+            const secretKey = process.env.INTERNAL_API_KEY;
 
+            if (!secretKey) {
+                throw new Error("Internal API key is not defined in environment variables");
+            }
             // Fetch latest records from data API with server-side filtering
-            const dataAPIResponse = await fetch(url.toString());
+            const dataAPIResponse = await fetch(url.toString(),
+               {
+                method: "GET", 
+                headers: {
+                "Content-Type": "application/json",
+                "x-internal-secret": secretKey, 
+                },
+            });
+
             if (!dataAPIResponse.ok) {
                 throw new Error("Failed to fetch energy generation records from data API");
             }

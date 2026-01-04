@@ -76,9 +76,22 @@ export const syncMiddleware = async (
     }
     console.log("User ", solarUnit);
 
+    const secretKey = process.env.INTERNAL_API_KEY;
+
+    if (!secretKey) {
+                throw new Error("Internal API key is not defined in environment variables");
+            }
+
     // Fetch latest records from data API
     const dataAPIResponse = await fetch(
       `https://solarpower-management-solarunit-api.onrender.com/api/energy-generation-records/solar-unit/${solarUnit.serial_number}`
+      ,{
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-internal-secret": secretKey, 
+      },
+  }  
     );
     if (!dataAPIResponse.ok) {
       throw new Error(

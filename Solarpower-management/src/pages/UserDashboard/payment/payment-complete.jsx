@@ -28,7 +28,7 @@ export default function PaymentCompletePage() {
     if (isSuccess && data?.invoice_id) {
       updateInvoiceStatus({
         id: data.invoice_id,
-        body: { paymentStatus: "paid",
+        body: { paymentStatus: "PAID",
           paidAt: new Date().toISOString()
          }
       });
