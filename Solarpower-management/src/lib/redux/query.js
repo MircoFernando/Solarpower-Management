@@ -105,6 +105,10 @@ export const api = createApi({
       query: () => `/invoices`,
       providesTags: ["Invoice"],
     }),
+    getInvoiceById: builder.query({
+      query: (id) => `/invoices/user/${id}`,
+      providesTags: ["Invoice"],
+    }),
     getSessionStatus: builder.query({
       query: (session_id) => `/payments/session-status?session_id=${session_id}`,
       providesTags: ["Invoice"],
@@ -140,7 +144,8 @@ export const {
   useGetAllInvoicesQuery,
   useGetInvoicesForUserQuery,
   useGetSessionStatusQuery,
-  useUpdateInvoiceStatusMutation
+  useUpdateInvoiceStatusMutation,
+  useGetInvoiceByIdQuery,
 } = api;
 
 
