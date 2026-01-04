@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSearchParams, Link, useNavigate } from "react-router"; // <--- FIXED IMPORT
+import { useSearchParams, Link, useNavigate } from "react-router"; 
 import { useGetSessionStatusQuery } from "../../../lib/redux/query";
 import { CheckCircle, XCircle, ArrowLeft, Loader2 } from "lucide-react";
 import { useUpdateInvoiceStatusMutation } from "../../../lib/redux/query";
@@ -8,8 +8,9 @@ export default function PaymentCompletePage() {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const navigate = useNavigate();
+  const [updateInvoiceStatus] = useUpdateInvoiceStatusMutation();
 
-  // 1. Safety check: Redirect if someone accesses this page without a session_id
+  // Redirect if no session_id
   useEffect(() => {
     if (!sessionId) {
       navigate("/dashboard/invoices");
@@ -20,7 +21,7 @@ export default function PaymentCompletePage() {
     skip: !sessionId,
   });
 
-  const [updateInvoiceStatus] = useUpdateInvoiceStatusMutation();
+  const isSuccess = data?.status === 'complete' || data?.payment_status === 'paid';
 
   // Update Invoice Status in backend
   useEffect(() => {
@@ -70,7 +71,7 @@ export default function PaymentCompletePage() {
 
   // 4. Success / Failure Logic based on Stripe status
   // Stripe usually returns status='complete' or payment_status='paid'
-  const isSuccess = data?.status === 'complete' || data?.payment_status === 'paid';
+  
 
   
 

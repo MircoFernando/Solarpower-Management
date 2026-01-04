@@ -17,7 +17,7 @@ import { ProtectedLayout } from "./Layouts/Protectedlayout.jsx";
 import AuthorizedLayout from "./pages/admin/authorized.jsx";
 import AdminPage from "./pages/admin/admin.jsx";
 import AdminHomePage from "./pages/admin/components/pages/Home/Home.jsx";
-import AdminUsersPage from "./pages/admin/components/pages/Users/User.jsx//";
+import AdminUsersPage from "./pages/admin/components/pages/Users/User.jsx";
 import AdminAnomaliesPage from "./pages/admin/components/pages/Anomalies/Anomalies.jsx";
 import AdminInvoicesPage from "./pages/admin/components/pages/Invoices/invoices.jsx"
 import AdminProfile from "./pages/admin/components/pages/profile/profile.jsx";
