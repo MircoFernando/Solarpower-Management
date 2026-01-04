@@ -6,13 +6,11 @@ import { Invoice } from "../../../infastructure/entities/Invoice";
 import { EnergyGenerationRecord } from "../../../infastructure/entities/EnergyGenerationRecord";
 
 export const generateInvoice = async () => {
+    const ratePerKWh = 0.5; 
     try {
         console.log("Starting Invoice Generation Job...");
         
-
         const solarUnits = await SolarUnit.find({status: "active"});
-
-        const RATE_PER_KWH = 0.5;
         
         if (solarUnits.length === 0) {
             console.log("No solar units found to invoice.");
@@ -30,7 +28,6 @@ export const generateInvoice = async () => {
                 }
 
                 // 3. Determine Billing Period
-                // Start Date: The end date of the last invoice OR the installation date
                 const lastInvoice = await Invoice.findOne({ solarUnitId: unit._id })
                     .sort({ billingPeriodEnd: -1 });
 
@@ -45,10 +42,7 @@ export const generateInvoice = async () => {
                 const latestRecord = await EnergyGenerationRecord
                     .findOne({ solarUnit: unit._id })
                     .sort({ timestamp: -1 })
-
-                if(!latestRecord){
-                    console.log("No records found the SolarUnit");
-                }
+                    .select('timestamp'); // Only need the timestamp
 
                 // If we have no records at all, or the latest record is OLDER than our target billing date,
                 if (!latestRecord || new Date(latestRecord.timestamp) < targetEndDate) {
@@ -61,7 +55,6 @@ export const generateInvoice = async () => {
                     {
                         $match: {
                             solarUnit: unit._id,
-                            // Strictly match records within the one-month window
                             timestamp: { $gt: startDate, $lte: targetEndDate }
                         }
                     },
@@ -75,13 +68,13 @@ export const generateInvoice = async () => {
 
                 const totalEnergy = aggregation.length > 0 ? aggregation[0].totalEnergy : 0;
                 
-                const totalAmount = totalEnergy * RATE_PER_KWH;
+                const totalAmount = totalEnergy * ratePerKWh;
                 if (totalEnergy <= 0) {
                      console.log(`Skipping unit ${unit.serial_number}: Zero generation recorded.`);
                      continue;
                 }
 
-                // 6. Create Invoice
+           
                 const newInvoice = {
                     solarUnitId: unit._id,
                     clerkUserId: user.clerkUserId,
@@ -99,10 +92,9 @@ export const generateInvoice = async () => {
 
             } catch (error) {
                 console.error(`Error processing unit ${unit.serial_number}:`, error);
-                // Continue to next unit even if one fails
             }
         }
-
+        console.log("Invoice Generation Job Completed.");
     } catch (error) {
         console.error("Error in Invoice Generation Job:", error);
     }

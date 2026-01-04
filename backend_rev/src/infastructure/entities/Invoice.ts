@@ -33,11 +33,6 @@ const InvoiceSchema = new mongoose.Schema(
         required: true
     },
 
-    amount: {
-      type: Number,
-      required: true
-    },
-
     paymentStatus: {
       type: String,
       enum: ["PENDING", "PAID", "FAILED"],
