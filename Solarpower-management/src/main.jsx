@@ -78,3 +78,5 @@ createRoot(document.getElementById("root")).render(
     </Provider>
   </StrictMode>
 );
+
+// Deployed at: https://solarpower-management.vercel.app/
