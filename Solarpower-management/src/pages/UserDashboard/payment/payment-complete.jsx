@@ -21,7 +21,7 @@ export default function PaymentCompletePage() {
     skip: !sessionId,
   });
 
-  const isSuccess = data?.status === 'complete' || data?.payment_status === 'paid';
+  const isSuccess = data?.status === 'complete' || data?.paymentStatus === 'paid';
 
   // Update Invoice Status in backend
   useEffect(() => {
@@ -91,7 +91,7 @@ export default function PaymentCompletePage() {
             <div className="bg-gray-50 rounded-xl p-4 mb-8 border border-gray-200">
               <p className="text-sm text-gray-500 uppercase tracking-wider font-semibold">Amount Paid</p>
               <p className="text-3xl font-bold text-gray-900 mt-1">
-                ${(data.amount_total / 100).toFixed(2)}
+                ${(data.amountTotal / 100).toFixed(2)}
               </p>
             </div>
           </>

@@ -2,6 +2,8 @@ import Stripe from "stripe";
 import { Request, Response } from "express";
 import { NotFoundError, ValidationError } from "../domain/dtos/errors/errors";
 import { Invoice } from "../infastructure/entities/Invoice";
+import { getAuth } from "@clerk/express";
+import { RegisteredUser } from "../infastructure/entities/registeredUsers";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
    
@@ -38,11 +40,24 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
 };
 
 export const getSessionStatus = async (req: Request, res: Response) => {
+  const auth = getAuth(req);
   const { session_id } = req.query;
+
+  console.log("Authentication info:", auth);
+  const clerkUserid = auth.userId;
+  console.log("Clerk UserID:", clerkUserid);
+  const user = await RegisteredUser.findOne({ clerkUserId: clerkUserid });
+  console.log("User:", user?._id);
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+  const invoice = await Invoice.findOne({ clerkUserId: clerkUserid });
+  console.log("User Invoice: ", invoice);
 
   const session = await stripe.checkout.sessions.retrieve(session_id as string);
 
   res.json({
+    invoice_id: invoice?._id,
     status: session.status,
     paymentStatus: session.payment_status,
     amountTotal: session.amount_total,  // Amount in cents
