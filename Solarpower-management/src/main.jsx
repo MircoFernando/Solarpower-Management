@@ -55,7 +55,7 @@ createRoot(document.getElementById("root")).render(
                   <Route path="anomalies" element={<AnomalyDashboard />} />
                   <Route path="invoices" element={<InvoiceDashboard />} />
                   <Route path="user" element={<UserProfile />} />
-                  <Route path="/payment/complete" element={<PaymentCompletePage />} />
+                  <Route path="payment/complete" element={<PaymentCompletePage />} />
                 </Route>
                 <Route path="/payment/:id" element={<PaymentPage />} />
                 
