@@ -19,6 +19,8 @@ import AdminPage from "./pages/admin/admin.jsx";
 import AdminHomePage from "./pages/admin/components/pages/Home/Home.jsx";
 import AdminUsersPage from "./pages/admin/components/pages/Users/User.jsx//";
 import AdminAnomaliesPage from "./pages/admin/components/pages/Anomalies/Anomalies.jsx";
+import AdminInvoicesPage from "./pages/admin/components/pages/Invoices/invoices.jsx"
+import AdminProfile from "./pages/admin/components/pages/profile/profile.jsx";
 import { RegistrationPage } from "./pages/auth/registration/registration-page.jsx";
 import AnomalyDashboard from "./pages/UserDashboard/dashboard-anomaly.jsx";
 import InvoiceDashboard from "./pages/UserDashboard/dashboard-invoice.jsx";
@@ -43,12 +45,14 @@ createRoot(document.getElementById("root")).render(
               <Route element={<MainLayout />}>
                 <Route path="/registration" element={<RegistrationPage />} />
                 <Route path="/" element={<HomePage />} />
+                <Route path="/services" element={<ServicesPage />} />
               </Route>
               <Route element={<ProtectedLayout />}>
                   <Route path="/dashboard" element={<DashboardLayout />} >
                   <Route index element={<HomeDashboard />} />
                   <Route path="anomalies" element={<AnomalyDashboard />} />
                   <Route path="invoices" element={<InvoiceDashboard />} />
+                  <Route path="user" element={<UserProfile />} />
                 </Route>
                 {/* Payment Page (Protected, but standalone layout) */}
                   <Route path="/invoices/:id" element={<PaymentPage />} />
@@ -60,6 +64,8 @@ createRoot(document.getElementById("root")).render(
                   <Route index element={<AdminHomePage />} />
                   <Route path="users" element={<AdminUsersPage />} />
                   <Route path="anomaly" element={<AdminAnomaliesPage />} />
+                  <Route path="invoices" element={<AdminInvoicesPage />} /> 
+                  <Route path="user" element={<AdminProfile />} />
                 </Route>
               </Route>
             </Route>

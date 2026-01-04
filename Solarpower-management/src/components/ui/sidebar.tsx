@@ -237,6 +237,8 @@ function Sidebar({
           variant === "floating" || variant === "inset"
             ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"
             : "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l",
+          // [UPDATED] Apply default bg only if standard sidebar, allowing override via className
+          variant === "sidebar" ? "bg-sidebar" : "",
           className
         )}
         {...props}
@@ -244,7 +246,13 @@ function Sidebar({
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className="bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm"
+          // [UPDATED] Removed hardcoded "bg-sidebar". Added bg-sidebar only for floating variants.
+          className={cn(
+            "flex h-full w-full flex-col",
+            variant === "floating" || variant === "inset"
+              ? "bg-sidebar group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm"
+              : ""
+          )}
         >
           {children}
         </div>

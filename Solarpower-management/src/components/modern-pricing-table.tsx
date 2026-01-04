@@ -107,24 +107,6 @@ const PricingTable: React.FC<PricingTableProps> = ({ plans }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <div className="space-y-4">
-          <motion.h1 
-            className="text-4xl md:text-5xl font-bold text-foreground"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-          >
-            Choose Your Plan
-          </motion.h1>
-          <motion.p 
-            className="text-lg text-muted-foreground max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            Select the perfect plan for your needs. All plans include our core features with different limits and capabilities.
-          </motion.p>
-        </div>
 
         {/* Billing Toggle */}
         <motion.div 

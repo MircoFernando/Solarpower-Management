@@ -26,6 +26,8 @@ export const CreateInvoiceDto = z.object({
 
   totalEnergyGenerated: z.number().min(0),
 
+  amount: z.number().min(0).optional(),
+
   paymentStatus: z.enum(["PENDING", "PAID", "FAILED"]).optional(),
 });
 

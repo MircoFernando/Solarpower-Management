@@ -3,7 +3,7 @@ import Brands from './brands';
 
 const BrandsPage = () => {
   return (
-    <section className="py-10">
+    <section className="bg-white">
      <div className='flex items-baseline justify-center'>
           <Brands />
     </div>

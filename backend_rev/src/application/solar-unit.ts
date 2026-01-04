@@ -43,7 +43,6 @@ export const createSolarUnit = async (
   next: NextFunction
 ) => {
   try {
-    // TODO: Implement taking userID via actual handlers with protect
     const data: z.infer<typeof CreateSolarUnitDto> = req.body;
 
     const newSolarUnit = {
