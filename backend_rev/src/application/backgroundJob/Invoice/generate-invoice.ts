@@ -10,7 +10,10 @@ export const generateInvoice = async () => {
     try {
         console.log("Starting Invoice Generation Job...");
         
+
         const solarUnits = await SolarUnit.find({status: "active"});
+
+        const RATE_PER_KWH = 0.5;
         
         if (solarUnits.length === 0) {
             console.log("No solar units found to invoice.");
@@ -42,7 +45,10 @@ export const generateInvoice = async () => {
                 const latestRecord = await EnergyGenerationRecord
                     .findOne({ solarUnit: unit._id })
                     .sort({ timestamp: -1 })
-                    .select('timestamp'); // Only need the timestamp
+
+                if(!latestRecord){
+                    console.log("No records found the SolarUnit");
+                }
 
                 // If we have no records at all, or the latest record is OLDER than our target billing date,
                 if (!latestRecord || new Date(latestRecord.timestamp) < targetEndDate) {
