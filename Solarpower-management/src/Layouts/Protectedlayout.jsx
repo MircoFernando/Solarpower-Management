@@ -52,16 +52,17 @@ export const ProtectedLayout = () => {
       </div>
     );
   }
-  
+
+  if (!solarUnits || solarUnits.length === 0) {
+    return <Navigate to="/registration" replace />;
+  }
   if (!isSignedIn || !isAuthorized) {
     return <Navigate to="/sign-in" replace />;
   }
   if (solarUnits.length > 0){
     return <Navigate to="/dashboard" replace />;
   }
-  if (!solarUnits || solarUnits.length === 0) {
-    return <Navigate to="/registration" replace />;
-  }
+  
   
   return <Outlet />;
 };
