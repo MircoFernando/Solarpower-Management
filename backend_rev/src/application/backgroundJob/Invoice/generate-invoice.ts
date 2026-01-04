@@ -9,8 +9,8 @@ export const generateInvoice = async () => {
     try {
         console.log("Starting Invoice Generation Job...");
         
-        // 1. Fetch all solar units (optionally filter by status if you have an 'isActive' flag)
-        const solarUnits = await SolarUnit.find({status: 'active'});
+
+        const solarUnits = await SolarUnit.find({status: "active"});
 
         const RATE_PER_KWH = 0.5;
         
@@ -75,9 +75,7 @@ export const generateInvoice = async () => {
 
                 const totalEnergy = aggregation.length > 0 ? aggregation[0].totalEnergy : 0;
                 
-                // 5. Calculate Amount (Fixing the undefined error)
                 const totalAmount = totalEnergy * RATE_PER_KWH;
-
                 if (totalEnergy <= 0) {
                      console.log(`Skipping unit ${unit.serial_number}: Zero generation recorded.`);
                      continue;

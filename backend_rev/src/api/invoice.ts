@@ -6,5 +6,6 @@ const InvoiceRouter = express.Router();
 
 InvoiceRouter.route("/").get(getAllInVoices);
 InvoiceRouter.route("/user").get(getInvoiceForUser);
+InvoiceRouter.route("/user/:id").put(validateIdParam, updateInvoiceStatus);
 
 export default InvoiceRouter; 

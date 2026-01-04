@@ -24,8 +24,8 @@ import AdminProfile from "./pages/admin/components/pages/profile/profile.jsx";
 import { RegistrationPage } from "./pages/auth/registration/registration-page.jsx";
 import AnomalyDashboard from "./pages/UserDashboard/dashboard-anomaly.jsx";
 import InvoiceDashboard from "./pages/UserDashboard/dashboard-invoice.jsx";
-import UserProfile from "./pages/UserDashboard/dashboard-user.jsx";
-import ServicesPage from "./pages/home/services-page.jsx";
+import PaymentPage from "./pages/UserDashboard/payment/payment-page.jsx";
+import PaymentCompletePage from "./pages/UserDashboard/payment/payment-complete.jsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
