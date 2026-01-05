@@ -1,7 +1,7 @@
 # Enovex SolarPower Management
 ### Solar Energy Monitoring System
 
-SolarPower Management is a robust full-stack web application designed to monitor and manage solar energy units. It allows users to track solar unit performance in real-time, view energy generation statistics, and handle billing via invoices seamlessly.
+Enovex is a robust full-stack web application designed to monitor and manage solar energy units. It allows users to track solar unit performance in real-time, view energy generation statistics, and handle billing via invoices seamlessly.
 
 ---
 
