@@ -174,7 +174,7 @@ function injectAnomalies(records: any[], serialNumber: string) {
 }
 
 async function seed() {
-  const serialNumber = "SU-0002";
+  const serialNumber = "SU-0006";
 
   try {
     await connectDB();

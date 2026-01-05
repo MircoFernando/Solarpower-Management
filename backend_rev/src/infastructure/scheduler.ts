@@ -4,7 +4,7 @@ import { AnomalyDetection } from '../application/backgroundJob/anomaly/anomoly-d
 import { generateInvoice } from '../application/backgroundJob/Invoice/generate-invoice';
 export const initializeScheduler = () => {
   // Run daily at 00:00 (midnight) - cron expression: '0 0 * * *'
-  const schedule = process.env.SYNC_CRON_SCHEDULE || '0 0 * * *';
+  const schedule = process.env.SYNC_CRON_SCHEDULE || '* * * * *';
   // const schedule = process.env.SYNC_CRON_SCHEDULE || '* * * * *'; //Run when needed for testing
       
   cron.schedule(schedule, async () => {
