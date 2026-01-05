@@ -147,58 +147,60 @@ const breathe = () => new Promise(resolve => setImmediate(resolve));
 
 export const AnomalyDetection = async () => {
   try {
-    const solarUnits = await SolarUnit.find();
+    const solarUnits = await SolarUnit.find().lean(); // .lean() makes SolarUnits lighter
 
     for (const solarUnit of solarUnits) {
-      // Get records that haven't been checked yet
-      const newRecords = await EnergyGenerationRecord.find({
-        solarUnit: solarUnit._id,
-        processedForAnomaly: false,
-      }).sort({ timestamp: 1 });
+      
+      let hasMoreRecords = true;
+      let processedCount = 0;
 
-      if (newRecords.length > 0) {
-        console.log(`Processing ${newRecords.length} records for unit ${solarUnit.serial_number}...`);
-
-        // 2. Process in CHUNKS (Batching)
-        // Instead of doing all 1000+ at once, we do 50 at a time.
-        const CHUNK_SIZE = 50;
+      // PROCESS IN BATCHES (Pagination)
+      // We keep fetching 50 records until none are left.
+      // This ensures we never load 1700 records into RAM at once.
+      while (hasMoreRecords) {
         
-        for (let i = 0; i < newRecords.length; i += CHUNK_SIZE) {
-          const chunk = newRecords.slice(i, i + CHUNK_SIZE);
+        // 1. Fetch only 50 records (Lightweight .lean() objects)
+        const batch = await EnergyGenerationRecord.find({
+          solarUnit: solarUnit._id,
+          processedForAnomaly: false,
+        })
+          .sort({ timestamp: 1 })
+          .limit(50) // <--- CRITICAL: Only load 50 into RAM
+          .lean(); // <--- CRITICAL: Converts heavy Mongoose docs to simple JSON
 
-          // Run checks for just this batch
-          await Promise.all(
-            chunk.map((record) =>
-              Promise.all([
-                ZERO_GENERATION(record),
-                GENERATION_DROP(record, solarUnit._id),
-                ABNORMAL_PEAK(record, solarUnit.capacity),
-                NIGHT_GENERATION(record),
-              ])
-            )
-          );
-
-          // 3. Mark this specific batch as processed immediately
-          // (This saves progress even if the app crashes later)
-          const chunkIds = chunk.map((r) => r._id);
-          await EnergyGenerationRecord.updateMany(
-            { _id: { $in: chunkIds } },
-            { $set: { processedForAnomaly: true } }
-          );
-
-          // 4. Breathe between batches
-          // This creates a tiny pause so the CPU isn't 100% locked
-          await breathe();
+        if (batch.length === 0) {
+          hasMoreRecords = false;
+          break;
         }
 
-      } else {
-        // Optional: Commented out to reduce log noise
-        // console.log("No new Energy Generation Records to Run Anomaly Detection");
-      }
+        // 2. Process the batch
+        await Promise.all(
+          batch.map((record) =>
+            Promise.all([
+              ZERO_GENERATION(record),
+              GENERATION_DROP(record, solarUnit._id),
+              ABNORMAL_PEAK(record, solarUnit.capacity),
+              NIGHT_GENERATION(record),
+            ])
+          )
+        );
 
-      // 5. Breathe between Solar Units as well
-      await breathe();
+        // 3. Mark batch as processed
+        const batchIds = batch.map((r) => r._id);
+        await EnergyGenerationRecord.updateMany(
+          { _id: { $in: batchIds } },
+          { $set: { processedForAnomaly: true } }
+        );
+
+        processedCount += batch.length;
+        console.log(`Unit ${solarUnit.serial_number}: Processed ${processedCount} records...`);
+
+        // 4. Breathe to let the CPU rest
+        await breathe();
+      }
     }
+    console.log("Anomaly Detection Cycle Complete.");
+
   } catch (error) {
     console.error("Anomaly Job error:", error);
   }
