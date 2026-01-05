@@ -8,44 +8,35 @@ import { Link } from "react-router";
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
-
 
 export const RegistrationPage = () => {
   const [isSubmitted, SetisSubmitted] = useState(null);
-
   const { user } = useUser();
-  console.log("Clerk User:", user?.id);
-
   const { data, isLoading, isError, error } =
     useGetAllRegisteredUsersByClerkUserIdQuery(undefined, { skip: !user });
 
   useEffect(() => {
-  if (!data || !user) return;
+    if (!data || !user) return;
 
+    if (data === "User has not applied") {
+      SetisSubmitted(false);
+      return;
+    }
 
-  if (data === "User has not applied") {
-    SetisSubmitted(false);
-    return;
-  }
-
-
-  if (data?.clerkUserId === user.id) {
-    SetisSubmitted(true);
-  }
-}, [data, user]);
+    if (data?.clerkUserId === user.id) {
+      SetisSubmitted(true);
+    }
+  }, [data, user]);
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
@@ -53,21 +44,18 @@ export const RegistrationPage = () => {
 
   if (isError) {
     return (
-      <div className="p-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error fetching Users: {error.toString()}
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-red-700 max-w-md text-center shadow-lg">
+          <p className="font-semibold">Error fetching Users</p>
+          <p className="text-sm mt-2">{error.toString()}</p>
         </div>
       </div>
     );
   }
 
-
-  
-
-
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
-      <div className="absolute inset-0 z-0">
+    <div className="relative min-h-screen w-full font-sans">
+      <div className="fixed inset-0 z-0">
         <video
           autoPlay
           loop
@@ -78,154 +66,131 @@ export const RegistrationPage = () => {
           <source src={Video} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        {/* <div className="absolute inset-0 bg-black/50"></div> */}
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/40"></div>
       </div>
-      <div className="relative flex flex-col md:flex-row items-center justify-center max-w-8xl">
-        <div
-          className="w-full max-w-screen-xl h-[80vh] flex flex-col justify-center items-center rounded-2xl backdrop-blur-md border-white/20 shadow-2xl overflow-hidden"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(0, 84, 97, 0.5) 0%, rgba(1, 135, 144, 0.5) 50%, rgba(0, 183, 181, 0.5) 100%)",
-          }}
-        >
-          <h1 className="text-3xl font-bold mt-10 text-white text-shadow-2xs drop-shadow-lg ">
-            Apply for a Solar Unit
-          </h1>
-          <p className="text-white/95 text-base drop-shadow-md text-center mt-5">
-            Please fill out the following information to request for a Solar
-            Unit
-            <br />
-            We will get back to you shortly after reviewing your request after,
-            installation your dashboard will be ready!
-          </p>
-          <VignettePurchaseFormDemo />
-        </div>
 
-        <div className="relative z-10 min-h-screen flex flex-col items-center justify-center">
-          {/* Your content */}
+      
+      <div className="relative z-10 min-h-screen w-full flex items-center justify-center p-4 md:p-8 lg:p-12">
+        
+        
+        <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+          
+          
+          <div
+            className="w-full flex flex-col justify-center items-center rounded-2xl backdrop-blur-md border border-white/20 shadow-2xl overflow-hidden p-6 md:p-10"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(0, 84, 97, 0.6) 0%, rgba(1, 135, 144, 0.6) 50%, rgba(0, 183, 181, 0.6) 100%)",
+            }}
+          >
+            <div className="text-center mb-8 max-w-lg mx-auto">
+              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-4">
+                Apply for a Solar Unit
+              </h1>
+              <p className="text-white/90 text-sm md:text-base leading-relaxed drop-shadow-md">
+                Please fill out the following information to request a Solar Unit.
+                <br className="hidden md:block" />
+                We will get back to you shortly after reviewing your request.
+                Once installed, your dashboard will be ready!
+              </p>
+            </div>
 
-          <div className=" flex items-center justify-center h-screen w-full px-4">
-            <div
-              className="w-full max-w-[900px] h-[80vh] rounded-2xl backdrop-blur-md 
-             border border-white/20 shadow-2xl overflow-hidden"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(0, 84, 97, 0.5) 0%, rgba(1, 135, 144, 0.5) 50%, rgba(0, 183, 181, 0.5) 100%)",
-              }}
-            >
-              <div className="flex flex-col h-full p-20">
-                <div className="text-center lg:text-left mb-8">
-                  <h2 className="text-2xl lg:text-3xl font-bold text-white mb-3 drop-shadow-lg">
-                    Need Help?
-                  </h2>
-                  <p className="text-white/95 text-base drop-shadow-md">
-                    Our experts are here to assist you
-                  </p>
-                </div>
+            
+            <div className="w-full max-w-md mx-auto bg-white/5 rounded-xl p-2 md:p-4 backdrop-blur-sm">
+              <VignettePurchaseFormDemo />
+            </div>
+          </div>
 
-                <div className="space-y-4">
-                  {/* Phone */}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300 border border-white/20">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
-                        <Phone className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold text-sm mb-1">
-                          Phone
-                        </h3>
-                        <p className="text-white/90 text-xs">
-                          +1 (555) 123-4567
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+       
+          <div
+            className="w-full flex flex-col justify-center rounded-2xl backdrop-blur-md border border-white/20 shadow-2xl overflow-hidden p-6 md:p-10 lg:h-auto lg:sticky lg:top-8"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(0, 84, 97, 0.6) 0%, rgba(1, 135, 144, 0.6) 50%, rgba(0, 183, 181, 0.6) 100%)",
+            }}
+          >
+            <div className="mb-8 text-center lg:text-left">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-lg">
+                Need Help?
+              </h2>
+              <p className="text-white/90 text-sm md:text-base drop-shadow-md">
+                Our experts are here to assist you with your application.
+              </p>
+            </div>
 
-                  {/* Email */}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300 border border-white/20">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
-                        <Mail className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold text-sm mb-1">
-                          Email
-                        </h3>
-                        <p className="text-white/90 text-xs">
-                          support@solar.com
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+            <div className="space-y-4 max-w-md mx-auto lg:mx-0 w-full">
+              <ContactCard
+                icon={<Phone className="w-5 h-5 text-white" />}
+                title="Phone"
+                detail="+1 (555) 123-4567"
+              />
+              <ContactCard
+                icon={<Mail className="w-5 h-5 text-white" />}
+                title="Email"
+                detail="support@solar.com"
+              />
+              <ContactCard
+                icon={<MapPin className="w-5 h-5 text-white" />}
+                title="Location"
+                detail="123 Solar Street, Green City"
+              />
+              <ContactCard
+                icon={<Clock className="w-5 h-5 text-white" />}
+                title="Working Hours"
+                detail="Mon - Fri: 9AM - 6PM"
+              />
 
-                  {/* Location */}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300 border border-white/20">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
-                        <MapPin className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold text-sm mb-1">
-                          Location
-                        </h3>
-                        <p className="text-white/90 text-xs">
-                          123 Solar Street
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Hours */}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300 border border-white/20">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
-                        <Clock className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold text-sm mb-1">
-                          Hours
-                        </h3>
-                        <p className="text-white/90 text-xs">
-                          Mon - Fri: 9AM - 6PM
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* CTA Button */}
-                <div className="mt-8">
-                  <button className="w-full bg-white/90 hover:bg-white text-primary-dark py-3 rounded-xl font-semibold text-base shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
-                    Schedule a Consultation
-                  </button>
-                </div>
+              {/* CTA Button */}
+              <div className="mt-8 pt-4">
+                <button className="w-full bg-white/90 hover:bg-white text-teal-900 py-3.5 rounded-xl font-bold text-base shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-95 backdrop-blur-sm">
+                  Schedule a Consultation
+                </button>
               </div>
             </div>
           </div>
         </div>
-        {isSubmitted && (
-            <AlertDialog open={isSubmitted} onOpenChange={SetisSubmitted}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Your request has already been submitted!
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              We will get back to you after reviewing your request, after solar
-              unit installation your dashboard will be ready. Thank you!
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction>
-              <Link to="/">Go to Home</Link>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-        )}
       </div>
+
+
+      {isSubmitted && (
+        <AlertDialog open={isSubmitted} onOpenChange={SetisSubmitted}>
+          <AlertDialogContent className="bg-white/95 backdrop-blur-xl border-white/20">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-teal-900 text-xl">
+                Request Already Submitted!
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-gray-600">
+                We have received your request. After reviewing your application and completing the solar unit installation, your dashboard will be activated. Thank you for your patience!
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction className="bg-teal-700 hover:bg-teal-800 text-white">
+                <Link to="/" className="w-full h-full flex items-center justify-center px-4">
+                  Return Home
+                </Link>
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 };
+
+
+const ContactCard = ({ icon, title, detail }) => (
+  <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 hover:bg-white/20 transition-all duration-300 border border-white/10 group cursor-default">
+    <div className="flex items-center gap-4">
+      <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/30 transition-colors">
+        {icon}
+      </div>
+      <div>
+        <h3 className="text-white font-semibold text-sm mb-0.5">{title}</h3>
+        <p className="text-white/90 text-sm font-light">{detail}</p>
+      </div>
+    </div>
+  </div>
+);
 
 export default RegistrationPage;
