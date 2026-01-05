@@ -63,9 +63,11 @@ export const syncMiddleware = async (
 ) => {
   try {
     const auth = getAuth(req);
+
     const user = await RegisteredUser.findOne({ clerkUserId: auth.userId });
     if (!user) {
-      throw new NotFoundError("User not found");
+      console.log("No user found, skipping sync");
+      return next();
     }
     console.log("User ", user);
 
