@@ -35,6 +35,11 @@ export const syncEnergyGenerationRecords = async () => {
             const baseUrl = `https://solarpower-management-solarunit-api.onrender.com/api/energy-generation-records/solar-unit/${solarUnit.serial_number}`;
             const url = new URL(baseUrl);
 
+            if (!lastSyncedRecord){
+                const newRecord = { timestamp: solarUnit.installation_date };
+                url.searchParams.append('sinceTimestamp', newRecord.timestamp.toISOString());
+            }
+
             if (lastSyncedRecord?.timestamp) {
                 url.searchParams.append('sinceTimestamp', lastSyncedRecord.timestamp.toISOString());
             }
