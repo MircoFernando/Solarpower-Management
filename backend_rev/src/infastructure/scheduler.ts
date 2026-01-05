@@ -8,7 +8,7 @@ let isJobRunning = false;
 
 export const initializeScheduler = () => {
 
-  const schedule = process.env.SYNC_CRON_SCHEDULE || '* * * * *'; 
+  const schedule = process.env.SYNC_CRON_SCHEDULE || '*/10 * * * *'; 
       
   cron.schedule(schedule, async () => {
     

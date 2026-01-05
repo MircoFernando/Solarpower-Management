@@ -143,41 +143,63 @@ export async function NIGHT_GENERATION(payload: RecordDto) {
     await AnomalyRecords.create(anomalyRecords);
   }
 }
+const breathe = () => new Promise(resolve => setImmediate(resolve));
 
 export const AnomalyDetection = async () => {
   try {
     const solarUnits = await SolarUnit.find();
 
     for (const solarUnit of solarUnits) {
-      // Get latest synced timestamp to only fetch new data
+      // Get records that haven't been checked yet
       const newRecords = await EnergyGenerationRecord.find({
         solarUnit: solarUnit._id,
         processedForAnomaly: false,
       }).sort({ timestamp: 1 });
 
       if (newRecords.length > 0) {
-        await Promise.all(
-          newRecords.map((record) =>
-            Promise.all([
-              ZERO_GENERATION(record),
-              GENERATION_DROP(record, solarUnit._id),
-              ABNORMAL_PEAK(record, solarUnit.capacity),
-              NIGHT_GENERATION(record),
-            ])
-          )
-        );
+        console.log(`Processing ${newRecords.length} records for unit ${solarUnit.serial_number}...`);
 
-        await EnergyGenerationRecord.updateMany(
-          { _id: { $in: newRecords.map((r) => r._id) } },
-          { $set: { processedForAnomaly: true } }
-        );
+        // 2. Process in CHUNKS (Batching)
+        // Instead of doing all 1000+ at once, we do 50 at a time.
+        const CHUNK_SIZE = 50;
+        
+        for (let i = 0; i < newRecords.length; i += CHUNK_SIZE) {
+          const chunk = newRecords.slice(i, i + CHUNK_SIZE);
+
+          // Run checks for just this batch
+          await Promise.all(
+            chunk.map((record) =>
+              Promise.all([
+                ZERO_GENERATION(record),
+                GENERATION_DROP(record, solarUnit._id),
+                ABNORMAL_PEAK(record, solarUnit.capacity),
+                NIGHT_GENERATION(record),
+              ])
+            )
+          );
+
+          // 3. Mark this specific batch as processed immediately
+          // (This saves progress even if the app crashes later)
+          const chunkIds = chunk.map((r) => r._id);
+          await EnergyGenerationRecord.updateMany(
+            { _id: { $in: chunkIds } },
+            { $set: { processedForAnomaly: true } }
+          );
+
+          // 4. Breathe between batches
+          // This creates a tiny pause so the CPU isn't 100% locked
+          await breathe();
+        }
+
       } else {
-        console.log(
-          "No new Energy Generation Records to Run Anomaly Detection"
-        );
+        // Optional: Commented out to reduce log noise
+        // console.log("No new Energy Generation Records to Run Anomaly Detection");
       }
+
+      // 5. Breathe between Solar Units as well
+      await breathe();
     }
   } catch (error) {
-    console.error("Sync Job error:", error);
+    console.error("Anomaly Job error:", error);
   }
 };
