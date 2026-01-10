@@ -8,6 +8,7 @@
     "dev:ngrok": "ngrok start solarpower-management --config ngrok.yml",
     "seed": "ts-node src/infastructure/seed.ts",
     "anomaly-seed": "ts-node src/infastructure/anomaly-seed.ts",
+    "anomaly-seed-1": "ts-node src/infastructure/anomaly-seed-1.ts",
     "build": "npm install && tsc",
     "start": "node ./dist/index.js"
   },

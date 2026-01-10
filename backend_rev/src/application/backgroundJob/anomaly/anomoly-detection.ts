@@ -53,6 +53,7 @@ export async function ZERO_GENERATION(payload: RecordDto) {
   }
 }
 export async function GENERATION_DROP(
+  //fix generation drop anomaly to detect below the capacity level if night its ok if not then its a problem
   payload: RecordDto,
   solarUnitId: mongoose.Types.ObjectId
 ) {
@@ -103,7 +104,7 @@ export async function ABNORMAL_PEAK(payload: RecordDto, capacity: number) {
   const timestamp = new Date(payload.timestamp);
   const serialNumber = payload.serialNumber;
 
-  const threshold = capacity * 1.2;
+  const threshold = capacity;
 
   if (payload.energyGenerated > threshold) {
     const anomalyRecords = {

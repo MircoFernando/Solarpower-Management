@@ -93,7 +93,7 @@ function injectAnomalies(records: any[], serialNumber: string) {
       record.timestamp >= peakDate &&
       record.timestamp <= peakEndDate
     ) {
-      // Generate 150% of normal (exceeds rated capacity)
+      // Generate 250% of normal (exceeds rated capacity)
       record.energyGenerated = Math.round(record.energyGenerated * 2.5);
       peakCount++;
     }
@@ -174,14 +174,14 @@ function injectAnomalies(records: any[], serialNumber: string) {
 }
 
 async function seed() {
-  const serialNumber = "SU-0007";
+  const serialNumber = "SU-0002";
 
   try {
     await connectDB();
 
     // Clear existing data
-    await EnergyGenerationRecord.deleteMany({});
-    console.log("🗑️  Cleared existing records\n");
+    // await EnergyGenerationRecord.deleteMany({});
+    // console.log("🗑️  Cleared existing records\n");
 
     // Create historical energy generation records
     const records = [];
