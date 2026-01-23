@@ -15,8 +15,9 @@ export const globalErrorHandlingMiddleware = (err: Error, req: Request, res: Res
     if (err.name === "UnauthorizedError") {
         return res.status(401).json({ message: err.message });
     }
+    if (err.name === "ForbiddenError"){
+        return res.status(403).json({ message: err.message });
+    }
    
-
-    
     res.status(500).json({ message: "Internal Server Error" });
 };

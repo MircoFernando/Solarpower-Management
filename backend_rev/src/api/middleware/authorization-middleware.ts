@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { getAuth} from "@clerk/express";
-import { ForbidenError, UnauthorizedError } from '../../domain/dtos/errors/errors';
+import { ForbiddenError, UnauthorizedError } from '../../domain/dtos/errors/errors';
 import { UserPublicMetadata } from '../../domain/dtos/types';
 
 export const authorizaztionMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -12,7 +12,7 @@ export const authorizaztionMiddleware = async (req: Request, res: Response, next
     }
     const publicMetaData = auth.sessionClaims?.metadata as UserPublicMetadata;
     if (publicMetaData.role !== 'admin') {
-        throw new ForbidenError("User does not have the required permissions");
+        throw new ForbiddenError("User does not have the required permissions");
     }
     next();
 }
