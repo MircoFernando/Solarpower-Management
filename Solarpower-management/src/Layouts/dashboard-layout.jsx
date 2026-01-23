@@ -54,7 +54,7 @@ const DashboardLayout = () => {
   const location = useLocation();
 
   const { data: invoices } = useGetInvoicesForUserQuery(undefined, {
-    pollingInterval: 30000,
+    pollingInterval: 30000, // 30 seconds
   });
 
   const invoiceList = Array.isArray(invoices) ? invoices : invoices?.data || [];

@@ -11,7 +11,7 @@ const injectAbnormalPeaks = async () => {
     console.log("🔌 Connecting to DB...");
     await connectDB();
 
-    const targetUnit = await SolarUnit.findOne();
+    const targetUnit = await SolarUnit.findOne({ serialNumber: "SU-0007" });
 
     if (!targetUnit) {
       console.error("❌ No Solar Units found! Cannot inject anomalies.");
