@@ -1,0 +1,17 @@
+# Keep the build context small and avoid leaking secrets/artifacts into images.
+**/.git
+**/.gitignore
+**/.env
+**/.env.*
+**/node_modules
+**/dist
+**/build
+**/.vscode
+**/.idea
+**/.DS_Store
+**/npm-debug.log
+**/Dockerfile*
+**/.dockerignore
+**/compose*.y*ml
+**/ngrok.yml
+README.md

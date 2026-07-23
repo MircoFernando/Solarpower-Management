@@ -1,0 +1,56 @@
+# Production stack: pulls pre-built images from Docker Hub. No build context, no source volumes.
+# MongoDB is expected to be an external/managed instance (e.g. Atlas) via MONGODB_URI / MONGODB_URL.
+# Values are interpolated from the root `.env` file (never hardcoded here).
+# Usage: docker compose -f compose.prod.yaml pull && docker compose -f compose.prod.yaml up -d
+
+services:
+  frontend:
+    image: ${DOCKER_REGISTRY_USER}/solarpower-management-frontend:latest
+    restart: always
+    init: true
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    depends_on:
+      - backend
+      - solar-unit-api
+    networks:
+      - solar-network
+
+  backend:
+    image: ${DOCKER_REGISTRY_USER}/solarpower-management-backend:latest
+    restart: always
+    init: true
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MONGODB_URI: ${MONGODB_URI}
+      FRONTEND_URL: ${FRONTEND_URL}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
+      CLERK_PUBLISHABLE_KEY: ${CLERK_PUBLISHABLE_KEY}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_PRICE_ID: ${STRIPE_PRICE_ID}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      SYNC_CRON_SCHEDULE: ${SYNC_CRON_SCHEDULE}
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    networks:
+      - solar-network
+
+  solar-unit-api:
+    image: ${DOCKER_REGISTRY_USER}/solarpower-management-solar-unit-api:latest
+    restart: always
+    init: true
+    environment:
+      NODE_ENV: production
+      PORT: 8000
+      MONGODB_URL: ${MONGODB_URL}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      ENERGY_CRON_SCHEDULE: ${ENERGY_CRON_SCHEDULE}
+    ports:
+      - "${UNIT_API_PORT:-8000}:8000"
+    networks:
+      - solar-network
+
+networks:
+  solar-network:

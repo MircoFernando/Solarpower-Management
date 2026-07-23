@@ -1,0 +1,101 @@
+# Development stack: builds locally, mounts source for hot reload, runs a local MongoDB.
+# Values are interpolated from the root `.env` file (never hardcoded here).
+# Usage: docker compose up --build
+
+services:
+  frontend:
+    build:
+      context: ./Solarpower-management
+      target: dev
+    init: true
+    environment:
+      # Vite exposes VITE_* from process.env at dev time (no rebuild needed)
+      VITE_BACKEND_URL: ${VITE_BACKEND_URL}
+      VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY}
+      VITE_STRIPE_PUBLISHABLE_KEY: ${VITE_STRIPE_PUBLISHABLE_KEY}
+      VITE_WEATHER_KEY: ${VITE_WEATHER_KEY}
+      VITE_WEATHER_API: ${VITE_WEATHER_API}
+      VITE_EMAILJS_SERVICE_ID: ${VITE_EMAILJS_SERVICE_ID}
+      VITE_EMAILJS_TEMPLATE_ID: ${VITE_EMAILJS_TEMPLATE_ID}
+      VITE_EMAILJS_PUBLIC_KEY: ${VITE_EMAILJS_PUBLIC_KEY}
+    ports:
+      - "${FRONTEND_DEV_PORT:-5173}:5173"
+    volumes:
+      - ./Solarpower-management:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+      - solar-unit-api
+    networks:
+      - solar-network
+
+  backend:
+    build:
+      context: ./backend_rev
+      target: dev
+    init: true
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      MONGODB_URI: ${MONGODB_URI}
+      FRONTEND_URL: ${FRONTEND_URL}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
+      CLERK_PUBLISHABLE_KEY: ${CLERK_PUBLISHABLE_KEY}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_PRICE_ID: ${STRIPE_PRICE_ID}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      SYNC_CRON_SCHEDULE: ${SYNC_CRON_SCHEDULE}
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    volumes:
+      - ./backend_rev:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - solar-network
+
+  solar-unit-api:
+    build:
+      context: ./solar-unit-api
+      target: dev
+    init: true
+    environment:
+      NODE_ENV: development
+      PORT: 8000
+      MONGODB_URL: ${MONGODB_URL}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      ENERGY_CRON_SCHEDULE: ${ENERGY_CRON_SCHEDULE}
+    ports:
+      - "${UNIT_API_PORT:-8000}:8000"
+    volumes:
+      - ./solar-unit-api:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - solar-network
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - solar-network
+
+networks:
+  solar-network:
+
+volumes:
+  mongo-data:
